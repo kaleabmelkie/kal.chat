@@ -7,7 +7,7 @@
 
 <li
 	class="grid max-w-md gap-1 {message.role === 'user' ? 'ml-auto pl-8' : 'mr-auto pr-8'}"
-	transition:slide|local={{ duration: 150 }}
+	transition:slide|local
 >
 	<div class="text-xs opacity-75 {message.role === 'user' ? 'text-right' : 'text-left'}">
 		{message.role === 'user' ? 'You' : 'Kal'}
