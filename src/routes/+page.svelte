@@ -1,35 +1,43 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Message from '$lib/components/message.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
 
 	onMount(() => {
-		scrollChatToBottom();
+		scrollToBottom();
 	});
 
 	let loading = false;
+	let messagesListEle: HTMLUListElement | null = null;
+	let typingDotCount = 0;
+
+	setInterval(() => {
+		typingDotCount = (typingDotCount + 1) % 4;
+	}, 300);
 
 	$: messages = form?.messages ?? data.messages;
-	$: {
-		messages; // deps
-		scrollChatToBottom();
-	}
 
-	let messagesListEle: HTMLUListElement | null = null;
-	function scrollChatToBottom() {
-		if (messagesListEle) {
-			messagesListEle.scrollTop = messagesListEle.scrollHeight;
-		}
+	async function scrollToBottom() {
+		await tick();
+		setTimeout(async () => {
+			await tick();
+			if (messagesListEle) {
+				messagesListEle.scrollTo({
+					top: messagesListEle.scrollHeight,
+					behavior: 'smooth'
+				});
+			}
+		}, 500);
 	}
 </script>
 
 <main class="relative h-screen bg-slate-200">
 	<ul
-		class="mx-auto flex h-full w-full max-w-screen-md flex-col gap-4 overflow-auto scroll-smooth p-4 pb-[calc(1rem+8rem)]"
+		class="mx-auto flex h-full w-full max-w-screen-md flex-col gap-4 overflow-auto p-4 pb-[calc(1rem+8rem)]"
 		bind:this={messagesListEle}
 	>
 		<span class="flex-1" />
@@ -37,7 +45,13 @@
 			<Message {message} />
 		{/each}
 		{#if loading}
-			<Message message={{ role: 'system', content: '_Typing..._' }} />
+			<Message
+				message={{
+					role: 'system',
+					content: `_Typing${[...Array(typingDotCount)].map(() => '.').join('')}_`
+				}}
+				class="animate-pulse"
+			/>
 		{/if}
 	</ul>
 
@@ -45,14 +59,15 @@
 		class="relative mx-auto mt-[-8rem] flex h-[8rem] w-full max-w-screen-md gap-1 bg-gradient-to-t from-slate-200 to-transparent p-4"
 		method="POST"
 		action="?/chat"
-		use:enhance={({ form }) => {
+		use:enhance={async ({ form }) => {
 			loading = true;
 			messages = [...messages, { role: 'user', content: form.message.value }];
 			form.reset();
-			scrollChatToBottom();
+			await scrollToBottom();
 			return async ({ update }) => {
 				loading = false;
 				await update();
+				scrollToBottom();
 			};
 		}}
 	>
