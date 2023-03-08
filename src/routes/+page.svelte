@@ -78,6 +78,7 @@
 			name="message"
 			placeholder="Type your message..."
 			autocomplete="off"
+			
 			required
 		/>
 
