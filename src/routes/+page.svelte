@@ -73,12 +73,13 @@
 	>
 		<input type="hidden" name="oldMessages" value={JSON.stringify(messages)} />
 
+		<!-- svelte-ignore a11y-autofocus -->
 		<textarea
 			class="h-full max-h-full min-h-full flex-1 resize-none rounded-xl border border-slate-300 bg-white/90 p-4 pr-[calc(1rem+4rem)] shadow backdrop-blur backdrop-saturate-200 transition-all hover:bg-white"
 			name="message"
 			placeholder="Type your message..."
 			autocomplete="off"
-			
+			autofocus
 			required
 		/>
 
