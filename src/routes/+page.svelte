@@ -14,24 +14,22 @@
 	let loading = false;
 	let messagesListEle: HTMLUListElement | null = null;
 	let typingDotCount = 0;
+	let termTextareaEle: HTMLTextAreaElement | null = null;
+
+	$: messages = form?.messages ?? data.messages;
 
 	setInterval(() => {
 		typingDotCount = (typingDotCount + 1) % 4;
 	}, 300);
 
-	$: messages = form?.messages ?? data.messages;
-
 	async function scrollToBottom() {
 		await tick();
-		setTimeout(async () => {
-			await tick();
-			if (messagesListEle) {
-				messagesListEle.scrollTo({
-					top: messagesListEle.scrollHeight,
-					behavior: 'smooth'
-				});
-			}
-		}, 500);
+		if (messagesListEle) {
+			messagesListEle.scrollTo({
+				top: messagesListEle.scrollHeight,
+				behavior: 'smooth'
+			});
+		}
 	}
 </script>
 
@@ -56,7 +54,7 @@
 	</ul>
 
 	<form
-		class="relative mx-auto mt-[-8rem] flex h-[8rem] w-full max-w-screen-md gap-1 bg-gradient-to-t from-slate-200 to-transparent p-4"
+		class="relative mx-auto mt-[-8rem] h-[8rem] w-full max-w-screen-md gap-1"
 		method="POST"
 		action="?/chat"
 		use:enhance={async ({ form }) => {
@@ -71,23 +69,49 @@
 			};
 		}}
 	>
-		<input type="hidden" name="oldMessages" value={JSON.stringify(messages)} />
+		<input class="hidden" type="hidden" name="oldMessages" value={JSON.stringify(messages)} />
 
-		<!-- svelte-ignore a11y-autofocus -->
-		<textarea
-			class="h-full max-h-full min-h-full flex-1 resize-none rounded-xl border border-slate-300 bg-white/90 p-4 pr-[calc(1rem+4rem)] shadow backdrop-blur backdrop-saturate-200 transition-all hover:bg-white"
-			name="message"
-			placeholder="Type your message..."
-			autocomplete="off"
-			autofocus
-			required
-		/>
+		<div class="absolute left-4 right-4 bottom-[3.5rem] flex">
+			<!-- svelte-ignore a11y-autofocus -->
+			<textarea
+				class="flex-1 resize-none rounded-xl border border-slate-300 bg-white/90 p-4 pr-[calc(1rem+4rem)] text-base leading-[1.5rem] shadow-lg outline-none backdrop-blur backdrop-saturate-200 transition-all duration-300 hover:border-slate-400 hover:bg-white/95 hover:shadow-2xl focus:border-slate-400 focus:bg-white/95 focus:shadow-2xl {termTextareaEle &&
+				termTextareaEle.scrollHeight < 140
+					? 'overflow-hidden'
+					: 'overflow-auto'}"
+				style="height: {termTextareaEle
+					? `${termTextareaEle.scrollHeight}px`
+					: `calc(1rem + 1.5rem + 1rem)`}"
+				name="message"
+				placeholder="Ask me anything..."
+				autocomplete="off"
+				autofocus
+				required
+				bind:this={termTextareaEle}
+				on:input={(e) => {
+					const heightBackup = e.currentTarget.style.height;
+					e.currentTarget.style.transitionProperty = 'none';
+					e.currentTarget.style.height = `1px`;
+					const newHeight = `${e.currentTarget.scrollHeight}px`;
+					e.currentTarget.style.height = heightBackup;
+					e.currentTarget.scrollHeight; // keep this line to `tick()` the DOM state and avoid height flakiness
+					e.currentTarget.style.transitionProperty = 'all';
+					e.currentTarget.style.height = newHeight;
+				}}
+				on:keydown={(e) => {
+					if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+						e.preventDefault();
+						e.currentTarget.form?.submitButton?.click();
+					}
+				}}
+			/>
 
-		<button
-			class="absolute top-4 right-4 bottom-4 w-16 rounded-r-xl transition-all active:scale-95 active:bg-slate-100"
-			type="submit"
-		>
-			Send
-		</button>
+			<button
+				class="absolute top-0 right-0 bottom-0 w-16 rounded-r-xl transition-all active:scale-95 active:bg-slate-100"
+				type="submit"
+				name="submitButton"
+			>
+				Send
+			</button>
+		</div>
 	</form>
 </main>
