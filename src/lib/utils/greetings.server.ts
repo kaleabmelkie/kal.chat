@@ -8,5 +8,5 @@ export const greetings = [
 	`Sup, boss?`,
 	`What's the dealio, dude?`,
 	`Howdy, partner!`,
-	`Greetings and salutations, my friend.`
-] as const;
+	`Greetings and salutations, my friend.`,
+] as const

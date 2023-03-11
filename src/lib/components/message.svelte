@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { ChatCompletionRequestMessage } from 'openai';
-	import SvelteMarkdown from 'svelte-markdown';
-	import { slide } from 'svelte/transition';
+	import type { ChatCompletionRequestMessage } from 'openai'
+	import SvelteMarkdown from 'svelte-markdown'
+	import { slide } from 'svelte/transition'
 
-	let className = '';
-	export { className as class };
-	export let articleClassName = '';
-	export let message: ChatCompletionRequestMessage;
+	let className = ''
+	export { className as class }
+	export let articleClassName = ''
+	export let message: ChatCompletionRequestMessage
 </script>
 
 <li
