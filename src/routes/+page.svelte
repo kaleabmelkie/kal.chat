@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import Message from '$lib/components/message.svelte'
-	import { onMount, tick } from 'svelte'
+	import { onMount } from 'svelte'
 	import type { ActionData, PageData } from './$types'
 
 	export let data: PageData
@@ -23,19 +23,15 @@
 	}, 300)
 
 	async function scrollToBottom() {
-		await tick()
 		if (messagesListEle) {
-			messagesListEle.scrollTo({
-				top: messagesListEle.scrollHeight,
-				behavior: 'smooth',
-			})
+			messagesListEle.scrollTop = messagesListEle.scrollHeight
 		}
 	}
 </script>
 
-<main class="relative h-screen bg-slate-200">
+<main class="bg-blue-100">
 	<ul
-		class="mx-auto flex h-full w-full max-w-screen-md flex-col gap-4 overflow-auto p-4 pb-[calc(1rem+8rem)]"
+		class="mx-auto flex min-h-screen max-w-screen-md flex-col gap-4 p-4 pb-[calc(1rem+8rem)]"
 		bind:this={messagesListEle}
 	>
 		<span class="flex-1" />
@@ -46,18 +42,22 @@
 			<Message
 				message={{
 					role: 'system',
-					content: `_Typing${[...Array(typingDotCount)].map(() => '.').join('')}_`,
+					content: `_Thinking${[...Array(typingDotCount)].map(() => '.').join('')}_`,
 				}}
 				class="animate-pulse"
+				articleClassName="text-blue-900"
 			/>
 		{/if}
 	</ul>
 
 	<form
-		class="relative mx-auto mt-[-8rem] h-[8rem] w-full max-w-screen-md gap-1"
+		class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mx-auto h-[8rem] w-full max-w-screen-md gap-1"
 		method="POST"
 		action="?/chat"
 		use:enhance={async ({ form }) => {
+			if (loading) {
+				return
+			}
 			loading = true
 			messages = [...messages, { role: 'user', content: form.message.value }]
 			form.reset()
@@ -69,13 +69,20 @@
 			}
 		}}
 	>
-		<input class="hidden" type="hidden" name="oldMessages" value={JSON.stringify(messages)} />
+		<input
+			class="hidden"
+			type="hidden"
+			name="oldMessages"
+			value={JSON.stringify(messages.slice(-10))}
+			disabled={loading}
+			readonly
+		/>
 
-		<div class="absolute left-4 right-4 bottom-[3.5rem] flex">
+		<div class="group pointer-events-auto absolute left-4 right-4 bottom-[3.5rem] flex">
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="flex-1 resize-none rounded-xl border border-slate-300 bg-white/90 p-4 pr-[calc(1rem+4rem)] text-base leading-[1.5rem] shadow-lg outline-none backdrop-blur backdrop-saturate-200 transition-all duration-300 hover:border-slate-400 hover:bg-white/95 hover:shadow-2xl focus:border-slate-400 focus:bg-white/95 focus:shadow-2xl {messageBoxEle &&
+				class="flex-1 transform-gpu resize-none rounded-xl border border-blue-200 bg-white/90 p-4 pr-[calc(1rem+4rem)] text-base leading-[1.5rem] shadow-lg shadow-blue-900/25 outline-none backdrop-blur backdrop-saturate-200 transition-all duration-300 hover:border-blue-400 hover:bg-white/95 hover:shadow-2xl hover:shadow-blue-900/50 focus:scale-[101%] focus:border-blue-400 focus:bg-white/95 focus:shadow-2xl focus:shadow-blue-900/50 disabled:bg-white/75 disabled:shadow-sm {messageBoxEle &&
 				messageBoxEle.scrollHeight < 140
 					? 'overflow-hidden'
 					: 'overflow-auto'}"
@@ -84,7 +91,11 @@
 					: `calc(1rem + 1.5rem + 1rem)`}"
 				name="message"
 				placeholder="Ask me anything..."
+				disabled={loading}
+				autocapitalize="off"
 				autocomplete="off"
+				spellcheck="false"
+				autocorrect="off"
 				autofocus
 				required
 				bind:this={messageBoxEle}
@@ -111,9 +122,14 @@
 				class="absolute top-0 right-0 bottom-0 w-16 rounded-r-xl transition-all active:scale-95 active:bg-slate-100"
 				type="submit"
 				name="submitButton"
+				disabled={loading}
 			>
 				Send
 			</button>
 		</div>
 	</form>
+
+	<div
+		class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-blue-100/100 to-blue-100/0"
+	/>
 </main>
