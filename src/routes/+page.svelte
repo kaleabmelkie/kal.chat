@@ -138,12 +138,8 @@
 						messages = result.data?.messages ?? messages
 						break
 					case 'redirect':
+						console.info(`Redirecting to: ${result.location}`)
 						await update()
-						break
-					default:
-						await update()
-						messages = [...messages.slice(0, -1)]
-						message = valueBackup + message
 						break
 				}
 
