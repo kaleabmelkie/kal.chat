@@ -18,6 +18,7 @@
 	let loading = false
 	let messagesListEle: HTMLUListElement | null = null
 	let typingDotCount = 0
+	let bottomEle: HTMLSpanElement | null = null
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let message = ''
 
@@ -50,9 +51,17 @@
 	}, 300)
 
 	async function scrollToBottom() {
-		if (messagesListEle) {
-			messagesListEle.scrollTop = messagesListEle.scrollHeight
+		if (!bottomEle) {
+			return
 		}
+		bottomEle.scrollIntoView({ behavior: 'smooth' })
+		await tick()
+		setTimeout(() => {
+			if (!bottomEle) {
+				return
+			}
+			bottomEle.scrollIntoView({ behavior: 'smooth' })
+		}, 150)
 	}
 </script>
 
@@ -60,10 +69,10 @@
 
 <main class="bg-gradient-to-t from-white to-sky-200 bg-fixed">
 	<ul
-		class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 p-4 pb-[calc(1rem+8rem)]"
+		class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 p-4 pb-[calc(2rem+1rem+8rem)]"
 		bind:this={messagesListEle}
 	>
-		<span class="flex-1" />
+		<div class="flex-1" />
 		{#each messages as message, index (index)}
 			<!-- TODO: change the key to message.id -->
 			<Message {message} />
@@ -80,7 +89,6 @@
 				/>
 			{/key}
 		{/if}
-		<span class="h-2" />
 	</ul>
 
 	<form
@@ -184,6 +192,8 @@
 			</button>
 		</div>
 	</form>
+
+	<div bind:this={bottomEle} />
 
 	<div
 		class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-sky-50 to-sky-50/0"

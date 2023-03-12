@@ -34,7 +34,7 @@
 	</div>
 
 	<article
-		class="prose relative rounded-[1.75rem] py-3 px-6 text-lg shadow-md shadow-sky-900/10 {message.role ===
+		class="prose relative rounded-[1.75rem] py-3 px-6 text-lg shadow-md shadow-sky-600/20 {message.role ===
 		'user'
 			? 'bg-sky-900 text-right text-white'
 			: 'bg-white text-left text-black'}  {articleClassName}"
