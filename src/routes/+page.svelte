@@ -68,7 +68,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<main class="bg-gradient-to-t from-white to-sky-200 bg-fixed">
+<main class="bg-gradient-to-t from-white to-amber-500/50 bg-fixed">
 	<ul
 		class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 p-4 pb-[calc(2rem+1rem+8rem)]"
 		bind:this={messagesListEle}
@@ -86,7 +86,7 @@
 						content: `Thinking${[...Array(typingDotCount)].map(() => '.').join('')}`,
 					}}
 					class="animate-pulse"
-					articleClassName="text-sky-900 !shadow-none !bg-transparent"
+					articleClassName="text-amber-900 !shadow-none !bg-transparent !bg-none"
 				/>
 			{/key}
 		{/if}
@@ -167,7 +167,7 @@
 
 		<div class="absolute left-4 right-4 bottom-[3.5rem] flex items-end gap-[calc(0.5rem+3px)]">
 			<button
-				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
+				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-amber-900 shadow-lg shadow-amber-900/20 ring-2 ring-amber-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-amber-900/30 focus:bg-white/95 active:shadow-xl active:shadow-amber-900/20 active:ring-offset-2 active:ring-offset-amber-50 disabled:animate-pulse disabled:bg-amber-600/25 disabled:text-amber-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 				type="reset"
 				title="New topic"
 				disabled={loading}
@@ -179,7 +179,7 @@
 				<!-- svelte-ignore a11y-autofocus -->
 				<textarea
 					data-testid="message-box"
-					class="placeholder:text-sky-700/ h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
+					class="placeholder:text-amber-700/ h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-amber-900/20 outline-none ring-2 ring-amber-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-amber-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-amber-900/20 focus:ring-offset-2 focus:ring-offset-amber-50 disabled:animate-pulse disabled:bg-amber-600/25 disabled:text-amber-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 					name="message"
 					placeholder="Ask me anything..."
 					autocapitalize="off"
@@ -210,7 +210,7 @@
 
 				<button
 					data-testid="send-button"
-					class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/0"
+					class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-amber-900 transition-all duration-150 hover:bg-amber-300/25 active:bg-amber-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-amber-900/0"
 					type="submit"
 					name="submitButton"
 					disabled={loading}
@@ -220,7 +220,7 @@
 			</div>
 
 			<button
-				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
+				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-amber-900 shadow-lg shadow-amber-900/20 ring-2 ring-amber-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-amber-900/30 focus:bg-white/95 active:shadow-xl active:shadow-amber-900/20 active:ring-offset-2 active:ring-offset-amber-50 disabled:animate-pulse disabled:bg-amber-600/25 disabled:text-amber-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 				type="button"
 				title="Type using voice"
 				disabled={true}
@@ -234,6 +234,6 @@
 	<div bind:this={bottomEle} />
 
 	<div
-		class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-sky-50 to-sky-50/0"
+		class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-amber-50 to-amber-50/0"
 	/>
 </main>

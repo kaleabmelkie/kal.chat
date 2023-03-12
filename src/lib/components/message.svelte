@@ -26,7 +26,7 @@
 	transition:slide|local={{ duration: 150 }}
 >
 	<div
-		class="text-xs font-semibold uppercase text-sky-600 {message.role === 'user'
+		class="text-xs font-semibold uppercase text-amber-600 {message.role === 'user'
 			? 'pr-6 text-right'
 			: 'pl-6 text-left'}"
 	>
@@ -34,10 +34,10 @@
 	</div>
 
 	<article
-		class="prose relative rounded-[1.75rem] py-3 px-6 text-lg shadow-md shadow-sky-600/20 {message.role ===
+		class="prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-amber-600/10 {message.role ===
 		'user'
-			? 'bg-sky-900 text-white'
-			: 'bg-white text-black'}  {articleClassName}"
+			? 'bg-amber-900/75 from-amber-600/25 to-amber-600/0 text-white'
+			: 'bg-white/75 from-white/25 to-white/0 text-black'}  {articleClassName}"
 	>
 		<SvelteMarkdown source={message.content} options={markedOptions} />
 	</article>
