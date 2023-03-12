@@ -142,7 +142,7 @@
 						await update()
 						break
 					default:
-						console.warn(`Failed to send your message, please try again.`)
+						alert(`Failed to send your message.\nPlease, try again.`)
 						messages = [...messages.slice(0, -1)]
 						message = valueBackup + message
 						break
