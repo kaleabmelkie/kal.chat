@@ -11,6 +11,7 @@
 
 	$: markedOptions = {
 		// highlight: (code, lang) => prism.highlight(code, prism.languages[lang], lang), // TODO: fix this
+		breaks: true,
 		gfm: true,
 		mangle: false,
 		sanitize: true,
@@ -19,20 +20,24 @@
 </script>
 
 <li
-	class="grid max-w-screen-sm gap-1 {message.role === 'user'
+	class="grid max-w-screen-sm gap-2 {message.role === 'user'
 		? 'ml-auto pl-8'
 		: 'mr-auto pr-8'} {className}"
 	transition:slide|local={{ duration: 150 }}
 >
-	<div class="text-xs opacity-75 {message.role === 'user' ? 'text-right' : 'text-left'}">
+	<div
+		class="text-xs font-semibold uppercase text-sky-600 {message.role === 'user'
+			? 'pr-6 text-right'
+			: 'pl-6 text-left'}"
+	>
 		{message.role === 'user' ? 'You' : 'Kal'}
 	</div>
 
 	<article
-		class="shadow-blue-30 prose relative rounded-xl py-2 px-3 text-lg shadow {message.role ===
+		class="prose relative rounded-[1.75rem] py-3 px-6 text-lg shadow-md shadow-sky-900/10 {message.role ===
 		'user'
-			? 'bg-blue-900 text-white'
-			: 'bg-white text-black'} {articleClassName}"
+			? 'bg-sky-900 text-right text-white'
+			: 'bg-white text-left text-black'}  {articleClassName}"
 	>
 		<SvelteMarkdown source={message.content} options={markedOptions} />
 	</article>

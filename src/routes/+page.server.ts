@@ -1,11 +1,10 @@
 import { greetings } from '$lib/utils/greetings.server'
 import { openai } from '$lib/utils/openai.server'
 import { countTokens } from '$lib/utils/tokenizer.server'
-import { error, type Actions } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
-import type { PageServerLoad } from './$types'
 
-export const load = (async () => {
+export const load = async () => {
 	return {
 		messages: [
 			{
@@ -14,9 +13,9 @@ export const load = (async () => {
 			},
 		] satisfies ChatCompletionRequestMessage[],
 	}
-}) satisfies PageServerLoad
+}
 
-export const actions: Actions = {
+export const actions = {
 	chat: async ({ request }) => {
 		const formData = await request.formData()
 
@@ -72,8 +71,8 @@ export const actions: Actions = {
 		return {
 			messages: [
 				...reqMessages,
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				...chatResponse.data.choices
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					.map((choice) => choice.message!)
 					.filter((message) => !!message),
 			],
