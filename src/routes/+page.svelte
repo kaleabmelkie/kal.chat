@@ -141,6 +141,11 @@
 						console.info(`Redirecting to: ${result.location}`)
 						await update()
 						break
+					default:
+						console.warn(`Failed to send your message, please try again.`)
+						messages = [...messages.slice(0, -1)]
+						message = valueBackup + message
+						break
 				}
 
 				await scrollToBottom()
