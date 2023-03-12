@@ -180,7 +180,7 @@
 					data-testid="message-box"
 					class="placeholder:text-sky-700/ h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 					name="message"
-					placeholder={loading ? '' : `Ask me anything...`}
+					placeholder="Ask me anything..."
 					autocapitalize="off"
 					autocomplete="off"
 					spellcheck="false"
