@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import Header from '$lib/components/header.svelte'
 	import Message from '$lib/components/message.svelte'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
@@ -69,6 +70,8 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <main class="bg-gradient-to-t from-white to-amber-500/50 bg-fixed">
+	<Header />
+
 	<ul
 		class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 p-4 pb-[calc(2rem+1rem+8rem)]"
 		bind:this={messagesListEle}

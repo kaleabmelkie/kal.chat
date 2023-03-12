@@ -10,11 +10,15 @@
 	export let message: ChatCompletionRequestMessage
 
 	$: markedOptions = {
-		// highlight: (code, lang) => prism.highlight(code, prism.languages[lang], lang), // TODO: fix this
+		// TODO: fix and enable code highlighting
+		// highlight: function (code, lang) {
+		// 	return languages[lang] ? highlight(code, languages[lang], lang) : code
+		// },
 		breaks: true,
 		gfm: true,
 		mangle: false,
 		sanitize: true,
+		smartLists: true,
 		smartypants: true,
 	} satisfies marked.MarkedOptions
 </script>
@@ -37,7 +41,7 @@
 		class="prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-amber-600/10 {message.role ===
 		'user'
 			? 'bg-amber-900/75 from-amber-600/25 to-amber-600/0 text-white'
-			: 'bg-white/75 from-white/25 to-white/0 text-black'}  {articleClassName}"
+			: 'bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
 	>
 		<SvelteMarkdown source={message.content} options={markedOptions} />
 	</article>
