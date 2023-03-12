@@ -4,6 +4,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import RefreshSvg from '$lib/icons/refresh.svg.svelte'
+	import { greetings } from '$lib/utils/greetings'
 	import { onMount, tick } from 'svelte'
 
 	export let data
@@ -131,7 +132,16 @@
 				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 				type="reset"
 				title="New topic"
-				on:click={() => alert('TODO: implement clear()')}
+				disabled={loading}
+				on:click={() => {
+					messages = [
+						{
+							role: 'assistant',
+							content: greetings[Math.floor(Math.random() * greetings.length)],
+						},
+					]
+					messageBoxEle?.focus()
+				}}
 			>
 				<RefreshSvg />
 			</button>

@@ -1,4 +1,4 @@
-import { greetings } from '$lib/utils/greetings.server'
+import { greetings } from '$lib/utils/greetings'
 import { openai } from '$lib/utils/openai.server'
 import { countTokens } from '$lib/utils/tokenizer.server'
 import { error } from '@sveltejs/kit'
