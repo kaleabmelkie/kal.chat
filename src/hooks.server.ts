@@ -1,4 +1,4 @@
-import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private'
+import { AUTH_SECRET, GITHUB_ID, GITHUB_SECRET } from '$env/static/private'
 import GitHub from '@auth/core/providers/github'
 import { SvelteKitAuth } from '@auth/sveltekit'
 
@@ -8,5 +8,5 @@ export const handle = SvelteKitAuth({
 		// @ts-ignore
 		GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
 	],
-	secret: `${Math.random()}`,
+	secret: AUTH_SECRET,
 })
