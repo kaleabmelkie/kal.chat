@@ -89,14 +89,15 @@
 			isVoiceTyping = true
 		}
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			message = `${originalMessage} ${Array.from(event.results)
+			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
 				.map((alternatives) =>
 					!alternatives.isFinal
 						? null
 						: orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript,
 				)
 				.filter((a) => a !== null)
-				.join('')}`
+				.join(' ')
+				.trim()}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
 			if (!['aborted', 'no-speech'].includes(event.error)) {
