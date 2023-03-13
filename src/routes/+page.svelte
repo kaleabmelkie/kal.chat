@@ -80,30 +80,18 @@
 			return
 		}
 		recognition = new (window.webkitSpeechRecognition as any)()
-		recognition.lang = 'en-US'
+		recognition.lang = 'en'
 		recognition.continuous = true
 		recognition.interimResults = true
-		recognition.maxAlternatives = 1
 		recognition.onstart = () => {
 			originalMessage = message
 			isVoiceTyping = true
 		}
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			let newText = ''
-			for (const alternatives of event.results) {
-				if (alternatives.isFinal) {
-					const segment =
-						orderBy(alternatives, (a) => a.confidence, 'desc')[0]?.transcript.trim() ?? ''
-					if (newText.startsWith(segment)) {
-						// android chromium
-						newText = `${segment} `
-					} else {
-						// default behavior
-						newText += `${segment} `
-					}
-				}
-			}
-			message = `${originalMessage.replace(/ $/, '')} ${newText.trim()}`
+			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
+				.map((result) => result[0].transcript.trim())
+				.join(' ')
+				.trim()}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
 			if (!['aborted', 'no-speech'].includes(event.error)) {
