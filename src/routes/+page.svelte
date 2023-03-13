@@ -8,6 +8,8 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import RefreshSvg from '$lib/icons/refresh.svg.svelte'
 	import { greetings } from '$lib/utils/greetings'
+	import { systemPrompt } from '$lib/utils/system-prompt'
+	import { countTokens } from '$lib/utils/tokenizer'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { onMount, tick } from 'svelte'
@@ -19,6 +21,8 @@
 		scrollToBottom()
 		setUpVoiceTyping()
 	})
+
+	const maxTokens = 4096
 
 	let innerWidth = 0
 	let innerHeight = 0
@@ -33,8 +37,9 @@
 	let recognition: any
 
 	$: messages = form?.messages ?? data.messages // TODO: remove `form?.messages ?? ` once DB is integrated
+	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
+	$: tokensUsed = countTokens([systemPrompt, ...messages.map((m) => m.content), message].join(''))
 
-	const maxMessageBoxHeight = 420
 	$: {
 		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps
 		if (messageBoxEle) {
@@ -151,7 +156,7 @@
 	</ul>
 
 	<form
-		class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mx-auto h-[8rem] w-full max-w-[calc(4rem+48rem+4rem)] gap-1"
+		class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mx-auto grid h-[8rem] w-full max-w-[calc(4rem+48rem+4rem)] gap-1 p-4"
 		method="POST"
 		action="?/chat"
 		on:reset|preventDefault={() => {
@@ -223,7 +228,7 @@
 			readonly
 		/>
 
-		<div class="absolute left-4 right-4 bottom-[3.5rem] flex items-end gap-[calc(0.5rem+3px)]">
+		<div class="flex h-[3.5rem] items-end gap-[calc(0.5rem+3px)]">
 			<button
 				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 				type="reset"
@@ -239,7 +244,10 @@
 					data-testid="message-box"
 					class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTypingSupported
 						? 'pr-[calc(1.5rem+3.5rem+3.5rem)]'
-						: 'pr-[calc(1.5rem+3.5rem)]'} {isVoiceTyping ? 'animate-pulse' : ''}"
+						: 'pr-[calc(1.5rem+3.5rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensUsed >
+					maxTokens
+						? '!ring-red-600/75 !ring-offset-red-50'
+						: ''}"
 					name="message"
 					placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
 					title="Shit+Enter for a new line"
@@ -298,14 +306,19 @@
 					<ArrowRightSvg />
 				</button>
 			</div>
+		</div>
 
-			<div
-				class="transition-all {(userAgentParser.getPlatformType() === 'desktop' &&
-					innerWidth === 0) ||
-				innerWidth >= (innerWidth < 640 ? 14 : 16) * (4 + 48 + 4)
-					? 'w-[3.5rem]'
-					: 'w-0'}"
-			/>
+		<div
+			class="mt-3 text-right text-sm"
+			title="Counts total tokens of the system prompt, the last 10 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
+		>
+			{#if tokensUsed > maxTokens}
+				<span class="font-black text-red-500">{tokensUsed - maxTokens}</span>
+				<span class="font-semibold text-red-500"> tokens over</span>
+			{:else}
+				<span class="font-semibold text-emerald-500">{tokensUsed}</span>
+				<span class="text-sky-900/50"> tokens used</span>
+			{/if}
 		</div>
 	</form>
 
