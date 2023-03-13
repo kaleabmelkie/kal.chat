@@ -4,8 +4,9 @@ import { countTokens } from '$lib/utils/tokenizer.server'
 import { error } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
 
-export const load = async () => {
+export const load = async ({ request }) => {
 	return {
+		userAgent: request.headers.get('user-agent'),
 		messages: [
 			{
 				role: 'assistant',
