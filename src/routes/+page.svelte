@@ -91,11 +91,15 @@
 				.map((result) => result[0].transcript)
 				.join('')}`
 		}
-		recognition.onerror = (event: any) => {
-			console.error('Speech recognition error:', event)
-			alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
+		recognition.onerror = async (event: { error: string }) => {
+			if (!['aborted', 'no-speech'].includes(event.error)) {
+				console.error('Speech recognition error:', event)
+				alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
+			}
 			originalMessage = message
 			isVoiceTyping = false
+			await tick()
+			messageBoxEle?.focus()
 		}
 		recognition.onend = async () => {
 			originalMessage = message
@@ -271,7 +275,7 @@
 					type="button"
 					title="Type using voice"
 					on:click={() => (isVoiceTyping ? recognition?.stop() : recognition?.start())}
-					on:keypress={(e) => {
+					on:keydown={(e) => {
 						if (e.key === 'Enter') {
 							e.currentTarget.form?.submitButton?.click()
 						}
