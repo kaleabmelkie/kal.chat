@@ -8,8 +8,8 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import RefreshSvg from '$lib/icons/refresh.svg.svelte'
 	import { greetings } from '$lib/utils/greetings'
-	import { onMount, tick } from 'svelte'
 	import orderBy from 'lodash/orderBy'
+	import { onMount, tick } from 'svelte'
 
 	export let data
 	export let form
@@ -28,7 +28,6 @@
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let message = ''
 	let isVoiceTyping = false
-	let originalMessage = message
 	let recognition: any
 
 	$: messages = form?.messages ?? data.messages // TODO: remove `form?.messages ?? ` once DB is integrated
@@ -85,26 +84,23 @@
 		recognition.interimResults = true
 		recognition.maxAlternatives = 1
 		recognition.onstart = () => {
-			originalMessage = message
 			isVoiceTyping = true
 		}
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			message = `${originalMessage} ${Array.from(event.results)
+			message = Array.from(event.results)
 				.map((alternatives) => orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript)
-				.join('')}`
+				.join('')
 		}
 		recognition.onerror = async (event: { error: string }) => {
 			if (!['aborted', 'no-speech'].includes(event.error)) {
 				console.error('Speech recognition error:', event)
 				alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
 			}
-			originalMessage = message
 			isVoiceTyping = false
 			await tick()
 			messageBoxEle?.focus()
 		}
 		recognition.onend = async () => {
-			originalMessage = message
 			isVoiceTyping = false
 			await tick()
 			messageBoxEle?.focus()
@@ -288,7 +284,12 @@
 				</button>
 			</div>
 
-			<div class="transition-all {innerWidth >= 16 * (4 + 48 + 4) ? 'w-[3.5rem]' : 'w-0'}" />
+			<div
+				class="transition-all {innerWidth === 0 ||
+				innerWidth >= (innerWidth < 640 ? 14 : 16) * (4 + 48 + 4)
+					? 'w-[3.5rem]'
+					: 'w-0'}"
+			/>
 		</div>
 	</form>
 
