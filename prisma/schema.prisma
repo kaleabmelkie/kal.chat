@@ -1,0 +1,30 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = env("PRISMA_BINARY_TARGETS")
+  previewFeatures = ["extendedWhereUnique", "fieldReference", "filteredRelationCount", "fullTextIndex", "fullTextSearch", "metrics", "orderByNulls"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id     Int      @id @default(autoincrement())
+  Thread Thread[]
+}
+
+model Thread {
+  id      Int       @id @default(autoincrement())
+  user    User      @relation(fields: [userId], references: [id])
+  userId  Int
+  Message Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  threadId  Int
+  createdAt DateTime @default(now())
+  content   String
+}
