@@ -12,6 +12,10 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
+  name  String
+  email String  @unique
+  image String?
+
   Thread Thread[]
 }
 
@@ -29,7 +33,15 @@ model Message {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
-  content  String
+  role    RoleType
+  content String
+
   thread   Thread @relation(fields: [threadId], references: [id])
   threadId Int
+}
+
+enum RoleType {
+  system
+  assistant
+  user
 }

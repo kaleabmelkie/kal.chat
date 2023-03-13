@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import { signIn, signOut } from '@auth/sveltekit/client'
 </script>
 
 <header
 	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex items-center justify-center gap-3 bg-gradient-to-t from-sky-100/0 to-sky-100 p-4"
 >
 	<h1
-		class="bg-gradient-to-tr from-sky-700/25 to-sky-500/25 bg-clip-text px-4 text-2xl font-black text-transparent"
+		class="bg-sky-600 bg-gradient-to-tr from-sky-700 to-sky-500 bg-clip-text px-4 text-2xl font-black text-transparent"
 	>
-		kal.chat
+		<a class="pointer-events-auto" href="/">kal.chat</a>
 	</h1>
 
 	<div class="flex-1" />
@@ -26,24 +25,22 @@
 			/>
 		{/if}
 
-		<div class="pointer-events-auto my-auto hidden pr-4 sm:grid">
+		<a
+			class="pointer-events-auto my-auto hidden sm:grid"
+			href="/login"
+			title={$page.data.session.user?.email}
+		>
 			<div class="text-xs uppercase text-sky-900/75">Logged in as</div>
 			<div class="text-sm font-bold text-sky-900">
 				{$page.data.session.user?.name ?? 'User'}
 			</div>
-		</div>
-
-		<button
-			class="pointer-events-auto rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
-			on:click={() => signOut()}>Logout</button
-		>
+		</a>
 	{:else}
-		<button
+		<a
 			class="pointer-events-auto rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
-			type="button"
-			on:click={() => signIn('github')}
+			href="/login?redirectTo={$page.url.pathname === '/login' ? '/' : $page.url.pathname}"
 		>
-			Login with GitHub
-		</button>
+			Login
+		</a>
 	{/if}
 </header>
