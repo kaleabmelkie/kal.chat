@@ -31,8 +31,8 @@
 >
 	<div
 		class="text-xs font-semibold uppercase text-sky-600 {message.role === 'user'
-			? 'pr-6 text-right'
-			: 'pl-6 text-left'}"
+			? 'text-right'
+			: 'text-left'}"
 	>
 		{message.role === 'user' ? 'You' : 'Kal'}
 	</div>
@@ -40,8 +40,8 @@
 	<article
 		class="prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-sky-600/10 {message.role ===
 		'user'
-			? 'bg-sky-600/90 from-sky-600/25 to-sky-600/0 text-white'
-			: 'bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
+			? 'prose-invert rounded-tr bg-sky-600/90 from-sky-600/25 to-sky-600/0 text-white'
+			: 'rounded-tl bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
 	>
 		<SvelteMarkdown source={message.content} options={markedOptions} />
 	</article>

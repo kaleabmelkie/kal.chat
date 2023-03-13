@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
 	import { enhance } from '$app/forms'
+	import { clickOutside } from '$lib/actions/click-outside'
 	import Header from '$lib/components/header.svelte'
 	import Message from '$lib/components/message.svelte'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -13,6 +15,7 @@
 
 	onMount(() => {
 		scrollToBottom()
+		setUpVoiceTyping()
 	})
 
 	let innerWidth = 0
@@ -23,12 +26,15 @@
 	let bottomEle: HTMLSpanElement | null = null
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let message = ''
+	let isVoiceTyping = false
+	let originalMessage = message
+	let recognition: any
 
 	$: messages = form?.messages ?? data.messages // TODO: remove `form?.messages ?? ` once DB is integrated
 
 	const maxMessageBoxHeight = 420
 	$: {
-		;[innerWidth, innerHeight, message, loading] // deps
+		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps
 		if (messageBoxEle) {
 			messageBoxEle.style.height = `${Math.min(messageBoxEle.scrollHeight, maxMessageBoxHeight)}px`
 			messageBoxEle.style.maxHeight = `${maxMessageBoxHeight}px`
@@ -50,7 +56,7 @@
 
 	setInterval(() => {
 		typingDotCount = (typingDotCount + 1) % 4
-	}, 300)
+	}, 150)
 
 	async function scrollToBottom() {
 		if (!bottomEle) {
@@ -65,11 +71,44 @@
 			bottomEle.scrollIntoView({ behavior: 'smooth' })
 		}, 150)
 	}
+
+	$: isVoiceTypingSupported = browser && 'webkitSpeechRecognition' in window
+
+	async function setUpVoiceTyping() {
+		if (isVoiceTyping || !('webkitSpeechRecognition' in window)) {
+			return
+		}
+		recognition = new (window.webkitSpeechRecognition as any)()
+		recognition.lang = 'en-US'
+		recognition.continuous = true
+		recognition.interimResults = true
+		recognition.onstart = () => {
+			originalMessage = message
+			isVoiceTyping = true
+		}
+		recognition.onresult = (event: { results: { transcript: string }[][] }) => {
+			message = `${originalMessage} ${Array.from(event.results)
+				.map((result) => result[0].transcript)
+				.join('')}`
+		}
+		recognition.onerror = (event: any) => {
+			console.error('Speech recognition error:', event)
+			alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
+			originalMessage = message
+			isVoiceTyping = false
+		}
+		recognition.onend = async () => {
+			originalMessage = message
+			isVoiceTyping = false
+			await tick()
+			messageBoxEle?.focus()
+		}
+	}
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<main class="bg-gradient-to-t from-white to-sky-100 bg-fixed">
+<main class="bg-gradient-to-t from-sky-50 to-sky-100 bg-fixed">
 	<Header />
 
 	<ul
@@ -88,8 +127,7 @@
 						role: 'system',
 						content: `Thinking${[...Array(typingDotCount)].map(() => '.').join('')}`,
 					}}
-					class="animate-pulse"
-					articleClassName="text-sky-900 !shadow-none !bg-transparent !bg-none"
+					articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-sky-900 !shadow-none"
 				/>
 			{/key}
 		{/if}
@@ -170,7 +208,7 @@
 
 		<div class="absolute left-4 right-4 bottom-[3.5rem] flex items-end gap-[calc(0.5rem+3px)]">
 			<button
-				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
+				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
 				type="reset"
 				title="New topic"
 				disabled={loading}
@@ -182,9 +220,12 @@
 				<!-- svelte-ignore a11y-autofocus -->
 				<textarea
 					data-testid="message-box"
-					class="placeholder:text-sky-700/ h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
+					class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTyping
+						? 'animate-pulse'
+						: ''}"
 					name="message"
 					placeholder="Ask me anything..."
+					title="Shit+Enter for a new line"
 					autocapitalize="off"
 					autocomplete="off"
 					spellcheck="false"
@@ -213,7 +254,7 @@
 
 				<button
 					data-testid="send-button"
-					class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/0"
+					class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50"
 					type="submit"
 					name="submitButton"
 					disabled={loading}
@@ -222,15 +263,24 @@
 				</button>
 			</div>
 
-			<button
-				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/0 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
-				type="button"
-				title="Type using voice"
-				disabled={true}
-				on:click={() => alert('TODO: implement voiceInput()')}
-			>
-				<MicSvg />
-			</button>
+			{#if isVoiceTypingSupported}
+				<button
+					class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTyping
+						? 'animate-bounce !bg-sky-500 text-white'
+						: ''}"
+					type="button"
+					title="Type using voice"
+					on:click={() => (isVoiceTyping ? recognition?.stop() : recognition?.start())}
+					on:keypress={(e) => {
+						if (e.key === 'Enter') {
+							e.currentTarget.form?.submitButton?.click()
+						}
+					}}
+					use:clickOutside={() => (isVoiceTyping ? recognition?.stop() : {})}
+				>
+					<MicSvg />
+				</button>
+			{/if}
 		</div>
 	</form>
 
