@@ -7,6 +7,7 @@ specifiers:
   '@sveltejs/adapter-auto': 2.0.0
   '@sveltejs/kit': 1.11.0
   '@tailwindcss/typography': 0.5.9
+  '@types/lodash': 4.14.191
   '@types/marked': 4.0.8
   '@types/prismjs': 1.26.0
   '@typescript-eslint/eslint-plugin': 5.54.1
@@ -17,6 +18,7 @@ specifiers:
   eslint-config-prettier: 8.7.0
   eslint-plugin-svelte3: 4.0.0
   gpt3-tokenizer: 1.1.5
+  lodash: 4.17.21
   openai: 3.2.1
   postcss: 8.4.21
   postcss-load-config: 4.0.1
@@ -39,6 +41,7 @@ devDependencies:
   '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.11.0
   '@sveltejs/kit': 1.11.0_svelte@3.56.0+vite@4.1.4
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
+  '@types/lodash': 4.14.191
   '@types/marked': 4.0.8
   '@types/prismjs': 1.26.0
   '@typescript-eslint/eslint-plugin': 5.54.1_4rfaf6mlw2mmutqjcopwvbftpu
@@ -49,6 +52,7 @@ devDependencies:
   eslint-config-prettier: 8.7.0_eslint@8.36.0
   eslint-plugin-svelte3: 4.0.0_pdvxdpbnzjwxjm7tkjwumh3vqi
   gpt3-tokenizer: 1.1.5
+  lodash: 4.17.21
   openai: 3.2.1
   postcss: 8.4.21
   postcss-load-config: 4.0.1_postcss@8.4.21
@@ -480,6 +484,10 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/marked/4.0.8:
@@ -1454,6 +1462,10 @@ packages:
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+    dev: true
+
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
   /lru-cache/6.0.0:

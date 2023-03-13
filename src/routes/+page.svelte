@@ -9,6 +9,7 @@
 	import RefreshSvg from '$lib/icons/refresh.svg.svelte'
 	import { greetings } from '$lib/utils/greetings'
 	import { onMount, tick } from 'svelte'
+	import orderBy from 'lodash/orderBy'
 
 	export let data
 	export let form
@@ -82,13 +83,14 @@
 		recognition.lang = 'en-US'
 		recognition.continuous = true
 		recognition.interimResults = true
+		recognition.maxAlternatives = 1
 		recognition.onstart = () => {
 			originalMessage = message
 			isVoiceTyping = true
 		}
-		recognition.onresult = (event: { results: { transcript: string }[][] }) => {
+		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
 			message = `${originalMessage} ${Array.from(event.results)
-				.map((result) => result[0].transcript)
+				.map((alternatives) => orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript)
 				.join('')}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
@@ -224,9 +226,9 @@
 				<!-- svelte-ignore a11y-autofocus -->
 				<textarea
 					data-testid="message-box"
-					class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 pr-[calc(1.5rem+3.5rem)] text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTyping
-						? 'animate-pulse'
-						: ''}"
+					class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTypingSupported
+						? 'pr-[calc(1.5rem+3.5rem+3.5rem)]'
+						: 'pr-[calc(1.5rem+3.5rem)]'} {isVoiceTyping ? 'animate-pulse' : ''}"
 					name="message"
 					placeholder="Ask me anything..."
 					title="Shit+Enter for a new line"
@@ -256,6 +258,25 @@
 					}}
 				/>
 
+				{#if isVoiceTypingSupported}
+					<button
+						class="absolute top-0 right-[3.5rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50 {isVoiceTyping
+							? 'animate-ping !bg-transparent !text-sky-500'
+							: ''}"
+						type="button"
+						title="Type using voice"
+						on:click={() => (isVoiceTyping ? recognition?.stop() : recognition?.start())}
+						on:keydown={(e) => {
+							if (e.key === 'Enter') {
+								e.currentTarget.form?.submitButton?.click()
+							}
+						}}
+						use:clickOutside={() => (isVoiceTyping ? recognition?.stop() : {})}
+					>
+						<MicSvg />
+					</button>
+				{/if}
+
 				<button
 					data-testid="send-button"
 					class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50"
@@ -267,24 +288,7 @@
 				</button>
 			</div>
 
-			{#if isVoiceTypingSupported}
-				<button
-					class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTyping
-						? 'animate-bounce !bg-sky-500 text-white'
-						: ''}"
-					type="button"
-					title="Type using voice"
-					on:click={() => (isVoiceTyping ? recognition?.stop() : recognition?.start())}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							e.currentTarget.form?.submitButton?.click()
-						}
-					}}
-					use:clickOutside={() => (isVoiceTyping ? recognition?.stop() : {})}
-				>
-					<MicSvg />
-				</button>
-			{/if}
+			<div class="w-[3.5rem]" />
 		</div>
 	</form>
 
