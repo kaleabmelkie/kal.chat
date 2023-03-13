@@ -288,7 +288,7 @@
 				</button>
 			</div>
 
-			<div class="w-[3.5rem]" />
+			<div class="transition-all {innerWidth >= 16 * (4 + 48 + 4) ? 'w-[3.5rem]' : 'w-0'}" />
 		</div>
 	</form>
 
