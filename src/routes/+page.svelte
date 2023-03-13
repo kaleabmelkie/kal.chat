@@ -89,15 +89,21 @@
 			isVoiceTyping = true
 		}
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
-				.map((alternatives) =>
-					!alternatives.isFinal
-						? null
-						: orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript.trim(),
-				)
-				.filter((a) => a !== null)
-				.join(' ')
-				.trim()}`
+			let newText = ''
+			for (const alternatives of event.results) {
+				if (alternatives.isFinal) {
+					const segment =
+						orderBy(alternatives, (a) => a.confidence, 'desc')[0]?.transcript.trim() ?? ''
+					if (newText.startsWith(segment)) {
+						// android chromium
+						newText = `${segment} `
+					} else {
+						// default behavior
+						newText += `${segment} `
+					}
+				}
+			}
+			message = `${originalMessage.replace(/ $/, '')} ${newText.trim()}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
 			if (!['aborted', 'no-speech'].includes(event.error)) {
@@ -236,7 +242,7 @@
 						? 'pr-[calc(1.5rem+3.5rem+3.5rem)]'
 						: 'pr-[calc(1.5rem+3.5rem)]'} {isVoiceTyping ? 'animate-pulse' : ''}"
 					name="message"
-					placeholder="Ask me anything..."
+					placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
 					title="Shit+Enter for a new line"
 					autocapitalize="off"
 					autocomplete="off"
