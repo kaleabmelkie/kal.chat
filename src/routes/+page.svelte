@@ -28,6 +28,7 @@
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let message = ''
 	let isVoiceTyping = false
+	let originalMessage = message
 	let recognition: any
 
 	$: messages = form?.messages ?? data.messages // TODO: remove `form?.messages ?? ` once DB is integrated
@@ -84,23 +85,31 @@
 		recognition.interimResults = true
 		recognition.maxAlternatives = 1
 		recognition.onstart = () => {
+			originalMessage = message
 			isVoiceTyping = true
 		}
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			message = Array.from(event.results)
-				.map((alternatives) => orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript)
-				.join('')
+			message = `${originalMessage} ${Array.from(event.results)
+				.map((alternatives) =>
+					!alternatives.isFinal
+						? null
+						: orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript,
+				)
+				.filter((a) => a !== null)
+				.join('')}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
 			if (!['aborted', 'no-speech'].includes(event.error)) {
 				console.error('Speech recognition error:', event)
 				alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
 			}
+			originalMessage = message
 			isVoiceTyping = false
 			await tick()
 			messageBoxEle?.focus()
 		}
 		recognition.onend = async () => {
+			originalMessage = message
 			isVoiceTyping = false
 			await tick()
 			messageBoxEle?.focus()
