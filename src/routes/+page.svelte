@@ -93,7 +93,7 @@
 				.map((alternatives) =>
 					!alternatives.isFinal
 						? null
-						: orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript,
+						: orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript.trim(),
 				)
 				.filter((a) => a !== null)
 				.join(' ')
