@@ -6,7 +6,7 @@
 	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex items-center justify-center gap-3 bg-gradient-to-t from-sky-100/0 to-sky-100 p-4"
 >
 	<h1
-		class="bg-sky-600 bg-gradient-to-tr from-sky-700 to-sky-500 bg-clip-text px-4 text-2xl font-black text-transparent"
+		class="bg-sky-600 bg-gradient-to-tr from-sky-700 to-sky-500 bg-clip-text px-2 text-2xl font-black text-transparent"
 	>
 		<a class="pointer-events-auto" href="/">kal.chat</a>
 	</h1>
@@ -15,7 +15,7 @@
 
 	{#if $page.data.session}
 		<a
-			class="pointer-events-auto my-auto flex flex-shrink-0 gap-3 rounded-[1.75rem] bg-white/75 py-1 pr-4 pl-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			class="pointer-events-auto my-auto flex flex-shrink-0 gap-3 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
 			href="/login"
 			title={$page.data.session.user?.email}
 		>
