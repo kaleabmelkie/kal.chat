@@ -11,27 +11,36 @@ export const load = async (event) => {
 		throw redirect(302, `/login?redirectTo=${encodeURIComponent(`/thread/${event.params.id}`)}`)
 	}
 
+	const thread = await prisma.thread.findFirst({
+		where: {
+			id: Number(event.params.id),
+			user: {
+				email: session.user.email,
+			},
+		},
+		orderBy: {
+			id: 'desc',
+		},
+		take: 1,
+		include: {
+			Message: {
+				orderBy: {
+					id: 'asc',
+				},
+			},
+		},
+	})
+
+	if (!thread) {
+		throw error(
+			404,
+			`Thread (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
+		)
+	}
+
 	return {
 		userAgent: event.request.headers.get('user-agent'),
-		thread: prisma.thread.findFirstOrThrow({
-			where: {
-				id: Number(event.params.id),
-				user: {
-					email: session.user.email,
-				},
-			},
-			orderBy: {
-				id: 'desc',
-			},
-			take: 1,
-			include: {
-				Message: {
-					orderBy: {
-						id: 'asc',
-					},
-				},
-			},
-		}),
+		thread,
 	}
 }
 
