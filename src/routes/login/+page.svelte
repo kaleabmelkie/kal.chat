@@ -12,10 +12,20 @@
 		{#if $page.data.session}
 			<h2 class="text-2xl">You're logged in!</h2>
 			<p class="grid gap-2">
-				<span class="mt-4 text-xs uppercase text-sky-900/75">Name</span>
-				<span class="text-lg font-semibold text-sky-600/90">{data.session?.user?.name}</span>
-				<span class="mt-4 text-xs uppercase text-sky-900/75">Email</span>
-				<span class="text-lg font-semibold text-sky-600/90">{data.session?.user?.email}</span>
+				<span class="mt-4 text-xs uppercase text-sky-900/75"> Name </span>
+				<span class="text-lg font-semibold text-sky-700/90">
+					{data.session?.user?.name ?? 'Unknown name'}
+				</span>
+
+				<span class="mt-4 text-xs uppercase text-sky-900/75"> Email </span>
+				<span class="text-lg font-semibold text-sky-700/90">
+					{data.session?.user?.email ?? 'Unknown email'}
+				</span>
+
+				<span class="mt-4 text-xs uppercase text-sky-900/75"> Usage </span>
+				<span class="text-lg font-semibold text-sky-700/90">
+					{data.messagesCount ?? 0} messages in {data.threadsCount ?? 0} threads
+				</span>
 			</p>
 			<div />
 			<a

@@ -1,4 +1,5 @@
 import { authHookConfig } from '$lib/utils/auth-hook.server'
+import { prisma } from '$lib/utils/prisma.server'
 import { redirect } from '@sveltejs/kit'
 
 export async function load(event) {
@@ -11,11 +12,17 @@ export async function load(event) {
 	}
 
 	return {
+		redirectTo: redirectTo ?? '/',
 		providers: authHookConfig.providers.map((p) => ({
 			id: p.id,
 			name: p.name,
 			type: p.type,
 		})),
-		redirectTo: redirectTo ?? '/',
+		threadsCount: prisma.thread.count({
+			where: { user: { email: session.user.email } },
+		}),
+		messagesCount: prisma.message.count({
+			where: { thread: { user: { email: session.user.email } } },
+		}),
 	}
 }
