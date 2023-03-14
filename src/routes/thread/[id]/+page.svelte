@@ -246,9 +246,8 @@
 			<textarea
 				data-testid="message-box"
 				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTypingSupported
-					? 'pr-[calc(1.5rem+3.5rem+3.5rem)]'
-					: 'pr-[calc(1.5rem+3.5rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensUsed >
-				maxTokens
+					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
+					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensUsed > maxTokens
 					? '!ring-red-600/75 !ring-offset-red-50'
 					: ''}"
 				name="message"
@@ -282,7 +281,7 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="absolute top-0 right-[3.5rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50 {isVoiceTyping
+					class="absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50 {isVoiceTyping
 						? 'animate-ping !bg-transparent !text-sky-500'
 						: ''}"
 					type="button"
@@ -301,7 +300,7 @@
 
 			<button
 				data-testid="send-button"
-				class="absolute top-0 right-0 bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50"
+				class="absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50"
 				type="submit"
 				disabled={loading}
 				bind:this={submitButtonEle}
