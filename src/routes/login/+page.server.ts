@@ -18,11 +18,11 @@ export async function load(event) {
 			name: p.name,
 			type: p.type,
 		})),
-		threadsCount: prisma.thread.count({
-			where: { user: { email: session.user.email } },
-		}),
-		messagesCount: prisma.message.count({
-			where: { thread: { user: { email: session.user.email } } },
-		}),
+		threadsCount: !session?.user?.email
+			? 0
+			: prisma.thread.count({ where: { user: { email: session.user.email } } }),
+		messagesCount: !session?.user?.email
+			? 0
+			: prisma.message.count({ where: { thread: { user: { email: session.user.email } } } }),
 	}
 }
