@@ -8,7 +8,7 @@ import type { ChatCompletionRequestMessage } from 'openai'
 export const load = async (event) => {
 	const { session } = await event.parent()
 	if (!session?.user?.email) {
-		throw redirect(302, `/login?redirectTo=/thread/${event.params.id}`)
+		throw redirect(302, `/login?redirectTo=${encodeURIComponent(`/thread/${event.params.id}`)}`)
 	}
 
 	return {
@@ -50,7 +50,7 @@ export const actions = {
 
 		const session = await event.locals.getSession()
 		if (!session?.user?.email) {
-			throw redirect(302, `/login?redirectTo=/thread/${threadId}`)
+			throw redirect(302, `/login?redirectTo=${encodeURIComponent(`/thread/${threadId}`)}`)
 		}
 
 		const oldMessages = (

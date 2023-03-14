@@ -14,8 +14,12 @@
 	<div class="flex-1" />
 
 	{#if $page.data.session}
-		{#if $page.data.session.user?.image}
-			<a class="pointer-events-auto my-auto" href="/login" title={$page.data.session.user?.email}>
+		<a
+			class="pointer-events-auto my-auto flex flex-shrink-0 gap-3 rounded-[1.75rem] bg-white/75 py-1 pr-4 pl-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			href="/login"
+			title={$page.data.session.user?.email}
+		>
+			{#if $page.data.session.user?.image}
 				<img
 					class="h-[2.25rem] w-[2.25rem] rounded-full bg-white/90 object-cover shadow shadow-sky-900/10"
 					alt=""
@@ -24,23 +28,21 @@
 							$page.data.session.user?.name ?? 'User'
 						}&background=random&format=svg`}
 				/>
-			</a>
-		{/if}
+			{/if}
 
-		<a
-			class="pointer-events-auto my-auto hidden sm:grid"
-			href="/login"
-			title={$page.data.session.user?.email}
-		>
-			<div class="text-xs uppercase text-sky-900/75">Logged in as</div>
-			<div class="text-sm font-bold text-sky-900">
-				{$page.data.session.user?.name ?? 'User'}
+			<div class="pointer-events-auto my-auto hidden sm:grid">
+				<div class="text-xs uppercase text-sky-900/75">Logged in as</div>
+				<div class="text-sm font-bold text-sky-900">
+					{$page.data.session.user?.name ?? 'User'}
+				</div>
 			</div>
 		</a>
 	{:else}
 		<a
 			class="pointer-events-auto rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
-			href="/login?redirectTo={$page.url.pathname === '/login' ? '/' : $page.url.pathname}"
+			href="/login?redirectTo={encodeURIComponent(
+				$page.url.pathname === '/login' ? '/' : $page.url.pathname,
+			)}"
 		>
 			Login
 		</a>

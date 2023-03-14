@@ -4,7 +4,7 @@ import { redirect } from '@sveltejs/kit'
 export const load = async (event) => {
 	const { session } = await event.parent()
 	if (!session?.user?.email) {
-		throw redirect(302, `/login?redirectTo=/thread/latest`)
+		throw redirect(302, `/login?redirectTo=${encodeURIComponent(`/thread/latest`)}`)
 	}
 
 	const thread = await prisma.thread.findFirst({
