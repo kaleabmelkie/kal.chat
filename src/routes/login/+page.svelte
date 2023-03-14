@@ -50,26 +50,28 @@
 		{:else}
 			<h2 class="text-2xl">Continue with</h2>
 			<div />
-			<button
-				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-sky-600/75 py-3 px-4 text-lg font-semibold text-white backdrop-blur transition-all duration-150 hover:bg-sky-600/90 hover:shadow hover:shadow-sky-600/10 focus:bg-sky-600/90 active:bg-sky-600/50 active:shadow-none disabled:animate-pulse disabled:bg-sky-600/25"
-				type="button"
-				disabled={isActive}
-				on:click={async () => {
-					isActive = true
-					try {
-						await signIn('github', {
-							callbackUrl: data.redirectTo,
-						})
-					} catch (e) {
-						// @ts-ignore
-						alert(`Sign in error: ${e?.message}`)
-					} finally {
-						isActive = false
-					}
-				}}
-			>
-				GitHub
-			</button>
+			{#each data.providers as provider (provider.id)}
+				<button
+					class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/75 py-3 px-4 text-lg text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none disabled:animate-pulse disabled:bg-white/25"
+					type="button"
+					disabled={isActive}
+					on:click={async () => {
+						isActive = true
+						try {
+							await signIn(provider.id, {
+								callbackUrl: data.redirectTo,
+							})
+						} catch (e) {
+							// @ts-ignore
+							alert(`Sign in error: ${e?.message}`)
+						} finally {
+							isActive = false
+						}
+					}}
+				>
+					{provider.name}
+				</button>
+			{/each}
 		{/if}
 	</div>
 </div>

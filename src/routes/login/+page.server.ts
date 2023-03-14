@@ -1,3 +1,4 @@
+import { authHookConfig } from '$lib/utils/auth-hook.server'
 import { redirect } from '@sveltejs/kit'
 
 export async function load(event) {
@@ -10,6 +11,11 @@ export async function load(event) {
 	}
 
 	return {
+		providers: authHookConfig.providers.map((p) => ({
+			id: p.id,
+			name: p.name,
+			type: p.type,
+		})),
 		redirectTo: redirectTo ?? '/',
 	}
 }

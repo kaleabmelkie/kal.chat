@@ -15,14 +15,16 @@
 
 	{#if $page.data.session}
 		{#if $page.data.session.user?.image}
-			<img
-				class="pointer-events-auto h-[2.25rem] w-[2.25rem] rounded-full bg-white/90 object-cover shadow shadow-sky-900/10"
-				alt=""
-				src={$page.data.session.user?.image ??
-					`https://ui-avatars.com/api/?name=${
-						$page.data.session.user?.name ?? 'User'
-					}&background=random&format=svg`}
-			/>
+			<a class="pointer-events-auto my-auto" href="/login" title={$page.data.session.user?.email}>
+				<img
+					class="h-[2.25rem] w-[2.25rem] rounded-full bg-white/90 object-cover shadow shadow-sky-900/10"
+					alt=""
+					src={$page.data.session.user?.image ??
+						`https://ui-avatars.com/api/?name=${
+							$page.data.session.user?.name ?? 'User'
+						}&background=random&format=svg`}
+				/>
+			</a>
 		{/if}
 
 		<a
