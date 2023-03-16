@@ -1,6 +1,6 @@
 <script lang="ts">
 	// prism import must come first
-	import { highlight, languages, plugins } from 'prismjs'
+	import Prism from 'prismjs'
 	import 'prismjs/themes/prism-okaidia.min.css'
 	// them prism plugins can follow
 	import 'prismjs/plugins/autoloader/prism-autoloader.js'
@@ -16,13 +16,16 @@
 	export let articleClassName = ''
 	export let message: ChatCompletionRequestMessage
 
-	$: if (plugins.autoloader) {
-		plugins.autoloader.languages_path = '../../../node_modules/prismjs/components/'
+	$: if (Prism.plugins.autoloader) {
+		Prism.plugins.autoloader.languages_path = '../../../node_modules/prismjs/components/'
 	}
 
 	$: parsedContent = marked(message.content, {
 		highlight: (code, lang, callback) => {
-			callback?.(null, languages[lang] ? highlight(code, languages[lang], lang) : code)
+			callback?.(
+				null,
+				Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
+			)
 		},
 		breaks: true,
 		gfm: true,
