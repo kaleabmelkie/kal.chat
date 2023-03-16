@@ -1,3 +1,4 @@
+import { dev } from '$app/environment'
 import {
 	AUTH_DISCORD_ID,
 	AUTH_DISCORD_SECRET,
@@ -87,8 +88,10 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			  }),
 	].filter((p) => p !== null),
 
-	trustHost: true,
 	secret: AUTH_SECRET,
+
+	trustHost: true,
+	useSecureCookies: !dev,
 
 	callbacks: {
 		signIn: async (params) => {
