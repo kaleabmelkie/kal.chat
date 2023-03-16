@@ -1,6 +1,8 @@
 import { authHookConfig } from '$lib/utils/auth-hook.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { redirect } from '@sveltejs/kit'
+import type { OAuth2Config, OIDCConfig } from '@auth/core/src/providers/oauth'
+import type { Profile } from '@auth/core/types'
 
 export async function load(event) {
 	const { session } = await event.parent()
@@ -13,11 +15,14 @@ export async function load(event) {
 
 	return {
 		redirectTo: redirectTo ?? '/',
-		providers: authHookConfig.providers.map((p) => ({
-			id: p.id,
-			name: p.name,
-			type: p.type,
-		})),
+		providers: authHookConfig.providers
+			.filter((p) => p.type === 'oauth' || p.type === 'oidc')
+			.map((p) => ({
+				id: p.id,
+				name: p.name,
+				type: p.type,
+				style: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).style,
+			})),
 		threadsCount: !session?.user?.email
 			? 0
 			: prisma.thread.count({ where: { user: { email: session.user.email } } }),

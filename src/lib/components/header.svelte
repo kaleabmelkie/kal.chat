@@ -16,7 +16,7 @@
 	{#if $page.data.session}
 		<a
 			class="pointer-events-auto my-auto flex flex-shrink-0 gap-3 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
-			href="/login"
+			href="/account"
 			title={$page.data.session.user?.email}
 		>
 			{#if $page.data.session.user?.image}
@@ -37,12 +37,10 @@
 				</div>
 			</div>
 		</a>
-	{:else}
+	{:else if $page.url.pathname !== '/account'}
 		<a
 			class="pointer-events-auto rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
-			href="/login?redirectTo={encodeURIComponent(
-				$page.url.pathname === '/login' ? '/' : $page.url.pathname,
-			)}"
+			href="/account?redirectTo={encodeURIComponent($page.url.pathname)}"
 		>
 			Login
 		</a>

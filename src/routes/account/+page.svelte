@@ -62,7 +62,10 @@
 			<div />
 			{#each data.providers as provider (provider.id)}
 				<button
-					class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/75 py-3 px-4 text-lg text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none disabled:animate-pulse disabled:bg-white/25"
+					class="pointer-events-auto flex w-full items-center justify-center gap-4 rounded-[1.75rem] bg-white/75 py-3 px-4 text-lg font-semibold text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none disabled:animate-pulse disabled:bg-white/25"
+					style={provider.style?.bgDark && provider.style.textDark
+						? `background-color: ${provider.style.bgDark}; color: ${provider.style.textDark};`
+						: ''}
 					type="button"
 					disabled={isActive}
 					on:click={async () => {
@@ -79,7 +82,14 @@
 						}
 					}}
 				>
-					{provider.name}
+					{#if provider.style?.logo}
+						<img
+							class="block h-6 w-6 {provider.style.bgDark !== '#fff' ? 'invert' : ''}"
+							src="/assets/social-login-provider-icons{provider.style.logo}"
+							alt={provider.name}
+						/>
+					{/if}
+					<div class="flex-1 pr-10 text-center">{provider.name}</div>
 				</button>
 			{/each}
 		{/if}
