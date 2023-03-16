@@ -17,7 +17,7 @@
 	export let message: ChatCompletionRequestMessage
 
 	$: if (Prism.plugins.autoloader) {
-		Prism.plugins.autoloader.languages_path = '/prismjs-components/'
+		Prism.plugins.autoloader.languages_path = '../../../node_modules/prismjs/components/'
 	}
 
 	$: parsedContent = marked(message.content, {
