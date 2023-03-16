@@ -1,8 +1,13 @@
 <script lang="ts">
+	// prism import must come first
+	import { highlight, languages, plugins } from 'prismjs'
+	import 'prismjs/themes/prism-okaidia.min.css'
+	// them prism plugins can follow
+	import 'prismjs/plugins/autoloader/prism-autoloader.js'
+
+	// normal imports
 	import { marked } from 'marked'
 	import type { ChatCompletionRequestMessage } from 'openai'
-	import { highlight, languages } from 'prismjs'
-	import 'prismjs/themes/prism-okaidia.min.css'
 	import sanitizeHtml from 'sanitize-html'
 	import { slide } from 'svelte/transition'
 
@@ -11,9 +16,14 @@
 	export let articleClassName = ''
 	export let message: ChatCompletionRequestMessage
 
+	$: if (plugins.autoloader) {
+		plugins.autoloader.languages_path = '../../../node_modules/prismjs/components/'
+	}
+
 	$: parsedContent = marked(message.content, {
-		highlight: (code, lang, callback) =>
-			callback?.(null, languages[lang] ? highlight(code, languages[lang], lang) : code),
+		highlight: (code, lang, callback) => {
+			callback?.(null, languages[lang] ? highlight(code, languages[lang], lang) : code)
+		},
 		breaks: true,
 		gfm: true,
 		mangle: false,
@@ -47,7 +57,7 @@
 				pre: [/^language-/],
 				code: [/^language-/],
 			},
-		})})}
+		})}
 	</article>
 </li>
 
