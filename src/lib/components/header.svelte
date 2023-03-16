@@ -3,7 +3,7 @@
 </script>
 
 <header
-	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex items-center justify-center gap-3 bg-gradient-to-t from-sky-100/0 to-sky-100 p-4"
+	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-sky-100/0 to-sky-100 p-4"
 >
 	<h1
 		class="bg-sky-600 bg-gradient-to-tr from-sky-700 to-sky-500 bg-clip-text px-2 text-2xl font-black text-transparent"
@@ -15,7 +15,14 @@
 
 	{#if $page.data.session}
 		<a
-			class="pointer-events-auto my-auto flex flex-shrink-0 gap-3 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
+			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			href="https://kal-chat.lemonsqueezy.com/checkout/buy/53c40b0d-973a-4437-8868-a489dbf8eb8f"
+		>
+			<div>✨</div>
+			<div class="pr-2">Upgrade</div>
+		</a>
+		<a
+			class="pointer-events-auto my-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
 			href="/account"
 			title={$page.data.session.user?.email}
 		>
@@ -39,10 +46,10 @@
 		</a>
 	{:else if $page.url.pathname !== '/account'}
 		<a
-			class="pointer-events-auto rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
 			href="/account?redirectTo={encodeURIComponent($page.url.pathname)}"
 		>
-			Login
+			<div>Login</div>
 		</a>
 	{/if}
 </header>
