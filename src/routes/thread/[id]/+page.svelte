@@ -311,7 +311,7 @@
 			<span class="pointer-events-auto font-semibold text-red-500"> tokens over</span>
 		{:else}
 			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensUsed}</span>
-			<span class="pointer-events-auto text-sky-900/50"> tokens used</span>
+			<span class="pointer-events-auto text-sky-900/50"> tokens</span>
 		{/if}
 	</div>
 </form>

@@ -25,7 +25,7 @@
 		"@playwright/test": "1.31.2",
 		"@prisma/client": "4.11.0",
 		"@sveltejs/adapter-auto": "2.0.0",
-		"@sveltejs/kit": "1.11.0",
+		"@sveltejs/kit": "1.12.0",
 		"@tailwindcss/typography": "0.5.9",
 		"@types/lodash": "4.14.191",
 		"@types/marked": "4.0.8",
