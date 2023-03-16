@@ -7,10 +7,11 @@
 	import Message from '$lib/components/message.svelte'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
-	import RefreshSvg from '$lib/icons/refresh.svg.svelte'
+	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { systemPrompt } from '$lib/utils/system-prompt'
 	import { countTokens } from '$lib/utils/tokenizer'
 	import Bowser from 'bowser'
+	import { update } from 'lodash'
 	import orderBy from 'lodash/orderBy'
 	import { onMount, tick } from 'svelte'
 
@@ -159,7 +160,7 @@
 	on:reset|preventDefault={async () => {
 		if (
 			data.thread.Message.length <= 1 ||
-			confirm('Are you sure you want to start a new topic? Your current conversation will be lost.')
+			confirm('Are you sure you want to start a new thread?')
 		) {
 			await goto('/thread/new')
 		}
@@ -179,6 +180,7 @@
 					? data.thread.Message[data.thread.Message.length - 1].id + 1
 					: 0, // to be replaced
 				createdAt: new Date(), // to be replaced
+				updatedAt: new Date(), // to be replaced
 				role: 'user',
 				content: form.message.value,
 				threadId: Number($page.params.id), // to be replaced
@@ -238,7 +240,7 @@
 			title="New topic"
 			disabled={loading}
 		>
-			<RefreshSvg />
+			<PlusSvg />
 		</button>
 
 		<div class="group pointer-events-auto relative flex flex-1">
