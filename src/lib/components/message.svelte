@@ -2,12 +2,13 @@
 	// prism import must come first
 	import Prism from 'prismjs'
 	import 'prismjs/themes/prism-okaidia.min.css'
-	// them prism plugins can follow
+	// then, prism plugins can follow
 	import 'prismjs/plugins/autoloader/prism-autoloader.js'
 
 	// normal imports
 	import { marked } from 'marked'
 	import type { ChatCompletionRequestMessage } from 'openai'
+	import loadLanguages from 'prismjs/components/'
 	import sanitizeHtml from 'sanitize-html'
 	import { slide } from 'svelte/transition'
 
@@ -22,6 +23,7 @@
 
 	$: parsedContent = marked(message.content, {
 		highlight: (code, lang, callback) => {
+			loadLanguages([lang])
 			callback?.(
 				null,
 				Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
@@ -70,6 +72,6 @@
 	}
 
 	article :global(pre) {
-		@apply text-sm leading-6;
+		@apply bg-black bg-gradient-to-tr from-sky-600/30 to-sky-400/30 text-sm leading-6;
 	}
 </style>
