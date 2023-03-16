@@ -2,6 +2,11 @@
 	import { page } from '$app/stores'
 </script>
 
+<svelte:head>
+	<!-- TODO: have a unique title per page -->
+	<title>kal.chat</title>
+</svelte:head>
+
 <header
 	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-sky-100/0 to-sky-100 p-4"
 >
@@ -18,8 +23,13 @@
 			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
 			href="https://kal-chat.lemonsqueezy.com/checkout/buy/53c40b0d-973a-4437-8868-a489dbf8eb8f"
 		>
-			<div>✨</div>
-			<div class="pr-2">Upgrade</div>
+			<div>🎁</div>
+			<div class="pr-2">Subscribe</div>
+			<!--
+				// TODO: change to upgrade
+				<div>✨</div>
+				<div class="pr-2">Upgrade</div>
+			-->
 		</a>
 		<a
 			class="pointer-events-auto my-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
