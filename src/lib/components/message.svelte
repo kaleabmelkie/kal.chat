@@ -23,7 +23,11 @@
 
 	$: parsedContent = marked(message.content, {
 		highlight: (code, lang, callback) => {
-			loadLanguages([lang])
+			try {
+				loadLanguages([lang])
+			} catch {
+				// do nothing
+			}
 			callback?.(
 				null,
 				Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
