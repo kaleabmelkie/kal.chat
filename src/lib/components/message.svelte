@@ -2,8 +2,16 @@
 	// prism import must come first
 	import Prism from 'prismjs'
 	import 'prismjs/themes/prism-okaidia.min.css'
-	// then, prism plugins can follow
+
+	// then, prism plugins can follow (don't auto-sort, order matters)
 	import 'prismjs/plugins/autoloader/prism-autoloader.js'
+	import 'prismjs/plugins/autolinker/prism-autolinker.css'
+	import 'prismjs/plugins/autolinker/prism-autolinker.js'
+	import 'prismjs/plugins/match-braces/prism-match-braces.css'
+	import 'prismjs/plugins/match-braces/prism-match-braces.js'
+	import 'prismjs/plugins/toolbar/prism-toolbar.css'
+	import 'prismjs/plugins/toolbar/prism-toolbar.js'
+	import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
 
 	// normal imports
 	import { marked } from 'marked'
@@ -36,6 +44,7 @@
 		breaks: true,
 		gfm: true,
 		mangle: false,
+		silent: true,
 		smartLists: true,
 		smartypants: true,
 	})
@@ -56,7 +65,7 @@
 	</div>
 
 	<article
-		class="prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-sky-600/10 {message.role ===
+		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-sky-600/10 {message.role ===
 		'user'
 			? 'prose-invert rounded-tr bg-sky-600/90 from-sky-600/25 to-sky-600/0 text-white'
 			: 'rounded-tl bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
