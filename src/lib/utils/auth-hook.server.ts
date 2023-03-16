@@ -89,8 +89,6 @@ export const authHookConfig: SvelteKitAuthConfig = {
 	].filter((p) => p !== null),
 
 	secret: AUTH_SECRET,
-
-	trustHost: true,
 	useSecureCookies: !dev,
 
 	callbacks: {
