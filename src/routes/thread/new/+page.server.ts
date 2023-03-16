@@ -1,4 +1,4 @@
-import { greetings } from '$lib/utils/greetings'
+import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { systemPrompt } from '$lib/utils/system-prompt'
 import { redirect } from '@sveltejs/kit'
@@ -25,7 +25,7 @@ export const load = async (event) => {
 						},
 						{
 							role: 'assistant',
-							content: greetings[Math.floor(Math.random() * greetings.length)],
+							content: generateGreeting(session.user.name ?? 'pal'),
 						},
 					],
 				},
