@@ -1,7 +1,9 @@
 <script lang="ts">
-	import type { marked } from 'marked'
+	import { marked } from 'marked'
 	import type { ChatCompletionRequestMessage } from 'openai'
-	import SvelteMarkdown from 'svelte-markdown'
+	import { highlight, languages } from 'prismjs'
+	import 'prismjs/themes/prism-okaidia.min.css'
+	import sanitizeHtml from 'sanitize-html'
 	import { slide } from 'svelte/transition'
 
 	let className = ''
@@ -9,18 +11,15 @@
 	export let articleClassName = ''
 	export let message: ChatCompletionRequestMessage
 
-	$: markedOptions = {
-		// TODO: fix and enable code highlighting
-		// highlight: function (code, lang) {
-		// 	return languages[lang] ? highlight(code, languages[lang], lang) : code
-		// },
+	$: parsedContent = marked(message.content, {
+		highlight: (code, lang, callback) =>
+			callback?.(null, languages[lang] ? highlight(code, languages[lang], lang) : code),
 		breaks: true,
 		gfm: true,
 		mangle: false,
-		sanitize: true,
 		smartLists: true,
 		smartypants: true,
-	} satisfies marked.MarkedOptions
+	})
 </script>
 
 <li
@@ -43,7 +42,12 @@
 			? 'prose-invert rounded-tr bg-sky-600/90 from-sky-600/25 to-sky-600/0 text-white'
 			: 'rounded-tl bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
 	>
-		<SvelteMarkdown source={message.content} options={markedOptions} />
+		{@html sanitizeHtml(parsedContent, {
+			allowedClasses: {
+				pre: [/^language-/],
+				code: [/^language-/],
+			},
+		})})}
 	</article>
 </li>
 

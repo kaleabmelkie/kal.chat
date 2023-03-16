@@ -11,7 +11,6 @@
 	import { systemPrompt } from '$lib/utils/system-prompt'
 	import { countTokens } from '$lib/utils/tokenizer'
 	import Bowser from 'bowser'
-	import { update } from 'lodash'
 	import orderBy from 'lodash/orderBy'
 	import { onMount, tick } from 'svelte'
 
@@ -133,7 +132,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <ul
-	class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 p-4 pb-[calc(2rem+1rem+8rem)]"
+	class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 scroll-smooth p-4 pb-[calc(2rem+1rem+8rem)]"
 	bind:this={messagesListEle}
 >
 	<div class="min-h-[3.5rem] flex-1" />
@@ -157,14 +156,6 @@
 	class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mx-auto grid h-[8rem] w-full max-w-[calc(4rem+48rem+4rem)] gap-1 p-4"
 	method="POST"
 	action="?/newMessage"
-	on:reset|preventDefault={async () => {
-		if (
-			data.thread.Message.length <= 1 ||
-			confirm('Are you sure you want to start a new thread?')
-		) {
-			await goto('/thread/new')
-		}
-	}}
 	use:enhance={async ({ form }) => {
 		if (loading) {
 			return
@@ -234,20 +225,19 @@
 	/>
 
 	<div class="flex h-[3.5rem] items-end gap-[calc(0.5rem+3px)]">
-		<button
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100"
-			type="reset"
-			title="New topic"
-			disabled={loading}
+		<a
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/90 text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 transition-all duration-150 hover:bg-white hover:shadow-sky-900/30 focus:bg-white active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0"
+			title="New thread"
+			href="/thread/new"
 		>
 			<PlusSvg />
-		</button>
+		</a>
 
 		<div class="group pointer-events-auto relative flex flex-1">
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/75 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 backdrop-blur backdrop-saturate-200 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white/95 hover:shadow-sky-900/30 focus:bg-white/95 focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 disabled:backdrop-blur-sm disabled:backdrop-saturate-100 {isVoiceTypingSupported
+				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-sky-900/30 focus:bg-white focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensUsed > maxTokens
 					? '!ring-red-600/75 !ring-offset-red-50'
