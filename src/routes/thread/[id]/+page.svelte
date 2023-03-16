@@ -132,7 +132,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <ul
-	class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 scroll-smooth p-4 pb-[calc(2rem+1rem+8rem)]"
+	class="mx-auto flex min-h-screen max-w-[48rem] transform-gpu flex-col gap-6 scroll-smooth p-4 pb-[calc(2rem+1rem+8rem)]"
 	bind:this={messagesListEle}
 >
 	<div class="min-h-[3.5rem] flex-1" />

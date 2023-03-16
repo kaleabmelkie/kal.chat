@@ -23,7 +23,7 @@
 
 	{#if $page.data.session}
 		<a
-			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 py-2 px-4 text-sm font-semibold uppercase text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none"
 			href="https://kal-chat.lemonsqueezy.com/checkout/buy/53c40b0d-973a-4437-8868-a489dbf8eb8f"
 		>
 			<div>🎁</div>
@@ -35,7 +35,7 @@
 			-->
 		</a>
 		<a
-			class="pointer-events-auto my-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-1 px-1 text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none sm:pr-4"
+			class="pointer-events-auto my-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 py-1 px-1 text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:pr-4"
 			href="/account"
 			title={$page.data.session.user?.email}
 		>
@@ -59,7 +59,7 @@
 		</a>
 	{:else if $page.url.pathname !== '/account'}
 		<a
-			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/75 py-2 px-4 text-sm font-semibold uppercase text-sky-600 backdrop-blur transition-all duration-150 hover:bg-white/90 hover:shadow hover:shadow-sky-600/10 focus:bg-white/90 active:bg-white/50 active:shadow-none"
+			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 py-2 px-4 text-sm font-semibold uppercase text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none"
 			href="/account?redirectTo={encodeURIComponent($page.url.pathname)}"
 		>
 			<div>Login</div>
