@@ -37,7 +37,7 @@
 	let submitButtonEle: HTMLButtonElement | null = null
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
-	$: tokensUsed = countTokens(
+	$: tokensActive = countTokens(
 		[systemPrompt, ...data.thread.Message.map((m) => m.content), message].join(''),
 	)
 
@@ -239,7 +239,8 @@
 				data-testid="message-box"
 				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-sky-900/30 focus:bg-white focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
-					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensUsed > maxTokens
+					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
+				maxTokens
 					? '!ring-red-600/75 !ring-offset-red-50'
 					: ''}"
 				name="message"
@@ -306,12 +307,12 @@
 		class="mt-3 text-right text-sm"
 		title="Counts total tokens of the system prompt, the last 10 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
-		{#if tokensUsed > maxTokens}
-			<span class="pointer-events-auto font-black text-red-500">{tokensUsed - maxTokens}</span>
+		{#if tokensActive > maxTokens}
+			<span class="pointer-events-auto font-black text-red-500">{tokensActive - maxTokens}</span>
 			<span class="pointer-events-auto font-semibold text-red-500"> tokens over</span>
 		{:else}
-			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensUsed}</span>
-			<span class="pointer-events-auto text-sky-900/50"> tokens</span>
+			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensActive}</span>
+			<span class="pointer-events-auto text-sky-900/50"> tokens active </span>
 		{/if}
 	</div>
 </form>
