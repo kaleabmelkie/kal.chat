@@ -41,7 +41,7 @@ model Message {
   updatedAt DateTime @updatedAt
 
   role    RoleType
-  content String   @db.VarChar(8192)
+  content String   @db.VarChar(15000)
 
   thread   Thread @relation(fields: [threadId], references: [id])
   threadId Int
