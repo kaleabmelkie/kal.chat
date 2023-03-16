@@ -27,13 +27,13 @@
 	{#if $page.data.session}
 		<a
 			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 py-2 px-4 text-sm font-semibold uppercase text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none"
-			href="https://kal-chat.lemonsqueezy.com/checkout/buy/53c40b0d-973a-4437-8868-a489dbf8eb8f"
+			href="https://checkout.kal.chat/checkout?cart=afe7324f-9d8e-4e76-b7bc-241da0f42f93"
 		>
-			<div>🎁</div>
-			<div class="pr-2">Subscribe</div>
+			<div class="text-lg">🎁</div>
+			<div class="pr-1">Gift</div>
 			<!--
 				// TODO: change to above to the below after fully integrating with Lemon Squeezy 
-				<div>✨</div>
+				<div class="text-lg">✨</div>
 				<div class="pr-2">Upgrade</div>
 			-->
 		</a>
