@@ -1,6 +1,6 @@
 import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { systemPrompt } from '$lib/utils/generate-system-prompt.server'
+import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { redirect } from '@sveltejs/kit'
 
 export const load = async (event) => {
@@ -21,7 +21,7 @@ export const load = async (event) => {
 					data: [
 						{
 							role: 'system',
-							content: systemPrompt,
+							content: generateSystemPrompt(session.user.name ?? undefined),
 						},
 						{
 							role: 'assistant',
