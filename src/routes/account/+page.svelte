@@ -30,9 +30,9 @@
 			<div />
 			<a
 				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
-				href="/"
+				href="/thread/latest"
 			>
-				Go home
+				Go chat
 			</a>
 			<button
 				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-red-500 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
