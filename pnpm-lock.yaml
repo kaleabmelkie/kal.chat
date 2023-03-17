@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@auth/core': 0.5.1
   '@auth/sveltekit': 0.3.0
+  '@builder.io/partytown': 0.7.5
   '@playwright/test': 1.31.2
   '@prisma/client': 4.11.0
   '@sveltejs/adapter-auto': 2.0.0
@@ -43,6 +44,7 @@ specifiers:
 devDependencies:
   '@auth/core': 0.5.1
   '@auth/sveltekit': 0.3.0_6xu4n6hfcghv434xktvtcjkjq4
+  '@builder.io/partytown': 0.7.5
   '@playwright/test': 1.31.2
   '@prisma/client': 4.11.0_prisma@4.11.0
   '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.12.0
@@ -109,6 +111,11 @@ packages:
       svelte: 3.57.0
     transitivePeerDependencies:
       - nodemailer
+    dev: true
+
+  /@builder.io/partytown/0.7.5:
+    resolution: {integrity: sha512-Zbr2Eo0AQ4yzmQr/36/h+6LKjmdVBB3Q5cGzO6rtlIKB/IOpbQVUZW+XAnhpJmJr9sIF97OZjgbhG9k7Sjn4yw==}
+    hasBin: true
     dev: true
 
   /@esbuild/android-arm/0.17.11:

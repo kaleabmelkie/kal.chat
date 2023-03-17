@@ -1,11 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" class="text-[14px] transition-[font-size] duration-150 sm:text-[16px]">
+<html lang="en" class="bg-sky-600 text-[14px] transition-[font-size] duration-150 sm:text-[16px]">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
+
+		<meta name="description" content="A nicer chat interface for OpenAI's GPT model." />
+
+		<meta name="theme-color" content="#0284C7" />
+
+		<script src="%sveltekit.assets%/~partytown/partytown.js"></script>
+		<script>
+			partytown = {
+				forward: ['dataLayer.push'],
+			}
+		</script>
+
+		<script type="text/partytown">
+			;(function (w, d, s, l, i) {
+				w[l] = w[l] || []
+				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : ''
+				j.async = true
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+				f.parentNode.insertBefore(j, f)
+			})(window, document, 'script', 'dataLayer', 'GTM-T4J9SKX')
+		</script>
+
 		%sveltekit.head%
 	</head>
+
 	<body data-sveltekit-preload-code="viewport" data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>

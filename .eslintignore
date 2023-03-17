@@ -7,6 +7,7 @@ node_modules
 .env.*
 !.env.example
 *.min.*
+/static/~partytown
 .vscode
 .vercel
 

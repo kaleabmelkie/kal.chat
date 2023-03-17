@@ -22,6 +22,7 @@
 	"devDependencies": {
 		"@auth/core": "0.5.1",
 		"@auth/sveltekit": "0.3.0",
+		"@builder.io/partytown": "0.7.5",
 		"@playwright/test": "1.31.2",
 		"@prisma/client": "4.11.0",
 		"@sveltejs/adapter-auto": "2.0.0",
