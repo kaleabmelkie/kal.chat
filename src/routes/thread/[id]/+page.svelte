@@ -225,6 +225,7 @@
 
 	<div class="flex h-[3.5rem] items-end gap-[calc(0.5rem+3px)]">
 		<a
+			data-sveltekit-preload-data="tap"
 			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/90 text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 transition-all duration-150 hover:bg-white hover:shadow-sky-900/30 focus:bg-white active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0"
 			title="New thread"
 			href="/thread/new"
