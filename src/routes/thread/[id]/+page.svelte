@@ -246,6 +246,7 @@
 				name="message"
 				placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
 				title="Shit+Enter for a new line"
+				maxlength={15000}
 				autocapitalize="off"
 				autocomplete="off"
 				spellcheck="false"
