@@ -1,6 +1,6 @@
 import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { systemPrompt } from '$lib/utils/system-prompt'
+import { systemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { redirect } from '@sveltejs/kit'
 
 export const load = async (event) => {

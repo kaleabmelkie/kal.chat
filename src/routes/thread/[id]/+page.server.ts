@@ -1,9 +1,12 @@
+import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { systemPrompt } from '$lib/utils/system-prompt'
 import { countTokens } from '$lib/utils/tokenizer'
 import { error, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
+
+const modelName = 'gpt-3.5-turbo' as const
+const maxTokens = 4000 as const
 
 export const load = async (event) => {
 	const { session } = await event.parent()
@@ -65,6 +68,7 @@ export const actions = {
 		const oldMessages = (
 			await prisma.message.findMany({
 				where: {
+					role: { in: ['assistant', 'user'] },
 					thread: {
 						id: threadId,
 						user: {
@@ -72,14 +76,17 @@ export const actions = {
 						},
 					},
 				},
-				take: 9,
+				take: 14,
 				orderBy: {
 					id: 'desc',
 				},
 			})
 		).reverse()
 
+		const systemPrompt = generateSystemPrompt(session.user.name ?? undefined)
+
 		const recentRequestMessages: ChatCompletionRequestMessage[] = [
+			{ role: 'system', content: systemPrompt },
 			...oldMessages.map((m) => ({ role: m.role, content: m.content })),
 			{ role: 'user', content: message },
 		]
@@ -88,7 +95,7 @@ export const actions = {
 		for (const message of recentRequestMessages) {
 			tokenCount += countTokens(message.content)
 		}
-		if (tokenCount > 4096) {
+		if (tokenCount > maxTokens) {
 			throw error(413, 'Too many tokens')
 		}
 
@@ -100,8 +107,10 @@ export const actions = {
 		}
 
 		const chatCompletionResponse = await openai.createChatCompletion({
-			model: 'gpt-3.5-turbo',
+			model: modelName,
 			messages: recentRequestMessages,
+			n: 1,
+			stream: false,
 		})
 
 		await prisma.message.createMany({

@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
 	import { enhance } from '$app/forms'
-	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import Message from '$lib/components/message.svelte'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
-	import { systemPrompt } from '$lib/utils/system-prompt'
 	import { countTokens } from '$lib/utils/tokenizer'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
@@ -21,7 +19,7 @@
 		setUpVoiceTyping()
 	})
 
-	const maxTokens = 4096
+	const maxTokens = 4000
 
 	let innerWidth = 0
 	let innerHeight = 0
@@ -33,13 +31,12 @@
 	let message = ''
 	let isVoiceTyping = false
 	let originalMessage = message
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let recognition: any
 	let submitButtonEle: HTMLButtonElement | null = null
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
-	$: tokensActive = countTokens(
-		[systemPrompt, ...data.thread.Message.map((m) => m.content), message].join(''),
-	)
+	$: tokensActive = countTokens([...data.thread.Message.map((m) => m.content), message].join(''))
 
 	$: {
 		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps
@@ -94,6 +91,7 @@
 		if (isVoiceTyping || !isVoiceTypingSupported || !('webkitSpeechRecognition' in window)) {
 			return
 		}
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		recognition = new (window.webkitSpeechRecognition as any)()
 		recognition.lang = 'en'
 		recognition.continuous = true
@@ -102,6 +100,7 @@
 			originalMessage = message
 			isVoiceTyping = true
 		}
+		// eslint-disable-next-line no-undef
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
 			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
 				.map((alternatives) =>
@@ -306,7 +305,7 @@
 
 	<div
 		class="mt-3 text-right text-sm"
-		title="Counts total tokens of the system prompt, the last 10 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
+		title="Counts total tokens of the system prompt, the latest 14 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		{#if tokensActive > maxTokens}
 			<span class="pointer-events-auto font-black text-red-500">{tokensActive - maxTokens}</span>

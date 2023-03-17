@@ -48,6 +48,7 @@
 							callbackUrl: data.redirectTo,
 						})
 					} catch (e) {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						alert(`Sign out error: ${e?.message}`)
 					} finally {
@@ -75,6 +76,7 @@
 								callbackUrl: data.redirectTo,
 							})
 						} catch (e) {
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 							// @ts-ignore
 							alert(`Sign in error: ${e?.message}`)
 						} finally {

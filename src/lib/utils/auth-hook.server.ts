@@ -17,8 +17,15 @@ import {
 	AUTH_TWITTER_SECRET,
 } from '$env/static/private'
 import { prisma } from '$lib/utils/prisma.server'
+import type { Provider } from '@auth/core/providers'
+import Discord from '@auth/core/providers/discord'
+import Facebook from '@auth/core/providers/facebook'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
+import Instagram from '@auth/core/providers/instagram'
+import LinkedIn from '@auth/core/providers/linkedin'
+import Twitter from '@auth/core/providers/twitter'
+import type { Profile } from '@auth/core/types'
 
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
 
@@ -86,7 +93,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 					clientId: AUTH_TWITTER_ID,
 					clientSecret: AUTH_TWITTER_SECRET,
 			  }),
-	].filter((p) => p !== null),
+	].filter((p) => p !== null) as Provider<Profile>[],
 
 	secret: AUTH_SECRET,
 	useSecureCookies: !dev,
