@@ -123,7 +123,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 	},
 
 	theme: {
-		brandColor: '#0284C7',
+		brandColor: '#2563EB',
 		colorScheme: 'auto',
 		logo: '/favicon.ico',
 	},

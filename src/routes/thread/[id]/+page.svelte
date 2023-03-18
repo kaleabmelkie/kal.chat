@@ -133,7 +133,11 @@
 </script>
 
 <svelte:head>
-	<title>{data.thread.title ?? 'Chat'} | kal.chat — Better Chat Interface for GPT</title>
+	<title>
+		{data.thread.title
+			? `Chat: ${data.thread.title} | kal.chat`
+			: 'Chat | kal.chat — Better Chat Interface for GPT'}
+	</title>
 </svelte:head>
 
 <svelte:window bind:innerWidth bind:innerHeight />
