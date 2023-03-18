@@ -5,7 +5,9 @@
 </script>
 
 <main class="bg-gradient-to-t from-emerald-50 to-emerald-100 bg-fixed">
-	<Header />
+	<div class="no-repeat bg-fixed" style="background-image: url(/assets/background-patterns/x.svg);">
+		<Header />
 
-	<slot />
+		<slot />
+	</div>
 </main>
