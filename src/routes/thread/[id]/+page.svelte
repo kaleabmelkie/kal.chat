@@ -7,7 +7,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
-	import { countTokens } from '$lib/utils/tokenizer'
+	import { countTokens } from '$lib/utils/count-tokens'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { onMount, tick } from 'svelte'
@@ -36,7 +36,10 @@
 	let submitButtonEle: HTMLButtonElement | null = null
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
-	$: tokensActive = countTokens([...data.thread.Message.map((m) => m.content), message].join(''))
+	let tokensActive = 0
+	$: countTokens([...data.thread.Message.map((m) => m.content), message].join('')).then(
+		(count) => (tokensActive = count),
+	)
 
 	$: {
 		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps

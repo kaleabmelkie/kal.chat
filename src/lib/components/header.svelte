@@ -13,10 +13,11 @@
 	<h1
 		class="relative grid h-11 bg-gradient-to-tr from-blue-700/95 to-blue-500/95 bg-clip-text text-2xl font-black text-transparent lg:px-2"
 	>
-		<a class="pointer-events-auto" href="/">kal.chat</a>
+		<a class="pointer-events-auto" href="/" title="Go home">kal.chat</a>
 		<a
 			class="pointer-events-auto absolute -bottom-2 right-0 text-[0.7rem] font-normal text-emerald-600 lg:right-2"
 			href="/"
+			title="Go home"
 		>
 			Early Access
 		</a>

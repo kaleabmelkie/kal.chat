@@ -1,7 +1,7 @@
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { countTokens } from '$lib/utils/tokenizer'
+import { countTokens } from '$lib/utils/count-tokens'
 import { error, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
 
@@ -91,9 +91,9 @@ export const actions = {
 			{ role: 'user', content: message },
 		]
 
-		let tokenCount = countTokens(systemPrompt)
+		let tokenCount = await countTokens(systemPrompt)
 		for (const message of recentRequestMessages) {
-			tokenCount += countTokens(message.content)
+			tokenCount += await countTokens(message.content)
 		}
 		if (tokenCount > maxTokens) {
 			throw error(413, 'Too many tokens')
