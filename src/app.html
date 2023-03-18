@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 
-<html lang="en" class="bg-blue-600 text-[14px] transition-[font-size] duration-150 sm:text-[16px]">
+<html lang="en" class="text-[14px] transition-[font-size] duration-150 sm:text-[16px]">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 
-		<meta name="description" content="A nicer chat interface for OpenAI's GPT model." />
+		<meta
+			name="description"
+			content="A better chat interface for OpenAI's GPT models (ChatGPT alternative)"
+		/>
 
+		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="theme-color" content="#0284C7" />
+
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="512x512" href="/assets/brand-images/logo-512x512.png" />
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@kal.chat" />
+		<meta name="twitter:creator" content="@kal.chat" />
+		<meta name="twitter:title" content="kal.chat — Better Chat Interface for GPT" />
+		<meta
+			name="twitter:description"
+			content="AA better chat interface for OpenAI's GPT models (ChatGPT alternative)"
+		/>
+		<meta name="twitter:image" content="/assets/brand-images/logo-512x512.png" />
+
+		<meta property="og:title" content="kal.chat — Better Chat Interface for GPT" />
+		<meta
+			property="og:description"
+			content="A better chat interface for OpenAI's GPT models (ChatGPT alternative)"
+		/>
+		<meta property="og:image" content="/assets/brand-images/logo-512x512.png" />
+		<meta property="og:url" content="https://kal.chat" />
+		<meta property="og:site_name" content="kal.chat" />
+		<meta property="og:type" content="website" />
 
 		<script src="/~partytown/partytown.js"></script>
 		<script>
@@ -33,6 +60,6 @@
 	</head>
 
 	<body data-sveltekit-preload-code="viewport" data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<div class="transform-gpu" style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

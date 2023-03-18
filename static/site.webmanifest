@@ -1,0 +1,19 @@
+{
+	"scope": "/",
+	"name": "kal.chat — Better Chat Interface for GPT",
+	"short_name": "kal.chat",
+	"description": "A better chat interface for OpenAI's GPT model (ChatGPT alternative)",
+	"icons": [
+		{
+			"src": "https://kal.chat/assets/brand-images/logo-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	],
+	"start_url": "/?utm_source=web_app_manifest",
+	"display": "standalone",
+	"orientation": "natural",
+	"background_color": "#FFFFFF",
+	"theme_color": "#0284C7"
+}

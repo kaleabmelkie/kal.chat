@@ -2,6 +2,10 @@
 	import { page } from '$app/stores'
 </script>
 
+<svelte:head>
+	<title>Error ${$page.status} | kal.chat — Better Chat Interface for GPT</title>
+</svelte:head>
+
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
 	<div class="grid w-full max-w-xs gap-4 overflow-auto">
 		<h2 class="text-2xl text-red-500">Error {$page.status}</h2>

@@ -2,11 +2,6 @@
 	import { page } from '$app/stores'
 </script>
 
-<svelte:head>
-	<!-- TODO: have a unique title per page -->
-	<title>kal.chat</title>
-</svelte:head>
-
 <header
 	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-blue-100/0 to-blue-100 p-4"
 >

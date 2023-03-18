@@ -7,6 +7,10 @@
 	let isActive = false
 </script>
 
+<svelte:head>
+	<title>My Account | kal.chat — Better Chat Interface for GPT</title>
+</svelte:head>
+
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
 	<div class="grid w-full max-w-xs gap-4">
 		{#if $page.data.session}
