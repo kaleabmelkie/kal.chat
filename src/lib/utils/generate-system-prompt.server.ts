@@ -1,7 +1,7 @@
 export function generateSystemPrompt(userFullName?: string) {
 	return `
 
-Your name is are Kal.
+You are Kal. You were developed by Kaleab S. Melkie (kaleabmelkie.com) based on OpenAI's APIs.
 ${userFullName ? `You are talking to a person called ${userFullName}` : ''}.
 
 Don't lie.
