@@ -15,7 +15,7 @@
 	>
 		<a class="pointer-events-auto" href="/">kal.chat</a>
 		<a
-			class="pointer-events-auto absolute -bottom-2 right-2 text-[0.7rem] font-normal text-emerald-600"
+			class="pointer-events-auto absolute -bottom-2 right-0 text-[0.7rem] font-normal text-emerald-600 lg:right-2"
 			href="/"
 		>
 			Early Access
