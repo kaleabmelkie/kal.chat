@@ -7,8 +7,10 @@ export async function initTokenizer() {
 		return
 	}
 
-	const { default: GPT3TokenizerImport } = await import('gpt3-tokenizer')
-	tokenizer = new GPT3TokenizerImport({
+	const GPT3TokenizerImport = await import('gpt3-tokenizer')
+	const GPT3Tokenizer: typeof GPT3TokenizerImport.default =
+		typeof GPT3TokenizerImport === 'function' ? GPT3TokenizerImport : GPT3TokenizerImport.default
+	tokenizer = new GPT3Tokenizer({
 		type: 'gpt3',
 	})
 }
