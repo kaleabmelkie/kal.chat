@@ -14,7 +14,7 @@ export default {
 
 		visualizer({
 			emitFile: true,
-			filename: 'admin/bundle',
+			filename: 'admin/bundle.html',
 			gzipSize: true,
 			brotliSize: true,
 		}),
