@@ -11,7 +11,7 @@
 	class="pointer-events-none fixed top-0 left-0 right-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-blue-100/0 to-blue-100 p-4"
 >
 	<h1
-		class="relative grid h-11 bg-blue-600 bg-gradient-to-tr from-blue-700 to-blue-500 bg-clip-text px-2 text-2xl font-black text-transparent"
+		class="relative grid h-11 bg-blue-600 bg-gradient-to-tr from-blue-700 to-blue-500 bg-clip-text text-2xl font-black text-transparent lg:px-2"
 	>
 		<a class="pointer-events-auto" href="/">kal.chat</a>
 		<a
