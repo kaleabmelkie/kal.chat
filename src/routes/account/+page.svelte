@@ -12,30 +12,30 @@
 		{#if $page.data.session}
 			<h2 class="text-2xl">You're logged in!</h2>
 			<p class="grid gap-2">
-				<span class="mt-4 text-xs uppercase text-sky-900/75"> Name </span>
-				<span class="text-lg font-semibold text-sky-700/90">
+				<span class="mt-4 text-xs uppercase text-emerald-900/75"> Name </span>
+				<span class="text-lg font-semibold text-emerald-700/90">
 					{data.session?.user?.name ?? 'Unknown name'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-sky-900/75"> Email </span>
-				<span class="text-lg font-semibold text-sky-700/90">
+				<span class="mt-4 text-xs uppercase text-emerald-900/75"> Email </span>
+				<span class="text-lg font-semibold text-emerald-700/90">
 					{data.session?.user?.email ?? 'Unknown email'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-sky-900/75"> Usage </span>
-				<span class="text-lg font-semibold text-sky-700/90">
+				<span class="mt-4 text-xs uppercase text-emerald-900/75"> Usage </span>
+				<span class="text-lg font-semibold text-emerald-700/90">
 					{data.messagesCount ?? 0} messages in {data.threadsCount ?? 0} threads
 				</span>
 			</p>
 			<div />
 			<a
-				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
+				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-emerald-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-emerald-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
 				href="/thread/latest"
 			>
 				Go chat
 			</a>
 			<button
-				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-red-500 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
+				class="pointer-events-auto flex w-full items-center justify-center rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg text-red-500 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-emerald-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
 				type="button"
 				disabled={isActive}
 				on:click={async () => {
@@ -63,7 +63,7 @@
 			<div />
 			{#each data.providers as provider (provider.id)}
 				<button
-					class="pointer-events-auto flex w-full items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg font-semibold text-sky-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-sky-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
+					class="pointer-events-auto flex w-full items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 py-3 px-4 text-lg font-semibold text-emerald-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-emerald-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50"
 					style={provider.style?.bgDark && provider.style.textDark
 						? `background-color: ${provider.style.bgDark}; color: ${provider.style.textDark};`
 						: ''}

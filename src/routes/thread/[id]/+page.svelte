@@ -145,7 +145,7 @@
 					role: 'system',
 					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
 				}}
-				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-sky-900 !shadow-none"
+				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-emerald-900 !shadow-none"
 			/>
 		{/key}
 	{/if}
@@ -226,7 +226,7 @@
 	<div class="flex h-[3.5rem] items-end gap-[calc(0.5rem+3px)]">
 		<a
 			data-sveltekit-preload-data="tap"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/90 text-sky-900 shadow-lg shadow-sky-900/20 ring-2 ring-sky-600/75 transition-all duration-150 hover:bg-white hover:shadow-sky-900/30 focus:bg-white active:shadow-xl active:shadow-sky-900/20 active:ring-offset-2 active:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0"
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/90 text-emerald-900 shadow-lg shadow-emerald-900/20 ring-2 ring-emerald-600/75 transition-all duration-150 hover:bg-white hover:shadow-emerald-900/30 focus:bg-white active:shadow-xl active:shadow-emerald-900/20 active:ring-offset-2 active:ring-offset-emerald-50 disabled:animate-pulse disabled:bg-emerald-600/25 disabled:text-emerald-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0"
 			title="New thread"
 			href="/thread/new"
 		>
@@ -237,7 +237,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-sky-900/20 outline-none ring-2 ring-sky-600/75 transition-all duration-150 placeholder:text-sky-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-sky-900/30 focus:bg-white focus:shadow-xl focus:shadow-sky-900/20 focus:ring-offset-2 focus:ring-offset-sky-50 disabled:animate-pulse disabled:bg-sky-600/25 disabled:text-sky-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 {isVoiceTypingSupported
+				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-emerald-900/20 outline-none ring-2 ring-emerald-600/75 transition-all duration-150 placeholder:text-emerald-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-emerald-900/30 focus:bg-white focus:shadow-xl focus:shadow-emerald-900/20 focus:ring-offset-2 focus:ring-offset-emerald-50 disabled:animate-pulse disabled:bg-emerald-600/25 disabled:text-emerald-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokens
@@ -275,8 +275,8 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50 {isVoiceTyping
-						? 'animate-ping !bg-transparent !text-sky-500'
+					class="absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-emerald-900 transition-all duration-150 hover:bg-emerald-300/25 active:bg-emerald-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-emerald-900/50 {isVoiceTyping
+						? 'animate-ping !bg-transparent !text-emerald-500'
 						: ''}"
 					type="button"
 					title="Type using voice"
@@ -294,7 +294,7 @@
 
 			<button
 				data-testid="send-button"
-				class="absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-sky-900 transition-all duration-150 hover:bg-sky-300/25 active:bg-sky-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-sky-900/50"
+				class="absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-emerald-900 transition-all duration-150 hover:bg-emerald-300/25 active:bg-emerald-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-emerald-900/50"
 				type="submit"
 				disabled={loading}
 				bind:this={submitButtonEle}
@@ -313,7 +313,7 @@
 			<span class="pointer-events-auto font-semibold text-red-500"> tokens over</span>
 		{:else}
 			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensActive}</span>
-			<span class="pointer-events-auto text-sky-900/50"> tokens active </span>
+			<span class="pointer-events-auto text-emerald-900/50"> tokens active </span>
 		{/if}
 	</div>
 </form>
@@ -321,5 +321,5 @@
 <div bind:this={bottomEle} />
 
 <div
-	class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-sky-50 to-sky-50/0"
+	class="pointer-events-none fixed bottom-0 left-0 right-0 z-0 h-[8rem] bg-gradient-to-t from-emerald-50 to-emerald-50/0"
 />
