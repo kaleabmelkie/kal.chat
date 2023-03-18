@@ -57,7 +57,7 @@
 	transition:slide|local={{ duration: 150 }}
 >
 	<div
-		class="text-xs font-semibold uppercase text-emerald-600 {message.role === 'user'
+		class="text-xs font-semibold uppercase text-blue-600 {message.role === 'user'
 			? 'text-right'
 			: 'text-left'}"
 	>
@@ -65,10 +65,10 @@
 	</div>
 
 	<article
-		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-6 text-lg shadow-md shadow-emerald-600/10 {message.role ===
+		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-4 text-lg shadow-md shadow-blue-600/10 {message.role ===
 		'user'
-			? 'prose-invert rounded-tr bg-emerald-600/90 from-emerald-600/25 to-emerald-600/0 text-white'
-			: 'rounded-tl bg-white/75 from-white/25 to-white/0 text-black'} {articleClassName}"
+			? 'prose-invert rounded-tr from-blue-700/90 to-blue-500/75 text-white'
+			: 'rounded-tl from-white/95 to-white/75 text-black'} {articleClassName}"
 	>
 		{@html sanitizeHtml(parsedContent, {
 			allowedClasses: {
@@ -85,6 +85,6 @@
 	}
 
 	article :global(pre) {
-		@apply bg-black bg-gradient-to-tr from-emerald-600/30 to-emerald-400/30 text-sm leading-6;
+		@apply bg-black bg-gradient-to-tr from-blue-600/30 to-blue-400/30 text-sm leading-6;
 	}
 </style>
