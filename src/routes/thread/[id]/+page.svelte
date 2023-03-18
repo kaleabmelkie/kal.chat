@@ -11,6 +11,7 @@
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { onMount, tick } from 'svelte'
+	import { fade } from 'svelte/transition'
 
 	export let data
 
@@ -312,16 +313,18 @@
 		title="Counts total tokens of the system prompt, the latest 14 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		<span class="flex-1" />
-		{#if tokensActive > maxTokens}
-			<div class="pointer-events-auto">
-				<span class="font-black text-red-500">{tokensActive - maxTokens}</span>
-				<span class="font-semibold text-red-500"> tokens over</span>
-			</div>
-		{:else}
-			<div class="pointer-events-auto">
-				<span class="font-semibold text-emerald-500">{tokensActive}</span>
-				<span class="text-blue-900/50"> tokens active</span>
-			</div>
+		{#if tokensActive > 0}
+			{#if tokensActive > maxTokens}
+				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
+					<span class="font-black text-red-500">{tokensActive - maxTokens}</span>
+					<span class="font-semibold text-red-500"> tokens over</span>
+				</div>
+			{:else}
+				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
+					<span class="font-semibold text-emerald-500">{tokensActive}</span>
+					<span class="text-blue-900/50"> tokens active</span>
+				</div>
+			{/if}
 		{/if}
 	</div>
 </form>
