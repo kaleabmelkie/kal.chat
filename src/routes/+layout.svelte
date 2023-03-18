@@ -9,5 +9,14 @@
 		<Header />
 
 		<slot />
+
+		<a
+			class="pointer-events-auto fixed left-4 bottom-4 text-sm text-blue-900/50 underline-offset-2 hover:underline lg:left-6"
+			href="mailto:support@kal.chat"
+			target="_blank"
+			title="Send feedback to feedback@kal.chat"
+		>
+			Give Feedback
+		</a>
 	</div>
 </main>

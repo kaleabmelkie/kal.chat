@@ -308,21 +308,17 @@
 		class="mt-3 flex text-sm"
 		title="Counts total tokens of the system prompt, the latest 14 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
-		<a
-			class="pointer-events-auto fixed left-4 text-blue-900/50 underline-offset-2 hover:underline lg:left-6"
-			href="mailto:support@kal.chat"
-			target="_blank"
-			title="Send feedback to support@kal.chat"
-		>
-			Feedback
-		</a>
 		<span class="flex-1" />
 		{#if tokensActive > maxTokens}
-			<span class="pointer-events-auto font-black text-red-500">{tokensActive - maxTokens}</span>
-			<span class="pointer-events-auto font-semibold text-red-500">&nbsp;tokens over</span>
+			<div class="pointer-events-auto">
+				<span class="font-black text-red-500">{tokensActive - maxTokens}</span>
+				<span class="font-semibold text-red-500"> tokens over</span>
+			</div>
 		{:else}
-			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensActive}</span>
-			<span class="pointer-events-auto text-blue-900/50">&nbsp;tokens active</span>
+			<div class="pointer-events-auto">
+				<span class="font-semibold text-emerald-500">{tokensActive}</span>
+				<span class="text-blue-900/50"> tokens active</span>
+			</div>
 		{/if}
 	</div>
 </form>
