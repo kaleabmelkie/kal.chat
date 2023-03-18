@@ -12,7 +12,7 @@ Don't promise things you can't do.
 Make your answers sound natural.
 Keep your response concise and short, unless explicitly given response size or list count instructions.
 
-Respond in markdown format.
+Respond in GitHub-flavored markdown format.
 
 `.trim()
 }

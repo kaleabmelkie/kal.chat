@@ -16,9 +16,10 @@
 	// normal imports
 	import { marked } from 'marked'
 	import type { ChatCompletionRequestMessage } from 'openai'
-	import loadLanguages from 'prismjs/components/'
+	import loadLanguages from 'prismjs/components/index.js'
 	import sanitizeHtml from 'sanitize-html'
 	import { slide } from 'svelte/transition'
+	import { tick } from 'svelte'
 
 	let className = ''
 	export { className as class }
@@ -29,6 +30,8 @@
 		Prism.plugins.autoloader.languages_path = '/assets/prismjs-components/'
 	}
 
+	loadLanguages.silent = false
+
 	$: parsedContent = marked(message.content, {
 		highlight: (code, lang, callback) => {
 			try {
@@ -36,10 +39,7 @@
 			} catch {
 				// do nothing
 			}
-			callback?.(
-				null,
-				Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
-			)
+			tick().then(() => callback?.(null, Prism.highlight(code, Prism.languages[lang], lang)))
 		},
 		breaks: true,
 		gfm: true,
