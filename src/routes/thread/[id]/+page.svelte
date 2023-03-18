@@ -305,15 +305,20 @@
 	</div>
 
 	<div
-		class="mt-3 text-right text-sm"
+		class="mt-3 flex text-sm"
 		title="Counts total tokens of the system prompt, the latest 14 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
+		<a
+			class="pointer-events-auto fixed left-4 text-emerald-900/50 underline-offset-2 hover:underline"
+			href="mailto:support@kal.chat">Feedback</a
+		>
+		<span class="flex-1" />
 		{#if tokensActive > maxTokens}
 			<span class="pointer-events-auto font-black text-red-500">{tokensActive - maxTokens}</span>
-			<span class="pointer-events-auto font-semibold text-red-500"> tokens over</span>
+			<span class="pointer-events-auto font-semibold text-red-500">&nbsp;tokens over</span>
 		{:else}
 			<span class="pointer-events-auto font-semibold text-emerald-500">{tokensActive}</span>
-			<span class="pointer-events-auto text-emerald-900/50"> tokens active </span>
+			<span class="pointer-events-auto text-emerald-900/50">&nbsp;tokens active</span>
 		{/if}
 	</div>
 </form>
