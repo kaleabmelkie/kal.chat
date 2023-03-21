@@ -15,9 +15,11 @@
 	let message = ''
 
 	let tokensActive = 0
-	$: countTokens([...data.thread.Message.map((m) => m.content), message].join('')).then(
-		(count) => (tokensActive = count),
-	)
+	$: countTokens(
+		[...data.thread.Message.slice(-1 * data.contextLength).map((m) => m.content), message].join(
+			' ',
+		),
+	).then((count) => (tokensActive = data.systemPromptTokensCount + count))
 
 	async function scrollToBottom() {
 		if (!bottomEle) {
