@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 </script>
 
@@ -24,7 +23,7 @@
 	{#if $page.data.session}
 		<a
 			class="pointer-events-auto flex flex-shrink-0 items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 py-2 px-4 text-sm font-semibold text-blue-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-blue-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none"
-			href="/subscription/subscribe"
+			href="/account/subscribe"
 		>
 			<div class="text-lg">✨</div>
 			<div class="pr-2">Subscribe</div>
