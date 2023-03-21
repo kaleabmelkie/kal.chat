@@ -333,7 +333,7 @@
 				</span>
 			{:else}
 				<span class="pointer-events-auto text-blue-900/50" transition:fade={{ duration: 150 }}>
-					<span class="text-emerald-500">{tokensActive}</span> / {maxTokens} words in context
+					{tokensActive} / {maxTokens} words in context
 				</span>
 			{/if}
 		{/if}
