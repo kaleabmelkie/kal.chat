@@ -325,19 +325,16 @@
 		<span class="flex-1" />
 		{#if tokensActive > 0}
 			{#if tokensActive > maxTokens}
-				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
-					<span class="font-black text-red-500">
-						{Intl.NumberFormat().format(tokensActive - maxTokens)}
-					</span>
-					<span class="font-semibold text-red-500"> words over</span>
-				</div>
+				<span
+					class="pointer-events-auto font-black text-red-500"
+					transition:fade={{ duration: 150 }}
+				>
+					{tokensActive - maxTokens} words over
+				</span>
 			{:else}
-				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
-					<span class="font-semibold text-emerald-500">
-						{Intl.NumberFormat().format(maxTokens - tokensActive)}
-					</span>
-					<span class="text-blue-900/50"> / 4,000 words</span>
-				</div>
+				<span class="pointer-events-auto text-blue-900/50" transition:fade={{ duration: 150 }}>
+					<span class="text-emerald-500">{tokensActive}</span> / {maxTokens} words in context
+				</span>
 			{/if}
 		{/if}
 	</div>
