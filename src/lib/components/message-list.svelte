@@ -22,9 +22,9 @@
 </script>
 
 <ul
-	class="mx-auto flex min-h-screen max-w-[48rem] flex-col gap-6 scroll-smooth pb-[calc(2rem+8rem)]"
+	class="mx-auto flex min-h-full max-w-[56rem] flex-col gap-6 px-4 pb-[calc(4rem+7.25rem)] lg:px-6"
 >
-	<div class="min-h-[3.5rem] flex-1" />
+	<div class="min-h-[4.75rem] flex-1" />
 
 	{#each data.thread.Message.filter((m) => m.role !== 'system') as message (message.id)}
 		<Message {message} />

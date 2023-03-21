@@ -10,6 +10,7 @@
 		scrollToBottom()
 	})
 
+	let isSideOpen = false
 	let loading = false
 	let bottomEle: HTMLSpanElement | null = null
 	let message = ''
@@ -44,16 +45,26 @@
 	</title>
 </svelte:head>
 
-<div>
-	<MessageList bind:data bind:loading on:scrollToBottom={scrollToBottom} />
+<div class="flex h-screen">
+	{#if isSideOpen}
+		<div class="h-screen w-[16rem] flex-shrink-0 overflow-auto bg-white/40">
+			<h2 class="p-4 pt-[calc(4.75rem+1rem)] lg:px-6">
+				// TODO: New Thread, Search, & Thread History Thread
+			</h2>
+		</div>
+	{/if}
+	<div class="relative h-screen flex-1 overflow-auto">
+		<MessageList bind:data bind:loading on:scrollToBottom={scrollToBottom} />
 
-	<MessageForm
-		bind:data
-		bind:loading
-		bind:message
-		bind:tokensActive
-		on:scrollToBottom={scrollToBottom}
-	/>
+		<MessageForm
+			bind:data
+			bind:isSideOpen
+			bind:loading
+			bind:message
+			bind:tokensActive
+			on:scrollToBottom={scrollToBottom}
+		/>
 
-	<div bind:this={bottomEle} />
+		<div bind:this={bottomEle} />
+	</div>
 </div>

@@ -19,7 +19,7 @@ export const load = async (event) => {
 		where: {
 			id: Number(event.params.id),
 			user: {
-				email: session.user.email,
+				email: session.user.email ?? 'kaleabmelkie@gmail.com',
 			},
 		},
 		orderBy: {

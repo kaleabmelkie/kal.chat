@@ -8,11 +8,12 @@
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
-	import { createEventDispatcher, onMount, tick } from 'svelte'
+	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
+	export let isSideOpen: boolean
 	export let loading: boolean
 	export let message: string
 	export let tokensActive: number
@@ -23,6 +24,21 @@
 
 	onMount(() => {
 		setUpVoiceTyping()
+
+		focusOnInput()
+		if (browser) {
+			window.addEventListener('focus', () => {
+				focusOnInput()
+			})
+		}
+	})
+
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('focus', () => {
+				focusOnInput()
+			})
+		}
 	})
 
 	const maxTokens = 4000
@@ -58,6 +74,12 @@
 	$: userAgentParser = Bowser.getParser(
 		browser ? window.navigator.userAgent : data.userAgent ?? ' ',
 	)
+
+	function focusOnInput() {
+		if (messageBoxEle) {
+			messageBoxEle.focus()
+		}
+	}
 
 	let isVoiceTyping = false
 	let originalMessage = message
@@ -113,7 +135,9 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <form
-	class="z-10 -mt-[8rem] grid h-[8rem] w-full gap-1 bg-gradient-to-t from-blue-50 to-blue-500/0"
+	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideOpen
+		? 'left-[16rem]'
+		: 'left-0'}"
 	method="POST"
 	action="?/newMessage"
 	use:enhance={async ({ form }) => {
@@ -184,21 +208,25 @@
 		readonly
 	/>
 
-	<div class="mx-auto flex w-full max-w-[calc(4rem+48rem+4rem)] items-end gap-[calc(0.5rem+3px)]">
-		<a
-			data-sveltekit-preload-data="tap"
-			class="flex h-[3.5rem] w-[3.5rem] flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0"
-			title="New thread"
-			href="/thread/new"
-		>
-			<PlusSvg />
-		</a>
+	<div
+		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+3px)]"
+	>
+		{#if !isSideOpen}
+			<a
+				data-sveltekit-preload-data="tap"
+				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur"
+				title="New thread"
+				href="/thread/new"
+			>
+				<PlusSvg />
+			</a>
+		{/if}
 
 		<div class="group relative flex flex-1">
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="h-[3.5rem] w-full min-w-0 flex-1 resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-blue-900/20 outline-none ring-2 ring-blue-600/75 transition-all duration-150 placeholder:text-blue-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-blue-900/30 focus:bg-white focus:shadow-xl focus:shadow-blue-900/20 focus:ring-offset-2 focus:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 {isVoiceTypingSupported
+				class="pointer-events-auto h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-blue-900/20 outline-none ring-2 ring-blue-600/75 transition-all duration-150 placeholder:text-blue-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-blue-900/30 focus:bg-white focus:shadow-xl focus:shadow-blue-900/20 focus:ring-offset-2 focus:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokens
@@ -236,7 +264,7 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50 {isVoiceTyping
+					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50 {isVoiceTyping
 						? 'animate-ping !bg-transparent !text-blue-500'
 						: ''}"
 					type="button"
@@ -255,7 +283,7 @@
 
 			<button
 				data-testid="send-button"
-				class="absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50"
+				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50"
 				type="submit"
 				disabled={loading}
 				bind:this={submitButtonEle}
@@ -266,16 +294,16 @@
 	</div>
 
 	<div
-		class="mt-3 flex text-sm"
+		class="flex py-5 text-sm"
 		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		<a
-			class="pointer-events-auto text-blue-900/50 underline-offset-2 hover:underline lg:left-6"
+			class="pointer-events-auto text-blue-900/75 underline-offset-2 hover:underline lg:left-6"
 			href="mailto:support@kal.chat"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"
 		>
-			Give Feedback
+			Send Feedback
 		</a>
 		<span class="flex-1" />
 		{#if tokensActive > 0}
