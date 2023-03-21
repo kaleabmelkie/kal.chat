@@ -44,6 +44,7 @@ export const load = async (event) => {
 	return {
 		userAgent: event.request.headers.get('user-agent'),
 		thread,
+		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 	}
 }
 
@@ -76,7 +77,7 @@ export const actions = {
 						},
 					},
 				},
-				take: 14,
+				take: 9,
 				orderBy: {
 					id: 'desc',
 				},

@@ -38,8 +38,8 @@
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	let tokensActive = 0
-	$: countTokens([...data.thread.Message.map((m) => m.content), message].join('')).then(
-		(count) => (tokensActive = count),
+	$: countTokens([...data.thread.Message.slice(-9).map((m) => m.content), message].join(' ')).then(
+		(count) => (tokensActive = data.systemPromptTokensCount + count),
 	)
 
 	$: {
