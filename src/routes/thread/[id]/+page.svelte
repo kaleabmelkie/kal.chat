@@ -38,9 +38,11 @@
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	let tokensActive = 0
-	$: countTokens([...data.thread.Message.slice(-9).map((m) => m.content), message].join(' ')).then(
-		(count) => (tokensActive = data.systemPromptTokensCount + count),
-	)
+	$: countTokens(
+		[...data.thread.Message.slice(-1 * data.contextLength).map((m) => m.content), message].join(
+			' ',
+		),
+	).then((count) => (tokensActive = data.systemPromptTokensCount + count))
 
 	$: {
 		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps
@@ -318,19 +320,23 @@
 
 	<div
 		class="mt-3 flex text-sm"
-		title="Counts total tokens of the system prompt, the latest 14 messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
+		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		<span class="flex-1" />
 		{#if tokensActive > 0}
 			{#if tokensActive > maxTokens}
 				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
-					<span class="font-black text-red-500">{tokensActive - maxTokens}</span>
-					<span class="font-semibold text-red-500"> tokens over</span>
+					<span class="font-black text-red-500">
+						{Intl.NumberFormat().format(tokensActive - maxTokens)}
+					</span>
+					<span class="font-semibold text-red-500"> words over</span>
 				</div>
 			{:else}
 				<div class="pointer-events-auto" transition:fade={{ duration: 150 }}>
-					<span class="font-semibold text-emerald-500">{tokensActive}</span>
-					<span class="text-blue-900/50"> tokens active</span>
+					<span class="font-semibold text-emerald-500">
+						{Intl.NumberFormat().format(maxTokens - tokensActive)}
+					</span>
+					<span class="text-blue-900/50"> / 4,000 words</span>
 				</div>
 			{/if}
 		{/if}

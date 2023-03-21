@@ -7,6 +7,7 @@ import type { ChatCompletionRequestMessage } from 'openai'
 
 const modelName = 'gpt-3.5-turbo' as const
 const maxTokens = 4000 as const
+const contextLength = 9 as const
 
 export const load = async (event) => {
 	const { session } = await event.parent()
@@ -45,6 +46,7 @@ export const load = async (event) => {
 		userAgent: event.request.headers.get('user-agent'),
 		thread,
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
+		contextLength,
 	}
 }
 
@@ -77,7 +79,7 @@ export const actions = {
 						},
 					},
 				},
-				take: 9,
+				take: contextLength,
 				orderBy: {
 					id: 'desc',
 				},
