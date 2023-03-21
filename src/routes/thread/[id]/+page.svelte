@@ -1,6 +1,7 @@
 <script lang="ts">
 	import MessageForm from '$lib/components/message-form.svelte'
 	import MessageList from '$lib/components/message-list.svelte'
+	import SideBar from '$lib/components/side-bar.svelte'
 	import { countTokens } from '$lib/utils/count-tokens'
 	import { onMount, tick } from 'svelte'
 
@@ -47,11 +48,7 @@
 
 <div class="flex h-screen">
 	{#if isSideOpen}
-		<div class="h-screen w-[16rem] flex-shrink-0 overflow-auto bg-white/40">
-			<h2 class="p-4 pt-[calc(4.75rem+1rem)] lg:px-6">
-				// TODO: New Thread, Search, & Thread History Thread
-			</h2>
-		</div>
+		<SideBar bind:isOpen={isSideOpen} />
 	{/if}
 	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList bind:data bind:loading on:scrollToBottom={scrollToBottom} />
