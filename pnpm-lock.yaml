@@ -22,13 +22,12 @@ specifiers:
   eslint-config-prettier: 8.7.0
   eslint-plugin-svelte3: 4.0.0
   gpt3-tokenizer: 1.1.5
-  lemonsqueezy.ts: 0.1.6
   lodash: 4.17.21
   marked: 4.2.12
   openai: 3.2.1
   postcss: 8.4.21
   postcss-load-config: 4.0.1
-  prettier: 2.8.4
+  prettier: 2.8.5
   prettier-plugin-svelte: 2.9.0
   prettier-plugin-tailwindcss: 0.2.5
   prisma: 4.11.0
@@ -64,15 +63,14 @@ devDependencies:
   eslint-config-prettier: 8.7.0_eslint@8.36.0
   eslint-plugin-svelte3: 4.0.0_wzem237sbvnwe7n34ytc5phasy
   gpt3-tokenizer: 1.1.5
-  lemonsqueezy.ts: 0.1.6
   lodash: 4.17.21
   marked: 4.2.12
   openai: 3.2.1
   postcss: 8.4.21
   postcss-load-config: 4.0.1_postcss@8.4.21
-  prettier: 2.8.4
-  prettier-plugin-svelte: 2.9.0_k23gl6auqwrxgr3e6o2bajswou
-  prettier-plugin-tailwindcss: 0.2.5_yjdjpc7im5hvpskij45owfsns4
+  prettier: 2.8.5
+  prettier-plugin-svelte: 2.9.0_olnlr4336c4vkm7c26l3r45yii
+  prettier-plugin-tailwindcss: 0.2.5_4t4kr7ese5dum3z35trke3ztzq
   prisma: 4.11.0
   prismjs: 1.29.0
   rollup-plugin-visualizer: 5.9.0
@@ -709,7 +707,7 @@ packages:
       magic-string: 0.30.0
       mime: 3.0.0
       sade: 1.8.1
-      set-cookie-parser: 2.5.1
+      set-cookie-parser: 2.6.0
       sirv: 2.0.2
       svelte: 3.57.0
       tiny-glob: 0.2.9
@@ -1059,7 +1057,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.5
-      caniuse-lite: 1.0.30001467
+      caniuse-lite: 1.0.30001468
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1113,7 +1111,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001467
+      caniuse-lite: 1.0.30001468
       electron-to-chromium: 1.4.333
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
@@ -1140,8 +1138,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite/1.0.30001467:
-    resolution: {integrity: sha512-cEdN/5e+RPikvl9AHm4uuLXxeCNq8rFsQ+lPHTfe/OtypP3WwnVVbjn+6uBV7PaFL6xUFzTh+sSCOz1rKhcO+Q==}
+  /caniuse-lite/1.0.30001468:
+    resolution: {integrity: sha512-zgAo8D5kbOyUcRAgSmgyuvBkjrGk5CGYG5TYgFdpQv+ywcyEpo1LOWoG8YmoflGnh+V+UsNuKYedsoYs0hzV5A==}
     dev: true
 
   /chalk/4.1.2:
@@ -1924,12 +1922,6 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /lemonsqueezy.ts/0.1.6:
-    resolution: {integrity: sha512-G8XgEWJSL2bGU8VKoyrhpFcHb+T/YKu7uNVYo+Ncs3nK7hTAlyiq0zKfXN9zI/MdknnRQeqzSsowgQPZF5OE0g==}
-    dependencies:
-      undici: 5.21.0
-    dev: true
-
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -2394,17 +2386,17 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-svelte/2.9.0_k23gl6auqwrxgr3e6o2bajswou:
+  /prettier-plugin-svelte/2.9.0_olnlr4336c4vkm7c26l3r45yii:
     resolution: {integrity: sha512-3doBi5NO4IVgaNPtwewvrgPpqAcvNv0NwJNflr76PIGgi9nf1oguQV1Hpdm9TI2ALIQVn/9iIwLpBO5UcD2Jiw==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
     dependencies:
-      prettier: 2.8.4
+      prettier: 2.8.5
       svelte: 3.57.0
     dev: true
 
-  /prettier-plugin-tailwindcss/0.2.5_yjdjpc7im5hvpskij45owfsns4:
+  /prettier-plugin-tailwindcss/0.2.5_4t4kr7ese5dum3z35trke3ztzq:
     resolution: {integrity: sha512-vZ/iKieyCx0WTxHbkf5E1rBlv/ybFk8WTT4hL5W2jlVxum2Zbe0jMUpuQdDrpa4z2vnPiJ5KIWCqL/kd16fKYg==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -2456,12 +2448,12 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.4
-      prettier-plugin-svelte: 2.9.0_k23gl6auqwrxgr3e6o2bajswou
+      prettier: 2.8.5
+      prettier-plugin-svelte: 2.9.0_olnlr4336c4vkm7c26l3r45yii
     dev: true
 
-  /prettier/2.8.4:
-    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
+  /prettier/2.8.5:
+    resolution: {integrity: sha512-3gzuxrHbKUePRBB4ZeU08VNkUcqEHaUaouNt0m7LGP4Hti/NuB07C7PPTM/LkWqXoJYJn2McEo5+kxPNrtQkLQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -2579,8 +2571,8 @@ packages:
       yargs: 17.7.1
     dev: true
 
-  /rollup/3.19.1:
-    resolution: {integrity: sha512-lAbrdN7neYCg/8WaoWn/ckzCtz+jr70GFfYdlf50OF7387HTg+wiuiqJRFYawwSPpqfqDNYqK7smY/ks2iAudg==}
+  /rollup/3.20.0:
+    resolution: {integrity: sha512-YsIfrk80NqUDrxrjWPXUa7PWvAfegZEXHuPsEZg58fGCdjL1I9C1i/NaG+L+27kxxwkrG/QEDEQc8s/ynXWWGQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -2641,8 +2633,8 @@ packages:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
     dev: true
 
-  /set-cookie-parser/2.5.1:
-    resolution: {integrity: sha512-1jeBGaKNGdEq4FgIrORu/N570dwoPYio8lSoYLWmX7sQ//0JY08Xh9o5pBcgmHQ/MbsYp/aZnOe1s1lIsbLprQ==}
+  /set-cookie-parser/2.6.0:
+    resolution: {integrity: sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==}
     dev: true
 
   /shebang-command/2.0.0:
@@ -3007,7 +2999,7 @@ packages:
       esbuild: 0.17.12
       postcss: 8.4.21
       resolve: 1.22.1
-      rollup: 3.19.1
+      rollup: 3.20.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
