@@ -16,7 +16,7 @@
 	export let innerWidth: number
 	export let innerHeight: number
 	export let isSideBarOpen: boolean
-	export let loading: boolean
+	export let isSendingMessage: boolean
 	export let message: string
 	export let tokensActive: number
 
@@ -25,6 +25,11 @@
 	}>()
 
 	onMount(() => {
+		isCreatingThread = false
+		page.subscribe(() => {
+			isCreatingThread = false
+		})
+
 		setUpVoiceTyping()
 
 		focusOnInput()
@@ -45,13 +50,13 @@
 
 	const maxTokens = 4000
 
+	let isCreatingThread = false
 	let messageBoxEle: HTMLTextAreaElement | null = null
-
 	let submitButtonEle: HTMLButtonElement | null = null
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	$: {
-		;[innerWidth, innerHeight, message, loading, isVoiceTyping] // deps
+		;[innerWidth, innerHeight, message, isSendingMessage, isVoiceTyping] // deps
 		if (messageBoxEle) {
 			messageBoxEle.style.height = `${Math.min(messageBoxEle.scrollHeight, maxMessageBoxHeight)}px`
 			messageBoxEle.style.maxHeight = `${maxMessageBoxHeight}px`
@@ -139,10 +144,10 @@
 	method="POST"
 	action="?/newMessage"
 	use:enhance={async ({ form }) => {
-		if (loading) {
+		if (isSendingMessage) {
 			return
 		}
-		loading = true
+		isSendingMessage = true
 
 		const valueBackup = form.message.value
 
@@ -191,7 +196,7 @@
 
 			dispatch('scrollToBottom')
 
-			loading = false
+			isSendingMessage = false
 			await tick()
 			messageBoxEle?.focus()
 		}
@@ -202,7 +207,7 @@
 		type="hidden"
 		name="threadId"
 		value={data.thread.id}
-		disabled={loading}
+		disabled={isSendingMessage}
 		readonly
 	/>
 
@@ -211,9 +216,18 @@
 	>
 		<a
 			data-sveltekit-preload-data="tap"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur"
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
+				? 'animate-pulse cursor-default bg-blue-600/25 text-blue-900/50 shadow-none ring-0 ring-offset-0'
+				: ''}"
 			title="New thread"
 			href="/thread/new"
+			on:click={(e) => {
+				if (!isCreatingThread) {
+					isCreatingThread = true
+				} else {
+					e.preventDefault()
+				}
+			}}
 		>
 			<PlusSvg />
 		</a>
@@ -281,7 +295,7 @@
 				data-testid="send-button"
 				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50"
 				type="submit"
-				disabled={loading}
+				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
 			>
 				<ArrowRightSvg />

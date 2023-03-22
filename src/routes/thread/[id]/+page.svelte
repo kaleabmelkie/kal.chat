@@ -18,7 +18,7 @@
 	let innerWidth = 0
 	let innerHeight = 0
 	let isSideBarOpen = false
-	let loading = false
+	let isSendingMessage = false
 	let bottomEle: HTMLSpanElement | null = null
 	let message = ''
 
@@ -74,14 +74,14 @@
 		</button>
 	{/if}
 	<div class="relative h-screen flex-1 overflow-auto">
-		<MessageList bind:data bind:loading on:scrollToBottom={scrollToBottom} />
+		<MessageList bind:data bind:isSendingMessage on:scrollToBottom={scrollToBottom} />
 
 		<MessageForm
 			bind:data
 			bind:innerWidth
 			bind:innerHeight
 			bind:isSideBarOpen
-			bind:loading
+			bind:isSendingMessage
 			bind:message
 			bind:tokensActive
 			on:scrollToBottom={scrollToBottom}

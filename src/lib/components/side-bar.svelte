@@ -3,12 +3,17 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
+	import { createEventDispatcher } from 'svelte'
 	import { fly } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
 	export let innerWidth: number
 	export let isOpen: boolean
+
+	const dispatch = createEventDispatcher<{
+		scrollToBottom: undefined // TODO: use or remove this
+	}>()
 </script>
 
 <div

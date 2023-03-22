@@ -4,7 +4,7 @@
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
-	export let loading: boolean
+	export let isSendingMessage: boolean
 
 	const dispatch = createEventDispatcher<{
 		scrollToBottom: undefined
@@ -30,7 +30,7 @@
 		<Message {message} />
 	{/each}
 
-	{#if loading}
+	{#if isSendingMessage}
 		{#key 'Typing...'}
 			<Message
 				message={{
