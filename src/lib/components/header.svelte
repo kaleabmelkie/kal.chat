@@ -12,7 +12,7 @@
 		<a
 			class="pointer-events-auto absolute -bottom-2 right-0 text-[0.7rem] font-normal text-emerald-600"
 			href="/"
-			title="Go home"
+			title="BEWARE: THERE WILL BE BUGS! 🤷‍♂️"
 		>
 			Early Access
 		</a>
