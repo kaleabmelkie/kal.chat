@@ -5,15 +5,19 @@
 	import ArrowRight from '$lib/icons/arrow-right.svg.svelte'
 	import MenuSvg from '$lib/icons/menu.svg.svelte'
 	import { countTokens } from '$lib/utils/count-tokens'
+	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
 	import { onMount, tick } from 'svelte'
 
 	export let data
 
 	onMount(() => {
 		scrollToBottom()
+		isSideBarOpen = innerWidth >= smallScreenThresholdInPx
 	})
 
-	let isSideBarOpen = true // TODO: hide for mobile
+	let innerWidth = 0
+	let innerHeight = 0
+	let isSideBarOpen = false
 	let loading = false
 	let bottomEle: HTMLSpanElement | null = null
 	let message = ''
@@ -40,6 +44,8 @@
 	}
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
+
 <svelte:head>
 	<title>
 		{data.thread.title
@@ -50,7 +56,12 @@
 
 <div class="flex h-screen">
 	{#if isSideBarOpen}
-		<SideBar bind:data bind:isOpen={isSideBarOpen} on:scrollToBottom={scrollToBottom} />
+		<SideBar
+			bind:data
+			bind:innerWidth
+			bind:isOpen={isSideBarOpen}
+			on:scrollToBottom={scrollToBottom}
+		/>
 	{:else}
 		<button
 			class="group absolute left-0 top-[4.75rem] z-30 flex h-14 w-36 transform-gpu items-center gap-2 rounded-r-full bg-white/75 p-4 text-blue-900 shadow-sm shadow-blue-600/10 transition-all hover:w-40 hover:bg-white/95 hover:text-blue-600 hover:shadow focus:w-44 focus:bg-white/95 focus:text-blue-600 focus:shadow active:bg-blue-500/5 active:shadow-none sm:backdrop-blur-sm lg:p-6 lg:backdrop-blur"
@@ -67,6 +78,8 @@
 
 		<MessageForm
 			bind:data
+			bind:innerWidth
+			bind:innerHeight
 			bind:isSideBarOpen
 			bind:loading
 			bind:message

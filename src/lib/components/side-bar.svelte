@@ -2,16 +2,13 @@
 	import { page } from '$app/stores'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
-	import { createEventDispatcher, tick } from 'svelte'
+	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
 	import { fly } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
+	export let innerWidth: number
 	export let isOpen: boolean
-
-	const dispatch = createEventDispatcher<{
-		scrollToBottom: undefined
-	}>()
 </script>
 
 <div
@@ -45,7 +42,9 @@
 						: ''}"
 					href="/thread/{topic.id}"
 					on:click={() => {
-						// isOpen = false // TODO: do this only on mobile
+						if (innerWidth < smallScreenThresholdInPx) {
+							isOpen = false
+						}
 					}}
 				>
 					<div

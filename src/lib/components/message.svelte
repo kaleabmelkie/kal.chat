@@ -39,7 +39,12 @@
 			} catch {
 				// do nothing
 			}
-			tick().then(() => callback?.(null, Prism.highlight(code, Prism.languages[lang], lang)))
+			tick().then(() =>
+				callback?.(
+					null,
+					Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
+				),
+			)
 		},
 		breaks: true,
 		gfm: true,

@@ -13,6 +13,8 @@
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
+	export let innerWidth: number
+	export let innerHeight: number
 	export let isSideBarOpen: boolean
 	export let loading: boolean
 	export let message: string
@@ -43,8 +45,6 @@
 
 	const maxTokens = 4000
 
-	let innerWidth = 0
-	let innerHeight = 0
 	let messageBoxEle: HTMLTextAreaElement | null = null
 
 	let submitButtonEle: HTMLButtonElement | null = null
@@ -131,8 +131,6 @@
 		}
 	}
 </script>
-
-<svelte:window bind:innerWidth bind:innerHeight />
 
 <form
 	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
@@ -310,11 +308,12 @@
 					class="pointer-events-auto font-black text-red-500"
 					transition:fade={{ duration: 150 }}
 				>
-					{tokensActive - maxTokens} words over
+					{Intl.NumberFormat().format(tokensActive - maxTokens)} words over
 				</span>
 			{:else}
 				<span class="pointer-events-auto text-blue-900/50" transition:fade={{ duration: 150 }}>
-					{tokensActive} / {maxTokens} words in context
+					{Intl.NumberFormat().format(tokensActive)} / {Intl.NumberFormat().format(maxTokens)} words
+					in context
 				</span>
 			{/if}
 		{/if}
