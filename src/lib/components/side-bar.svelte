@@ -3,7 +3,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
-	import { createEventDispatcher } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import { fly } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
@@ -11,9 +11,20 @@
 	export let innerWidth: number
 	export let isOpen: boolean
 
-	const dispatch = createEventDispatcher<{
-		scrollToBottom: undefined // TODO: use or remove this
-	}>()
+	onMount(() => {
+		minuteInterval = setInterval(() => {
+			minuteKey = Date.now()
+		}, 1000)
+	})
+
+	onDestroy(() => {
+		if (minuteInterval) {
+			clearInterval(minuteInterval)
+		}
+	})
+
+	let minuteInterval: NodeJS.Timer
+	let minuteKey = Date.now()
 </script>
 
 <div
@@ -60,14 +71,16 @@
 					>
 						{topic.title ?? 'Untitled thread'}
 					</div>
-					<div
-						class="text-xs text-blue-900/50"
-						title="Last message in this thread was sent on {dayjs(topic.updatedAt).format(
-							'MMMM DD, YYYY hh:mm A',
-						)}"
-					>
-						{dayjs(topic.updatedAt).fromNow()}
-					</div>
+					{#key minuteKey}
+						<div
+							class="text-xs text-blue-900/50"
+							title="Last message in this thread was sent on {dayjs(topic.updatedAt).format(
+								'MMMM DD, YYYY hh:mm A',
+							)}"
+						>
+							{dayjs(topic.updatedAt).fromNow()}
+						</div>
+					{/key}
 				</a>
 			</li>
 		{:else}
