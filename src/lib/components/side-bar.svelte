@@ -4,7 +4,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
-	import { onDestroy, onMount, tick } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import { fly } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
@@ -12,7 +12,7 @@
 	export let innerWidth: number
 	export let isOpen: boolean
 
-	onMount(() => {
+	onMount(async () => {
 		if (browser) {
 			minuteInterval = setInterval(() => {
 				minuteKey = Date.now()
@@ -20,11 +20,6 @@
 
 			scrollableEle?.addEventListener('scroll', updateIsAtTheTop)
 		}
-
-		scrollToTop()
-		page.subscribe(() => {
-			scrollToTop()
-		})
 	})
 
 	onDestroy(() => {
@@ -39,7 +34,6 @@
 
 	let scrollableEle: HTMLDivElement | null = null
 	let isAtTheTop = true
-	let topEle: HTMLDivElement | null = null
 	let minuteInterval: NodeJS.Timer
 	let minuteKey = Date.now()
 
@@ -49,29 +43,13 @@
 		}
 		isAtTheTop = scrollableEle.scrollTop === 0
 	}
-
-	async function scrollToTop() {
-		if (!topEle) {
-			return
-		}
-		topEle.scrollIntoView({ behavior: 'smooth' })
-		await tick()
-		setTimeout(() => {
-			if (!topEle) {
-				return
-			}
-			topEle.scrollIntoView({ behavior: 'smooth' })
-		}, 150)
-	}
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden bg-white pt-[4.75rem] sm:static sm:w-[16rem] sm:bg-white/25"
+	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] sm:static sm:w-[16rem] sm:bg-white/25"
 	transition:fly={{ duration: 150, x: -32 }}
 	bind:this={scrollableEle}
 >
-	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
-
 	<div class="pointer-events-none sticky top-0 flex items-center p-4 lg:px-6">
 		<h2 class="text-blue-600/50 transition-all {isAtTheTop ? 'opacity-100' : 'opacity-0'}">
 			Threads
