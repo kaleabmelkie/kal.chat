@@ -326,8 +326,7 @@
 				</span>
 			{:else}
 				<span class="pointer-events-auto text-blue-900/50" transition:fade={{ duration: 150 }}>
-					{Intl.NumberFormat().format(tokensActive)} / {Intl.NumberFormat().format(maxTokens)} words
-					in context
+					{Intl.NumberFormat().format(maxTokens - tokensActive)} words left
 				</span>
 			{/if}
 		{/if}
