@@ -2,6 +2,8 @@
 	import MessageForm from '$lib/components/message-form.svelte'
 	import MessageList from '$lib/components/message-list.svelte'
 	import SideBar from '$lib/components/side-bar.svelte'
+	import ArrowRight from '$lib/icons/arrow-right.svg.svelte'
+	import MenuSvg from '$lib/icons/menu.svg.svelte'
 	import { countTokens } from '$lib/utils/count-tokens'
 	import { onMount, tick } from 'svelte'
 
@@ -11,7 +13,7 @@
 		scrollToBottom()
 	})
 
-	let isSideOpen = false
+	let isSideBarOpen = true // TODO: hide for mobile
 	let loading = false
 	let bottomEle: HTMLSpanElement | null = null
 	let message = ''
@@ -47,15 +49,25 @@
 </svelte:head>
 
 <div class="flex h-screen">
-	{#if isSideOpen}
-		<SideBar bind:isOpen={isSideOpen} />
+	{#if isSideBarOpen}
+		<SideBar bind:data bind:isOpen={isSideBarOpen} on:scrollToBottom={scrollToBottom} />
+	{:else}
+		<button
+			class="group absolute left-0 top-[4.75rem] z-30 flex h-14 w-36 transform-gpu items-center gap-2 rounded-r-full bg-white/75 p-4 text-blue-900 shadow-sm shadow-blue-600/10 transition-all hover:w-40 hover:bg-white/95 hover:text-blue-600 hover:shadow focus:w-44 focus:bg-white/95 focus:text-blue-600 focus:shadow active:bg-blue-500/5 active:shadow-none sm:backdrop-blur-sm lg:p-6 lg:backdrop-blur"
+			type="button"
+			on:click={() => (isSideBarOpen = true)}
+		>
+			<MenuSvg class="!h-5 !w-5 transition-all group-hover:opacity-0 group-focus:opacity-0" />
+			<span class="flex-1 pr-1 text-center font-semibold transition-all"> Threads </span>
+			<ArrowRight class="hidden !h-5 !w-5 transition-all group-hover:block group-focus:block" />
+		</button>
 	{/if}
 	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList bind:data bind:loading on:scrollToBottom={scrollToBottom} />
 
 		<MessageForm
 			bind:data
-			bind:isSideOpen
+			bind:isSideBarOpen
 			bind:loading
 			bind:message
 			bind:tokensActive

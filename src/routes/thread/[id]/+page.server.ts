@@ -1,7 +1,7 @@
+import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { countTokens } from '$lib/utils/count-tokens'
 import { error, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
 
@@ -47,6 +47,11 @@ export const load = async (event) => {
 		thread,
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 		contextLength,
+		topics: prisma.thread.findMany({
+			where: { user: { email: session.user.email } },
+			select: { id: true, title: true, updatedAt: true },
+			orderBy: { updatedAt: 'desc' },
+		}),
 	}
 }
 

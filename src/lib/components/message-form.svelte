@@ -13,7 +13,7 @@
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
-	export let isSideOpen: boolean
+	export let isSideBarOpen: boolean
 	export let loading: boolean
 	export let message: string
 	export let tokensActive: number
@@ -135,7 +135,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <form
-	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideOpen
+	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
 		? 'left-[16rem]'
 		: 'left-0'}"
 	method="POST"
@@ -209,18 +209,16 @@
 	/>
 
 	<div
-		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+3px)]"
+		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+2px)]"
 	>
-		{#if !isSideOpen}
-			<a
-				data-sveltekit-preload-data="tap"
-				class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur"
-				title="New thread"
-				href="/thread/new"
-			>
-				<PlusSvg />
-			</a>
-		{/if}
+		<a
+			data-sveltekit-preload-data="tap"
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur"
+			title="New thread"
+			href="/thread/new"
+		>
+			<PlusSvg />
+		</a>
 
 		<div class="group relative flex flex-1">
 			<!-- svelte-ignore a11y-autofocus -->
@@ -294,7 +292,7 @@
 	</div>
 
 	<div
-		class="flex py-5 text-sm"
+		class="flex gap-4 py-5 text-sm"
 		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		<a
