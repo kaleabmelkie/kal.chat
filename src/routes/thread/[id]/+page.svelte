@@ -64,7 +64,7 @@
 		/>
 	{:else}
 		<button
-			class="group absolute left-0 top-[4.75rem] z-30 flex h-14 w-36 transform-gpu items-center gap-2 rounded-r-full bg-white/75 p-4 text-blue-900 shadow-sm shadow-blue-600/10 transition-all hover:w-40 hover:bg-white/95 hover:text-blue-600 hover:shadow focus:w-44 focus:bg-white/95 focus:text-blue-600 focus:shadow active:bg-blue-500/5 active:shadow-none sm:backdrop-blur-sm lg:p-6 lg:backdrop-blur"
+			class="group fixed left-0 top-[4.75rem] z-30 flex h-14 w-36 transform-gpu items-center gap-2 rounded-r-full bg-white/75 p-4 text-blue-900 shadow-sm shadow-blue-600/10 transition-all hover:w-40 hover:bg-white/95 hover:text-blue-600 hover:shadow focus:w-44 focus:bg-white/95 focus:text-blue-600 focus:shadow active:bg-blue-500/5 active:shadow-none sm:backdrop-blur-sm lg:p-6 lg:backdrop-blur"
 			type="button"
 			on:click={() => (isSideBarOpen = true)}
 		>
