@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import Message from '$lib/components/message.svelte'
 	import { createEventDispatcher, onMount } from 'svelte'
 	import type { PageData } from '../../routes/thread/[id]/$types'
@@ -12,6 +13,9 @@
 
 	onMount(() => {
 		dispatch('scrollToBottom')
+		page.subscribe(() => {
+			dispatch('scrollToBottom')
+		})
 	})
 
 	let typingDotCount = 0
