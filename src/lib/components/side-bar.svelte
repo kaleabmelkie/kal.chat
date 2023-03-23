@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
+	import { goto, invalidate, invalidateAll } from '$app/navigation'
 	import { page } from '$app/stores'
+	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
+	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
+	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
 	import { onDestroy, onMount } from 'svelte'
-	import { fly } from 'svelte/transition'
+	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
 	export let data: PageData
@@ -34,6 +38,7 @@
 
 	let scrollableEle: HTMLDivElement | null = null
 	let isAtTheTop = true
+	let optionsExpandedForThreadId: number | null = null
 	let minuteInterval: NodeJS.Timer
 	let minuteKey = Date.now()
 
@@ -70,39 +75,87 @@
 	</div>
 
 	<ul>
-		{#each data.topics as topic (topic.id)}
-			<li title={topic.title ?? undefined}>
+		{#each data.threads as thread (thread.id)}
+			<li class="relative" title={thread.title ?? undefined}>
 				<a
-					class="group block py-3 px-4 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-blue-500/5 lg:px-6 {$page
-						.url.pathname === `/thread/${topic.id}`
+					class="group flex py-3 px-4 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-blue-500/5 lg:px-6 {$page
+						.url.pathname === `/thread/${thread.id}`
 						? 'bg-white/50'
 						: ''}"
-					href="/thread/{topic.id}"
+					href="/thread/{thread.id}"
 					on:click={() => {
 						if (innerWidth < smallScreenThresholdInPx) {
 							isOpen = false
 						}
 					}}
 				>
-					<div
-						class="text-sm line-clamp-2 group-hover:text-blue-600 group-focus:text-blue-600 {$page
-							.url.pathname === `/thread/${topic.id}`
-							? 'font-semibold text-blue-600'
-							: 'text-blue-900/90'}"
-					>
-						{topic.title ?? 'Untitled thread'}
-					</div>
-					{#key minuteKey}
+					<div class="flex-1">
 						<div
-							class="text-xs text-blue-900/50"
-							title="Last message in this thread was sent on {dayjs(topic.updatedAt).format(
-								'MMMM DD, YYYY hh:mm A',
-							)}"
+							class="text-sm line-clamp-2 group-hover:text-blue-600 group-focus:text-blue-600 {$page
+								.url.pathname === `/thread/${thread.id}`
+								? 'font-semibold text-blue-600'
+								: 'text-blue-900/90'}"
 						>
-							{dayjs(topic.updatedAt).fromNow()}
+							{thread.title ?? 'Untitled thread'}
 						</div>
-					{/key}
+						{#key minuteKey}
+							<div
+								class="text-xs text-blue-900/50"
+								title="Last message in this thread was sent on {dayjs(thread.updatedAt).format(
+									'MMMM DD, YYYY hh:mm A',
+								)}"
+							>
+								{dayjs(thread.updatedAt).fromNow()}
+							</div>
+						{/key}
+					</div>
+					<button
+						class="-mr-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-blue-100/50 {optionsExpandedForThreadId ===
+						thread.id
+							? 'bg-blue-100/50'
+							: ''}"
+						on:click|preventDefault|stopPropagation={() => (optionsExpandedForThreadId = thread.id)}
+					>
+						<MoreVerticalSvg class="h-4 w-4 text-blue-900/50" />
+					</button>
 				</a>
+				{#if optionsExpandedForThreadId === thread.id}
+					<div
+						class="shadow-blur-900/25 absolute top-12 right-4 z-30 flex flex-col gap-2 rounded bg-white/75 p-1 shadow-lg backdrop-blur-sm"
+						transition:slide={{ duration: 150 }}
+						use:clickOutside={() => (optionsExpandedForThreadId = null)}
+					>
+						<button
+							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
+							type="button"
+							on:click={async () => {
+								if (!confirm('Are you sure you want to delete this thread?')) {
+									return
+								}
+								optionsExpandedForThreadId = null
+								await fetch(`/thread/${thread.id}`, { method: 'DELETE' })
+									.then(async (r) => {
+										if (!r.ok) {
+											throw new Error(
+												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
+											)
+										}
+										await goto('/thread/latest')
+									})
+									.catch((e) =>
+										alert(
+											`Thread (ID: ${thread.id}) could not be deleted.\n\n${
+												e?.message ?? 'Unknown error.'
+											}`,
+										),
+									)
+							}}
+						>
+							<TrashSvg class="h-4 w-4 text-red-500/95" />
+							<span>Delete thread</span>
+						</button>
+					</div>
+				{/if}
 			</li>
 		{:else}
 			<li class="p-4 text-sm text-blue-900/75 lg:p-6">

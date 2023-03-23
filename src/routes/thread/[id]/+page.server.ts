@@ -47,7 +47,7 @@ export const load = async (event) => {
 		thread,
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 		contextLength,
-		topics: prisma.thread.findMany({
+		threads: prisma.thread.findMany({
 			where: { user: { email: session.user.email } },
 			select: { id: true, title: true, updatedAt: true },
 			orderBy: { updatedAt: 'desc' },

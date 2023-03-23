@@ -36,7 +36,7 @@ model Thread {
 
   title String? @db.VarChar(64)
 
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId Int
 
   Message Message[]
@@ -52,7 +52,7 @@ model Message {
   role    RoleType
   content String   @db.VarChar(15000)
 
-  thread   Thread @relation(fields: [threadId], references: [id])
+  thread   Thread @relation(fields: [threadId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   threadId Int
 
   @@index([threadId])
