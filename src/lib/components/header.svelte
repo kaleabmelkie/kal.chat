@@ -55,7 +55,10 @@
 
 			<div class="pointer-events-auto my-auto hidden sm:grid">
 				<div class="text-xs uppercase text-blue-900/75">Logged in as</div>
-				<div class="text-sm font-bold text-blue-900">
+				<div
+					class="max-w-[8rem] text-sm font-bold text-blue-900 line-clamp-1"
+					title={$page.data.session.user?.name ?? undefined}
+				>
 					{$page.data.session.user?.name ?? 'User'}
 				</div>
 			</div>

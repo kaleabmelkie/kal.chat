@@ -8,6 +8,7 @@ specifiers:
   '@prisma/client': 4.11.0
   '@sveltejs/adapter-vercel': 2.4.0
   '@sveltejs/kit': 1.13.0
+  '@tailwindcss/line-clamp': 0.4.2
   '@tailwindcss/typography': 0.5.9
   '@types/lodash': 4.14.191
   '@types/marked': 4.0.8
@@ -49,6 +50,7 @@ devDependencies:
   '@prisma/client': 4.11.0_prisma@4.11.0
   '@sveltejs/adapter-vercel': 2.4.0_@sveltejs+kit@1.13.0
   '@sveltejs/kit': 1.13.0_svelte@3.57.0+vite@4.2.1
+  '@tailwindcss/line-clamp': 0.4.2_tailwindcss@3.2.7
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
   '@types/lodash': 4.14.191
   '@types/marked': 4.0.8
@@ -734,6 +736,14 @@ packages:
       vitefu: 0.2.4_vite@4.2.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@tailwindcss/line-clamp/0.4.2_tailwindcss@3.2.7:
+    resolution: {integrity: sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.2.7_postcss@8.4.21
     dev: true
 
   /@tailwindcss/typography/0.5.9_tailwindcss@3.2.7:

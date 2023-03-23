@@ -32,6 +32,7 @@
 		"@prisma/client": "4.11.0",
 		"@sveltejs/adapter-vercel": "2.4.0",
 		"@sveltejs/kit": "1.13.0",
+		"@tailwindcss/line-clamp": "0.4.2",
 		"@tailwindcss/typography": "0.5.9",
 		"@types/lodash": "4.14.191",
 		"@types/marked": "4.0.8",

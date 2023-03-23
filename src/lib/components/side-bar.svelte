@@ -85,8 +85,8 @@
 					}}
 				>
 					<div
-						class="text-sm group-hover:text-blue-600 group-focus:text-blue-600 {$page.url
-							.pathname === `/thread/${topic.id}`
+						class="text-sm line-clamp-2 group-hover:text-blue-600 group-focus:text-blue-600 {$page
+							.url.pathname === `/thread/${topic.id}`
 							? 'font-semibold text-blue-600'
 							: 'text-blue-900/90'}"
 					>
