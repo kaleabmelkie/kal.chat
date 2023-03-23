@@ -24,9 +24,18 @@
 		<a
 			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 py-2 px-4 text-sm font-semibold text-blue-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-blue-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
 			href="/account/subscribe"
+			on:click={(e) => {
+				if (
+					!confirm(
+						`Upgrading to the paid monthly subscription while the app is in the free Early Access period will not get you any special perks.\n\nYou'll be notified by email when launch officially.\n\nUpgrading now would be just a sign of support for the development of the project (which is really appreciated).\n\nDo you still want to continue?`,
+					)
+				) {
+					e.preventDefault()
+				}
+			}}
 		>
 			<div class="text-lg">✨</div>
-			<div class="pr-2">Subscribe</div>
+			<div class="pr-2">Upgrade</div>
 		</a>
 		<a
 			class="pointer-events-auto my-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 py-1 px-1 text-blue-600 transition-all duration-150 hover:bg-white/95 hover:shadow hover:shadow-blue-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:pr-4 sm:backdrop-blur-sm lg:backdrop-blur"
