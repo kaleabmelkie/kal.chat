@@ -1,13 +1,10 @@
+import { contextLength, maxTokens, modelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
-
-const modelName = 'gpt-3.5-turbo' as const
-const maxTokens = 4000 as const
-const contextLength = 9 as const
 
 export const load = async (event) => {
 	const { session } = await event.parent()

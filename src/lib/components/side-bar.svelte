@@ -4,14 +4,16 @@
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
+	import EditBoxSvg from '$lib/icons/edit-box.svg.svelte'
 	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
+	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
-	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
 	import { onDestroy, onMount } from 'svelte'
 	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
+	import _ from 'lodash'
 
 	export let data: PageData
 	export let innerWidth: number
@@ -52,7 +54,7 @@
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] sm:static sm:w-[16rem] sm:bg-white/25"
+	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] sm:static sm:w-[18rem] sm:bg-white/25"
 	transition:fly={{ duration: 150, x: -32 }}
 	bind:this={scrollableEle}
 >
@@ -77,9 +79,13 @@
 
 	<ul>
 		{#each data.threads as thread (thread.id)}
-			<li class="relative" title={thread.title ?? undefined}>
+			<li
+				class="relative"
+				title={thread.title ?? undefined}
+				transition:slide|local={{ duration: 150 }}
+			>
 				<a
-					class="group flex py-3 px-4 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-blue-500/5 lg:px-6 {$page
+					class="group flex gap-1 py-3 px-4 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-blue-500/5 lg:px-6 {$page
 						.url.pathname === `/thread/${thread.id}`
 						? 'bg-white/50'
 						: ''}"
@@ -122,10 +128,59 @@
 				</a>
 				{#if optionsExpandedForThreadId === thread.id}
 					<div
-						class="shadow-blur-900/25 absolute top-12 right-4 z-30 flex flex-col gap-2 rounded bg-white/75 p-1 shadow-lg backdrop-blur-sm"
+						class="shadow-blur-900/25 absolute top-12 right-4 z-30 flex flex-col rounded bg-white/75 p-1 shadow-lg backdrop-blur-sm"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForThreadId = null)}
 					>
+						<button
+							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
+							type="button"
+							on:click={async () => {
+								if (
+									thread.title &&
+									!confirm(
+										'This thread already has a title. Are you sure you want to auto-regenerate it?',
+									)
+								) {
+									return
+								}
+								optionsExpandedForThreadId = null
+								await fetch(`/thread/${thread.id}/generate-title`, {
+									method: 'PUT',
+								})
+									.then(async (r) => {
+										if (!r.ok) {
+											throw new Error(
+												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
+											)
+										}
+										const response = await r.json()
+										if (typeof response?.title !== 'string') {
+											throw new Error(`Expected a title but did not get one.`)
+										}
+										thread.title = response.title
+										thread.updatedAt = response.updatedAt
+										const threadIndex = data.threads.findIndex((t) => t.id === thread.id)
+										if (threadIndex !== -1) {
+											data.threads[threadIndex].title = response.title
+											data.threads[threadIndex].updatedAt = response.updatedAt
+											data.threads.splice(threadIndex, 1)
+											data.threads.unshift(thread)
+										}
+									})
+									.catch((e) =>
+										alert(
+											`The title of the thread (ID: ${thread.id}) could not be auto-generated.\n\n${
+												e?.message ?? 'Unknown error.'
+											}`,
+										),
+									)
+							}}
+						>
+							<EditSvg class="h-4 w-4 text-blue-500/95" />
+							<span>Generate title</span>
+						</button>
+
 						<button
 							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
 							type="button"
@@ -159,7 +214,7 @@
 									)
 							}}
 						>
-							<EditSvg class="h-4 w-4 text-blue-500/95" />
+							<EditBoxSvg class="h-4 w-4 text-blue-500/95" />
 							<span>Change title</span>
 						</button>
 

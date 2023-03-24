@@ -5,8 +5,8 @@
 	import SideBar from '$lib/components/side-bar.svelte'
 	import ArrowRight from '$lib/icons/arrow-right.svg.svelte'
 	import MenuSvg from '$lib/icons/menu.svg.svelte'
+	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { countTokens } from '$lib/utils/count-tokens'
-	import { smallScreenThresholdInPx } from '$lib/utils/small-screen-threshold-in-px'
 	import { onMount, tick } from 'svelte'
 
 	export let data

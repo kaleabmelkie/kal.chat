@@ -6,6 +6,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
+	import { maxTokens } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -47,8 +48,6 @@
 			})
 		}
 	})
-
-	const maxTokens = 4000
 
 	let isCreatingThread = false
 	let messageBoxEle: HTMLTextAreaElement | null = null
@@ -139,7 +138,7 @@
 
 <form
 	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
-		? 'left-[16rem]'
+		? 'left-[18rem]'
 		: 'left-0'}"
 	method="POST"
 	action="?/newMessage"
