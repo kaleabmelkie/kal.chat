@@ -179,7 +179,11 @@
 									'MMMM DD, YYYY hh:mm A',
 								)}"
 							>
-								{dayjs(thread.updatedAt).fromNow()}
+								<span>{dayjs(thread.updatedAt).fromNow()}</span>,
+								<span title="Messages in this thread plus the system prompt."
+									>{thread.Message.length}
+									{thread.Message.length === 1 ? 'message' : 'messages'}</span
+								>
 							</div>
 						{/key}
 					</div>

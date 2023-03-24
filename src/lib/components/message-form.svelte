@@ -225,7 +225,7 @@
 	/>
 
 	<div
-		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+2px)]"
+		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+1px)]"
 	>
 		<a
 			data-sveltekit-preload-data="tap"
