@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { goto, invalidate } from '$app/navigation'
+	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -24,7 +24,7 @@
 		if (browser) {
 			minuteInterval = setInterval(() => {
 				minuteKey = Date.now()
-			}, 1000)
+			}, 1000) as unknown as number
 
 			scrollableEle?.addEventListener('scroll', updateIsAtTheTop)
 		}
@@ -48,7 +48,7 @@
 	let isAtTheTop = true
 	let topEle: HTMLDivElement | null = null
 	let optionsExpandedForThreadId: number | null = null
-	let minuteInterval: NodeJS.Timer
+	let minuteInterval: number
 	let minuteKey = Date.now()
 
 	async function updateIsAtTheTop() {
