@@ -4,21 +4,29 @@ import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
 
-export async function PUT({ locals, params }) {
+export async function PUT({ locals, params, url }) {
 	const session = await locals.getSession()
 	if (!session?.user?.email) {
 		throw error(401, `You must be logged in to change a thread's title`)
 	}
 
+	let thread = await prisma.thread.findFirstOrThrow({
+		where: {
+			id: Number(params.id),
+			user: {
+				email: session.user.email,
+			},
+		},
+	})
+
+	if (thread.title && url.searchParams.get('force') !== 'true') {
+		throw error(400, 'Thread already has a title')
+	}
+
 	const reversedMessages = await prisma.message.findMany({
 		where: {
 			role: { in: ['assistant', 'user'] },
-			thread: {
-				id: Number(params.id),
-				user: {
-					email: session.user.email,
-				},
-			},
+			threadId: thread.id,
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -64,7 +72,7 @@ export async function PUT({ locals, params }) {
 		throw error(500, 'Could not generate a title')
 	}
 
-	const thread = await prisma.thread.update({
+	thread = await prisma.thread.update({
 		where: {
 			id: Number(params.id),
 			user: {

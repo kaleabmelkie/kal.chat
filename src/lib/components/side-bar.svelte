@@ -67,15 +67,8 @@
 		}, 150)
 	}
 
-	async function handleGenerateTitle(thread: PageData['threads'][number]) {
-		if (
-			thread.title &&
-			!confirm('This thread already has a title. Are you sure you want to auto-regenerate it?')
-		) {
-			return
-		}
-		optionsExpandedForThreadId = null
-		await fetch(`/thread/${thread.id}/generate-title`, {
+	async function handleGenerateTitle(thread: PageData['threads'][number], force: boolean) {
+		await fetch(`/thread/${thread.id}/generate-title?force=${force}`, {
 			method: 'PUT',
 		})
 			.then(async (r) => {
@@ -112,11 +105,11 @@
 		for (const thread of threads) {
 			if (!thread.title && thread.Message.length > 2) {
 				console.log(`Generating title for unnamed thread (ID: ${thread.id})...`)
-				await handleGenerateTitle(thread)
+				await handleGenerateTitle(thread, false)
 			}
 		}
 	}
-	$: generateTitleForUnnamedAndEligibleThreads(data.threads)
+	generateTitleForUnnamedAndEligibleThreads(data.threads).catch(console.error)
 </script>
 
 <div
@@ -204,10 +197,21 @@
 						<button
 							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
 							type="button"
-							on:click={() => handleGenerateTitle(thread)}
+							on:click={() => {
+								if (
+									thread.title &&
+									!confirm(
+										'This thread already has a title. Are you sure you want to auto-regenerate it?',
+									)
+								) {
+									return
+								}
+								optionsExpandedForThreadId = null
+								handleGenerateTitle(thread, true)
+							}}
 						>
 							<EditSvg class="h-4 w-4 text-blue-500/95" />
-							<span>Generate title</span>
+							<span>{thread.title ? 'Regenerate' : 'Generate'} title</span>
 						</button>
 
 						<button
