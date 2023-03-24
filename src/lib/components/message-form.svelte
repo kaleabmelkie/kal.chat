@@ -146,7 +146,7 @@
 </script>
 
 <form
-	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-blue-50 to-blue-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
+	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
 		? 'left-[18rem]'
 		: 'left-0'}"
 	method="POST"
@@ -237,8 +237,8 @@
 	>
 		<a
 			data-sveltekit-preload-data="tap"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-blue-900 shadow-lg shadow-blue-900/20 ring-2 ring-blue-600/75 transition-all duration-150 hover:bg-white hover:shadow-blue-900/30 focus:bg-white active:shadow-xl active:shadow-blue-900/20 active:ring-offset-2 active:ring-offset-blue-50 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
-				? 'animate-pulse cursor-default bg-blue-600/25 text-blue-900/50 shadow-none ring-0 ring-offset-0'
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-offset-2 active:ring-offset-primary-50 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
+				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0 ring-offset-0'
 				: ''}"
 			title="New thread"
 			href="/thread/new"
@@ -257,7 +257,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="pointer-events-auto h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-blue-900/20 outline-none ring-2 ring-blue-600/75 transition-all duration-150 placeholder:text-blue-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-blue-900/30 focus:bg-white focus:shadow-xl focus:shadow-blue-900/20 focus:ring-offset-2 focus:ring-offset-blue-50 disabled:animate-pulse disabled:bg-blue-600/25 disabled:text-blue-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="pointer-events-auto h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-offset-2 focus:ring-offset-primary-50 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokens
@@ -295,8 +295,8 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50 {isVoiceTyping
-						? 'animate-ping !bg-transparent !text-blue-500'
+					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
+						? 'animate-ping !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
 					title="Type using voice"
@@ -314,7 +314,7 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-blue-900 transition-all duration-150 hover:bg-blue-300/25 active:bg-blue-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-blue-900/50"
+				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
 				type="submit"
 				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
@@ -329,7 +329,7 @@
 		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
 	>
 		<a
-			class="pointer-events-auto text-blue-900/75 underline-offset-2 hover:underline lg:left-6"
+			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline lg:left-6"
 			href="mailto:support@kal.chat"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"
@@ -344,7 +344,7 @@
 					over
 				</span>
 			{:else}
-				<span class="pointer-events-auto text-blue-900/50" transition:fade={{ duration: 150 }}>
+				<span class="pointer-events-auto text-primary-900/50" transition:fade={{ duration: 150 }}>
 					<span
 						class="font-semibold {tokensActive > maxTokens - maxTokens / 10
 							? 'text-amber-500/95'

@@ -61,7 +61,7 @@
 		<SideBar bind:data bind:innerWidth bind:isOpen={isSideBarOpen} />
 	{:else}
 		<button
-			class="group fixed left-0 top-[4.75rem] z-30 flex h-14 w-20 transform-gpu items-center gap-1 rounded-r-full bg-white/75 p-4 text-blue-900 shadow-sm shadow-blue-600/10 transition-all hover:w-36 hover:bg-white/95 hover:text-blue-600 hover:shadow focus:w-36 focus:bg-white/95 focus:text-blue-600 focus:shadow active:w-36 active:bg-blue-500/5 active:shadow-none sm:backdrop-blur-sm lg:p-6 lg:backdrop-blur"
+			class="group fixed left-0 top-[4.75rem] z-30 flex h-14 w-[4.5rem] transform-gpu items-center rounded-r-full bg-white/75 p-4 text-primary-900 shadow-sm shadow-primary-600/10 transition-all hover:w-36 hover:bg-white/95 hover:text-primary-600 hover:shadow focus:w-36 focus:bg-white/95 focus:text-primary-600 focus:shadow active:w-36 active:bg-primary-500/5 active:shadow-none sm:backdrop-blur-sm lg:pl-6 lg:backdrop-blur"
 			type="button"
 			on:click={() => (isSideBarOpen = true)}
 		>

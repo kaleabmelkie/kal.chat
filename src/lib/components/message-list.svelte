@@ -28,7 +28,7 @@
 					role: 'system',
 					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
 				}}
-				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-blue-900 !shadow-none"
+				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-primary-900 !shadow-none"
 			/>
 		{/key}
 	{/if}
