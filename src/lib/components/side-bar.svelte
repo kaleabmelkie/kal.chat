@@ -10,6 +10,7 @@
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
+	import _ from 'lodash'
 	import { onDestroy, onMount, tick } from 'svelte'
 	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
@@ -65,6 +66,57 @@
 			topEle.scrollIntoView({ behavior: 'smooth' })
 		}, 150)
 	}
+
+	async function handleGenerateTitle(thread: PageData['threads'][number]) {
+		if (
+			thread.title &&
+			!confirm('This thread already has a title. Are you sure you want to auto-regenerate it?')
+		) {
+			return
+		}
+		optionsExpandedForThreadId = null
+		await fetch(`/thread/${thread.id}/generate-title`, {
+			method: 'PUT',
+		})
+			.then(async (r) => {
+				if (!r.ok) {
+					throw new Error(
+						`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
+					)
+				}
+				const response = await r.json()
+				if (typeof response?.title !== 'string') {
+					throw new Error(`Expected a title but did not get one.`)
+				}
+				thread.title = _.startCase(response.title)
+				thread.updatedAt = response.updatedAt
+				const threadIndex = data.threads.findIndex((t) => t.id === thread.id)
+				if (threadIndex !== -1) {
+					data.threads[threadIndex].title = response.title
+					data.threads[threadIndex].updatedAt = response.updatedAt
+					data.threads.splice(threadIndex, 1)
+					data.threads.unshift(thread)
+				}
+				scrollToTop()
+			})
+			.catch((e) =>
+				alert(
+					`The title of the thread (ID: ${thread.id}) could not be auto-generated.\n\n${
+						e?.message ?? 'Unknown error.'
+					}`,
+				),
+			)
+	}
+
+	async function generateTitleForUnnamedAndEligibleThreads(threads: PageData['threads']) {
+		for (const thread of threads) {
+			if (!thread.title && thread.Message.length > 2) {
+				console.log(`Generating title for unnamed thread (ID: ${thread.id})...`)
+				await handleGenerateTitle(thread)
+			}
+		}
+	}
+	$: generateTitleForUnnamedAndEligibleThreads(data.threads)
 </script>
 
 <div
@@ -152,48 +204,7 @@
 						<button
 							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
 							type="button"
-							on:click={async () => {
-								if (
-									thread.title &&
-									!confirm(
-										'This thread already has a title. Are you sure you want to auto-regenerate it?',
-									)
-								) {
-									return
-								}
-								optionsExpandedForThreadId = null
-								await fetch(`/thread/${thread.id}/generate-title`, {
-									method: 'PUT',
-								})
-									.then(async (r) => {
-										if (!r.ok) {
-											throw new Error(
-												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
-											)
-										}
-										const response = await r.json()
-										if (typeof response?.title !== 'string') {
-											throw new Error(`Expected a title but did not get one.`)
-										}
-										thread.title = response.title
-										thread.updatedAt = response.updatedAt
-										const threadIndex = data.threads.findIndex((t) => t.id === thread.id)
-										if (threadIndex !== -1) {
-											data.threads[threadIndex].title = response.title
-											data.threads[threadIndex].updatedAt = response.updatedAt
-											data.threads.splice(threadIndex, 1)
-											data.threads.unshift(thread)
-										}
-										scrollToTop()
-									})
-									.catch((e) =>
-										alert(
-											`The title of the thread (ID: ${thread.id}) could not be auto-generated.\n\n${
-												e?.message ?? 'Unknown error.'
-											}`,
-										),
-									)
-							}}
+							on:click={() => handleGenerateTitle(thread)}
 						>
 							<EditSvg class="h-4 w-4 text-blue-500/95" />
 							<span>Generate title</span>

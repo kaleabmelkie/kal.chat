@@ -46,7 +46,16 @@ export const load = async (event) => {
 		contextLength,
 		threads: prisma.thread.findMany({
 			where: { user: { email: session.user.email } },
-			select: { id: true, title: true, updatedAt: true },
+			select: {
+				id: true,
+				title: true,
+				updatedAt: true,
+				Message: {
+					select: {
+						id: true,
+					},
+				},
+			},
 			orderBy: { updatedAt: 'desc' },
 		}),
 	}
@@ -149,26 +158,28 @@ export const actions = {
 			}),
 		])
 
+		const thread = await prisma.thread.findFirstOrThrow({
+			where: {
+				id: Number(event.params.id),
+				user: {
+					email: session.user.email,
+				},
+			},
+			orderBy: {
+				id: 'desc',
+			},
+			take: 1,
+			include: {
+				Message: {
+					orderBy: {
+						id: 'asc',
+					},
+				},
+			},
+		})
+
 		return {
-			thread: await prisma.thread.findFirstOrThrow({
-				where: {
-					id: Number(event.params.id),
-					user: {
-						email: session.user.email,
-					},
-				},
-				orderBy: {
-					id: 'desc',
-				},
-				take: 1,
-				include: {
-					Message: {
-						orderBy: {
-							id: 'asc',
-						},
-					},
-				},
-			}),
+			thread,
 		}
 	},
 }
