@@ -4,7 +4,7 @@ import { error, json } from '@sveltejs/kit'
 export async function PUT({ locals, params, request }) {
 	const session = await locals.getSession()
 	if (!session?.user?.email) {
-		throw error(401, 'You must be logged in to edit a thread title')
+		throw error(401, `You must be logged in to change a thread's title`)
 	}
 
 	const data = await request.json()
@@ -24,5 +24,5 @@ export async function PUT({ locals, params, request }) {
 		},
 	})
 
-	return json({ message: 'Thread title renamed' })
+	return json({ message: 'Thread title changed' })
 }

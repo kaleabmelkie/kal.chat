@@ -136,7 +136,7 @@
 									return
 								}
 								optionsExpandedForThreadId = null
-								await fetch(`/thread/${thread.id}/rename`, {
+								await fetch(`/thread/${thread.id}/change-title`, {
 									method: 'PUT',
 									body: JSON.stringify({
 										title: newTitle,
@@ -152,7 +152,7 @@
 									})
 									.catch((e) =>
 										alert(
-											`The title of the thread (ID: ${thread.id}) could not be edited.\n\n${
+											`The title of the thread (ID: ${thread.id}) could not be changed.\n\n${
 												e?.message ?? 'Unknown error.'
 											}`,
 										),
@@ -160,7 +160,7 @@
 							}}
 						>
 							<EditSvg class="h-4 w-4 text-blue-500/95" />
-							<span>Edit thread title</span>
+							<span>Change title</span>
 						</button>
 
 						<button
@@ -195,7 +195,7 @@
 							}}
 						>
 							<TrashSvg class="h-4 w-4 text-red-500/95" />
-							<span>Delete thread</span>
+							<span>Delete</span>
 						</button>
 					</div>
 				{/if}
