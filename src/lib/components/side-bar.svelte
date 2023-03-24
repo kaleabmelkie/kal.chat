@@ -128,20 +128,18 @@
 >
 	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
 
-	<div class="pointer-events-none sticky top-0 flex items-center p-4 lg:px-6">
+	<div class="pointer-events-none sticky top-0 z-10 flex items-center p-4 lg:px-6">
 		<h2 class="text-blue-600/50 transition-all {isAtTheTop ? 'opacity-100' : 'opacity-0'}">
 			Threads
 		</h2>
 		<span class="flex-1" />
 		<button
-			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center gap-2 rounded-l-full bg-white/50 p-4 text-blue-900 transition-all hover:w-36 hover:bg-white/95 hover:text-blue-600 focus:w-36 focus:bg-white/95 focus:text-blue-600 active:bg-blue-500/5 sm:backdrop-blur-sm lg:right-4 lg:-m-6 lg:p-6 lg:backdrop-blur"
+			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center gap-1 rounded-l-full bg-white/50 p-4 text-blue-900 transition-all hover:w-32 hover:bg-white/95 hover:text-blue-600 focus:w-32 focus:bg-white/95 focus:text-blue-600 active:w-32 active:bg-blue-500/5 sm:backdrop-blur-sm lg:right-4 lg:-m-6 lg:p-6 lg:backdrop-blur"
 			type="button"
 			on:click={() => (isOpen = false)}
 		>
 			<ArrowRightSvg class="!h-5 !w-5 rotate-180 transition-all" />
-			<span
-				class="hidden flex-1 pr-4 text-center transition-all group-hover:block group-focus:block"
-			>
+			<span class="hidden flex-1 text-center transition-all group-hover:block group-focus:block">
 				Hide
 			</span>
 		</button>
@@ -150,7 +148,7 @@
 	<ul>
 		{#each data.threads as thread (thread.id)}
 			<li
-				class="relative"
+				class="relative z-0"
 				title={thread.title ?? undefined}
 				transition:slide|local={{ duration: 150 }}
 			>
