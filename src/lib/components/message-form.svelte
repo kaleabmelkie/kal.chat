@@ -26,7 +26,7 @@
 		scrollToBottom: undefined
 	}>()
 
-	onMount(() => {
+	onMount(async () => {
 		isCreatingThread = false
 		page.subscribe(() => {
 			isCreatingThread = false
@@ -45,6 +45,8 @@
 		if (browser && q && data.thread.Message.length === 1 && messageBoxEle && submitButtonEle) {
 			messageBoxEle.value = q
 			submitButtonEle.click()
+			await tick()
+			messageBoxEle.value = ''
 		}
 	})
 
