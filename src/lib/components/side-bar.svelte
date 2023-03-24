@@ -97,13 +97,17 @@
 				}
 				scrollToTop()
 			})
-			.catch((e) =>
-				alert(
-					`The title of the thread (ID: ${thread.id}) could not be auto-generated.\n\n${
-						e?.message ?? 'Unknown error.'
-					}`,
-				),
-			)
+			.catch((e) => {
+				if (force) {
+					alert(
+						`The title of the thread (ID: ${thread.id}) could not be auto-generated.\n\n${
+							e?.message ?? 'Unknown error.'
+						}`,
+					)
+				} else {
+					console.error(e)
+				}
+			})
 	}
 
 	async function generateTitleForUnnamedAndEligibleThreads(threads: PageData['threads']) {
