@@ -10,10 +10,9 @@
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
-	import { onDestroy, onMount } from 'svelte'
+	import { onDestroy, onMount, tick } from 'svelte'
 	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
-	import _ from 'lodash'
 
 	export let data: PageData
 	export let innerWidth: number
@@ -41,6 +40,7 @@
 
 	let scrollableEle: HTMLDivElement | null = null
 	let isAtTheTop = true
+	let topEle: HTMLDivElement | null = null
 	let optionsExpandedForThreadId: number | null = null
 	let minuteInterval: NodeJS.Timer
 	let minuteKey = Date.now()
@@ -51,6 +51,20 @@
 		}
 		isAtTheTop = scrollableEle.scrollTop === 0
 	}
+
+	async function scrollToTop() {
+		if (!topEle) {
+			return
+		}
+		topEle.scrollIntoView({ behavior: 'smooth' })
+		await tick()
+		setTimeout(() => {
+			if (!topEle) {
+				return
+			}
+			topEle.scrollIntoView({ behavior: 'smooth' })
+		}, 150)
+	}
 </script>
 
 <div
@@ -58,6 +72,8 @@
 	transition:fly={{ duration: 150, x: -32 }}
 	bind:this={scrollableEle}
 >
+	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
+
 	<div class="pointer-events-none sticky top-0 flex items-center p-4 lg:px-6">
 		<h2 class="text-blue-600/50 transition-all {isAtTheTop ? 'opacity-100' : 'opacity-0'}">
 			Threads
@@ -98,8 +114,9 @@
 				>
 					<div class="flex-1">
 						<div
-							class="text-sm line-clamp-2 group-hover:text-blue-600 group-focus:text-blue-600 {$page
-								.url.pathname === `/thread/${thread.id}`
+							class="text-sm line-clamp-2 group-hover:text-blue-600 group-focus:text-blue-600 {!thread.title
+								? 'italic'
+								: ''} {$page.url.pathname === `/thread/${thread.id}`
 								? 'font-semibold text-blue-600'
 								: 'text-blue-900/90'}"
 						>
@@ -167,6 +184,7 @@
 											data.threads.splice(threadIndex, 1)
 											data.threads.unshift(thread)
 										}
+										scrollToTop()
 									})
 									.catch((e) =>
 										alert(

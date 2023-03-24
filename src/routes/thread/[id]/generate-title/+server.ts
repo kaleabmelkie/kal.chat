@@ -44,12 +44,13 @@ export async function PUT({ locals, params }) {
 		messages: [
 			...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
 			{
-				role: 'user',
-				content: `Generate a short and concise title for our chat conversation. Use all of the history above. Limit the title to a maximum of 7 words. The title should describe our chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not include any quotation marks. Do not include any periods. Do not include any other text. If there are multiple topics, choose the most talked about.`, // 84 tokens (max is 96 minus the response message)
+				role: 'system',
+				content: `Generate a short and accurate title for this chat conversation. Limit the title to a maximum of 5 words. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not include any quotation marks and periods.${
+					session.user?.name ? ` Do not include "${session.user.name.split(' ')[0]}".` : ''
+				} Do not include any other text. If there are multiple topics, choose the most talked about.`, // 86 tokens (max is 96 minus the response message)
 			},
 		],
 	})
-
 	const newTitle = chatCompletionResponse.data.choices
 		?.map((c) => c.message?.content ?? '')
 		.join('')
@@ -59,7 +60,6 @@ export async function PUT({ locals, params }) {
 		.replace(/Topic: /i, '')
 		.replace(/"/g, '')
 		.replace(/\.$/, '')
-
 	if (!newTitle) {
 		throw error(500, 'Could not generate a title')
 	}
