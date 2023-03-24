@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { goto, invalidate, invalidateAll } from '$app/navigation'
+	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
+	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { dayjs } from '$lib/utils/dayjs'
@@ -129,18 +130,60 @@
 							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
 							type="button"
 							on:click={async () => {
-								if (!confirm('Are you sure you want to delete this thread?')) {
+								const newTitle = prompt('New thread title:')
+								if (!newTitle) {
+									alert('Cancelled because no title was provided.')
 									return
 								}
 								optionsExpandedForThreadId = null
-								await fetch(`/thread/${thread.id}`, { method: 'DELETE' })
+								await fetch(`/thread/${thread.id}/rename`, {
+									method: 'PUT',
+									body: JSON.stringify({
+										title: newTitle,
+									}),
+								})
 									.then(async (r) => {
 										if (!r.ok) {
 											throw new Error(
 												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
 											)
 										}
-										await goto('/thread/latest')
+										thread.title = newTitle
+									})
+									.catch((e) =>
+										alert(
+											`The title of the thread (ID: ${thread.id}) could not be edited.\n\n${
+												e?.message ?? 'Unknown error.'
+											}`,
+										),
+									)
+							}}
+						>
+							<EditSvg class="h-4 w-4 text-blue-500/95" />
+							<span>Edit thread title</span>
+						</button>
+
+						<button
+							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-blue-100/50 focus:bg-blue-100/50 active:bg-blue-100"
+							type="button"
+							on:click={async () => {
+								if (!confirm('Are you sure you want to delete this thread?')) {
+									return
+								}
+								optionsExpandedForThreadId = null
+								await fetch(`/thread/${thread.id}/delete`, {
+									method: 'DELETE',
+								})
+									.then(async (r) => {
+										if (!r.ok) {
+											throw new Error(
+												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
+											)
+										}
+										data.threads = data.threads.filter((t) => t.id !== thread.id)
+										if (data.thread.id === thread.id) {
+											await goto('/thread/latest')
+										}
 									})
 									.catch((e) =>
 										alert(

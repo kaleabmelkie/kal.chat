@@ -121,25 +121,36 @@ export const actions = {
 			stream: false,
 		})
 
-		await prisma.message.createMany({
-			data: [
-				{
-					role: 'user',
-					content: message,
-					threadId,
-				},
-				// new messages:
-				...chatCompletionResponse.data.choices
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					.map((c) => c.message!)
-					.filter((m) => !!m)
-					.map((m) => ({
-						role: m.role,
-						content: m.content,
+		await Promise.all([
+			prisma.message.createMany({
+				data: [
+					{
+						role: 'user',
+						content: message,
 						threadId,
-					})),
-			],
-		})
+					},
+					// new messages:
+					...chatCompletionResponse.data.choices
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						.map((c) => c.message!)
+						.filter((m) => !!m)
+						.map((m) => ({
+							role: m.role,
+							content: m.content,
+							threadId,
+						})),
+				],
+			}),
+
+			prisma.thread.update({
+				where: {
+					id: threadId,
+				},
+				data: {
+					updatedAt: new Date(),
+				},
+			}),
+		])
 
 		return {
 			thread: await prisma.thread.findFirstOrThrow({

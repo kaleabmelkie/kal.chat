@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Error ${$page.status} | kal.chat — Better Chat Interface for GPT</title>
+	<title>Error {$page.status} | kal.chat — Better Chat Interface for GPT</title>
 </svelte:head>
 
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">

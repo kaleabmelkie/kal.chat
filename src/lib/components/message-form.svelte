@@ -151,6 +151,10 @@
 
 		const valueBackup = form.message.value
 
+		data.threads = [
+			...(data.threads.filter((t) => t.id === Number($page.params.id)) ?? []),
+			...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
+		]
 		data.thread.Message = [
 			...data.thread.Message,
 			{
