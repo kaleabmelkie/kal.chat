@@ -151,10 +151,15 @@
 
 		const valueBackup = form.message.value
 
-		data.threads = [
-			...(data.threads.filter((t) => t.id === Number($page.params.id)) ?? []),
-			...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
-		]
+		const thread = data.threads.find((t) => t.id === Number($page.params.id))
+		if (thread) {
+			thread.updatedAt = new Date()
+			data.threads = [
+				thread,
+				...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
+			]
+		}
+
 		data.thread.Message = [
 			...data.thread.Message,
 			{
@@ -168,6 +173,7 @@
 				threadId: Number($page.params.id), // to be replaced
 			},
 		]
+
 		message = ''
 
 		dispatch('scrollToBottom')
