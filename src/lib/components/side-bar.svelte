@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { goto } from '$app/navigation'
+	import { goto, invalidate } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -8,6 +8,7 @@
 	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
+	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import _ from 'lodash'
@@ -27,6 +28,10 @@
 
 			scrollableEle?.addEventListener('scroll', updateIsAtTheTop)
 		}
+
+		latestNewMessageSentAt.subscribe(() => {
+			generateTitleForUnnamedAndEligibleThreads(data.threads).catch(console.error)
+		})
 	})
 
 	onDestroy(() => {

@@ -158,28 +158,46 @@ export const actions = {
 			}),
 		])
 
-		const thread = await prisma.thread.findFirstOrThrow({
-			where: {
-				id: Number(event.params.id),
-				user: {
-					email: session.user.email,
-				},
-			},
-			orderBy: {
-				id: 'desc',
-			},
-			take: 1,
-			include: {
-				Message: {
-					orderBy: {
-						id: 'asc',
+		const [thread, threads] = await Promise.all([
+			prisma.thread.findFirstOrThrow({
+				where: {
+					id: Number(event.params.id),
+					user: {
+						email: session.user.email,
 					},
 				},
-			},
-		})
+				orderBy: {
+					id: 'desc',
+				},
+				take: 1,
+				include: {
+					Message: {
+						orderBy: {
+							id: 'asc',
+						},
+					},
+				},
+			}),
+
+			prisma.thread.findMany({
+				where: { user: { email: session.user.email } },
+				select: {
+					id: true,
+					title: true,
+					updatedAt: true,
+					Message: {
+						select: {
+							id: true,
+						},
+					},
+				},
+				orderBy: { updatedAt: 'desc' },
+			}),
+		])
 
 		return {
 			thread,
+			threads,
 		}
 	},
 }

@@ -6,6 +6,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
+	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { maxTokens } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
@@ -191,6 +192,7 @@
 					break
 				case 'success':
 					data.thread = result.data?.thread ?? data.thread
+					data.threads = result.data?.threads ?? data.thread
 					break
 				case 'redirect':
 					console.info(`Redirecting to: ${result.location}`)
@@ -208,6 +210,8 @@
 			isSendingMessage = false
 			await tick()
 			messageBoxEle?.focus()
+
+			$latestNewMessageSentAt = Date.now()
 		}
 	}}
 >
