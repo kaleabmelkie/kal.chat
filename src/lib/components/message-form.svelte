@@ -40,6 +40,12 @@
 				focusOnInput()
 			})
 		}
+
+		const q = $page.url.searchParams.get('q') ?? null
+		if (browser && q && data.thread.Message.length === 1 && messageBoxEle && submitButtonEle) {
+			messageBoxEle.value = q
+			submitButtonEle.click()
+		}
 	})
 
 	onDestroy(() => {
