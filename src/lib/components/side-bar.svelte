@@ -148,7 +148,7 @@
 	<ul>
 		{#each data.threads as thread (thread.id)}
 			<li
-				class="relative z-0"
+				class="relative"
 				title={thread.title ?? undefined}
 				transition:slide|local={{ duration: 150 }}
 			>
