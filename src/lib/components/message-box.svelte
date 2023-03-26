@@ -186,8 +186,8 @@
 
 		isSendingMessage = false
 
-		await tick()
-		messageBoxEle?.focus()
+		
+	
 
 		$latestNewMessageSentAt = Date.now()
 	}
