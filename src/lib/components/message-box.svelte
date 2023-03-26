@@ -100,6 +100,8 @@
 			return
 		}
 		isSendingMessage = true
+		await tick()
+		messageBoxEle?.focus()
 
 		const valueBackup = message
 
