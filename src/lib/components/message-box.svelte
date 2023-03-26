@@ -7,10 +7,10 @@
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { maxTokensForUser } from '$lib/utils/constants'
-	import type { Thread } from '@prisma/client'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
+	import { prevent_default } from 'svelte/internal'
 	import { fade } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
@@ -100,10 +100,13 @@
 			return
 		}
 		isSendingMessage = true
+
+		message = message.trim()
+
 		await tick()
 		messageBoxEle?.focus()
 
-		const valueBackup = message
+		const messageBackup = message
 
 		const thread = data.threads.find((t) => t.id === Number($page.params.id))
 		if (thread) {
@@ -139,7 +142,7 @@
 			},
 			body: JSON.stringify({
 				threadId: Number($page.params.id),
-				message: valueBackup,
+				message: messageBackup,
 			}),
 		})
 
@@ -157,7 +160,7 @@
 		if (!response.ok) {
 			alert(`Error: ${result?.message ?? 'Unknown cause'}`)
 			data.thread.Message = data.thread.Message.slice(0, -1)
-			message = valueBackup + message
+			message = messageBackup + message
 		} else {
 			data.thread = result?.thread ?? data.thread
 			data.threads = result?.threads ?? data.threads
@@ -166,6 +169,7 @@
 		dispatch('scrollToBottom')
 
 		isSendingMessage = false
+
 		await tick()
 		messageBoxEle?.focus()
 
@@ -281,7 +285,7 @@
 					e.currentTarget.style.transitionProperty = 'all'
 					e.currentTarget.style.height = newHeight
 				}}
-				on:keydown={(e) => {
+				on:keydown={async (e) => {
 					if (e.key === 'Enter') {
 						if (e.shiftKey) {
 							// do nothing
@@ -290,8 +294,11 @@
 							// const { selectionStart, selectionEnd } = e.currentTarget
 							// message = `${message.slice(0, selectionStart)}\n${message.slice(selectionEnd)}`
 							// e.currentTarget.setSelectionRange(selectionStart + 1, selectionStart + 1)
+						} else if (!message.trim()) {
+							e.preventDefault()
 						} else {
-							submitButtonEle?.click()
+							e.preventDefault()
+							sendNewMessage()
 						}
 					}
 				}}
