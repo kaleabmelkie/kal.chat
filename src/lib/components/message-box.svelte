@@ -265,7 +265,7 @@
 					: ''}"
 				name="message"
 				placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
-				title="Shit+Enter for a new line"
+				title="For a new line either one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter works"
 				maxlength={15000}
 				autocapitalize="off"
 				autocomplete="off"
@@ -287,13 +287,13 @@
 				}}
 				on:keydown={async (e) => {
 					if (e.key === 'Enter') {
-						if (e.shiftKey) {
-							// do nothing
-						} else if (e.metaKey || e.ctrlKey || e.altKey) {
+						if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) {
 							e.preventDefault()
-							// const { selectionStart, selectionEnd } = e.currentTarget
-							// message = `${message.slice(0, selectionStart)}\n${message.slice(selectionEnd)}`
-							// e.currentTarget.setSelectionRange(selectionStart + 1, selectionStart + 1)
+							const cursorPosition = e.currentTarget.selectionStart
+							message = `${message.slice(0, cursorPosition)}\n${message.slice(cursorPosition)}`
+							await tick()
+							e.currentTarget.selectionStart = cursorPosition + 1
+							e.currentTarget.selectionEnd = cursorPosition + 1
 						} else if (!message.trim()) {
 							e.preventDefault()
 						} else {
