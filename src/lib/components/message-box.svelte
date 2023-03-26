@@ -282,11 +282,17 @@
 					e.currentTarget.style.height = newHeight
 				}}
 				on:keydown={(e) => {
-					if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
-						e.preventDefault()
-						submitButtonEle?.click()
-					} else if (e.key === 'Enter') {
-						submitButtonEle?.click()
+					if (e.key === 'Enter') {
+						if (e.shiftKey) {
+							// do nothing
+						} else if (e.metaKey || e.ctrlKey || e.altKey) {
+							e.preventDefault()
+							// const { selectionStart, selectionEnd } = e.currentTarget
+							// message = `${message.slice(0, selectionStart)}\n${message.slice(selectionEnd)}`
+							// e.currentTarget.setSelectionRange(selectionStart + 1, selectionStart + 1)
+						} else {
+							submitButtonEle?.click()
+						}
 					}
 				}}
 			/>
