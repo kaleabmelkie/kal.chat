@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -8,6 +7,7 @@
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { maxTokensForUser } from '$lib/utils/constants'
+	import type { Thread } from '@prisma/client'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -94,6 +94,81 @@
 		}
 	}
 
+	async function sendNewMessage() {
+		if (isSendingMessage) {
+			return
+		}
+		isSendingMessage = true
+
+		const valueBackup = message
+
+		const thread = data.threads.find((t) => t.id === Number($page.params.id))
+		if (thread) {
+			thread.updatedAt = new Date()
+			data.threads = [
+				thread,
+				...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
+			]
+		}
+
+		data.thread.Message = [
+			...data.thread.Message,
+			{
+				id: data.thread.Message[data.thread.Message.length - 1]
+					? data.thread.Message[data.thread.Message.length - 1].id + 1
+					: 0, // to be replaced
+				createdAt: new Date(), // to be replaced
+				updatedAt: new Date(), // to be replaced
+				role: 'user',
+				content: message,
+				threadId: Number($page.params.id), // to be replaced
+			},
+		]
+
+		message = ''
+
+		dispatch('scrollToBottom')
+
+		const response = await fetch(`/thread/${$page.params.id}/new-message`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				threadId: Number($page.params.id),
+				message: valueBackup,
+			}),
+		})
+
+		let result: {
+			error?: { message: string }
+			thread?: typeof data.thread
+			threads?: typeof data.threads
+		} | null = null
+		try {
+			result = await response.json()
+		} catch {
+			alert(`Error: ${response.statusText ?? 'Unknown cause'}`)
+		}
+
+		if (!response.ok) {
+			alert(`Error: ${result?.error?.message ?? 'Unknown cause'}`)
+			data.thread.Message = data.thread.Message.slice(0, -1)
+			message = valueBackup + message
+		} else {
+			data.thread = result?.thread ?? data.thread
+			data.threads = result?.threads ?? data.threads
+		}
+
+		dispatch('scrollToBottom')
+
+		isSendingMessage = false
+		await tick()
+		messageBoxEle?.focus()
+
+		$latestNewMessageSentAt = Date.now()
+	}
+
 	let isVoiceTyping = false
 	let originalMessage = message
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -145,93 +220,11 @@
 	}
 </script>
 
-<form
+<div
 	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
 		? 'left-[18rem]'
 		: 'left-0'}"
-	method="POST"
-	action="?/newMessage"
-	use:enhance={async ({ form }) => {
-		if (isSendingMessage) {
-			return
-		}
-		isSendingMessage = true
-
-		const valueBackup = form.message.value
-
-		const thread = data.threads.find((t) => t.id === Number($page.params.id))
-		if (thread) {
-			thread.updatedAt = new Date()
-			data.threads = [
-				thread,
-				...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
-			]
-		}
-
-		data.thread.Message = [
-			...data.thread.Message,
-			{
-				id: data.thread.Message[data.thread.Message.length - 1]
-					? data.thread.Message[data.thread.Message.length - 1].id + 1
-					: 0, // to be replaced
-				createdAt: new Date(), // to be replaced
-				updatedAt: new Date(), // to be replaced
-				role: 'user',
-				content: form.message.value,
-				threadId: Number($page.params.id), // to be replaced
-			},
-		]
-
-		message = ''
-
-		dispatch('scrollToBottom')
-
-		return async ({ result, update }) => {
-			switch (result.type) {
-				case 'error':
-					alert(`Error: ${result.error?.message ?? 'Unknown cause'}`)
-					data.thread.Message = data.thread.Message.slice(0, -1)
-					message = valueBackup + message
-					break
-				case 'failure':
-					alert(`Failure: ${result.data?.message ?? 'Unknown cause'}`)
-					data.thread.Message = data.thread.Message.slice(0, -1)
-					message = valueBackup + message
-					break
-				case 'success':
-					data.thread = result.data?.thread ?? data.thread
-					data.threads = result.data?.threads ?? data.thread
-					break
-				case 'redirect':
-					console.info(`Redirecting to: ${result.location}`)
-					await update()
-					break
-				default:
-					alert(`Failed to send your message.\nPlease, try again.`)
-					data.thread.Message = data.thread.Message.slice(0, -1)
-					message = valueBackup + message
-					break
-			}
-
-			dispatch('scrollToBottom')
-
-			isSendingMessage = false
-			await tick()
-			messageBoxEle?.focus()
-
-			$latestNewMessageSentAt = Date.now()
-		}
-	}}
 >
-	<input
-		class="hidden"
-		type="hidden"
-		name="threadId"
-		value={data.thread.id}
-		disabled={isSendingMessage}
-		readonly
-	/>
-
 	<div
 		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+1px)]"
 	>
@@ -289,6 +282,8 @@
 					if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
 						e.preventDefault()
 						submitButtonEle?.click()
+					} else if (e.key === 'Enter') {
+						submitButtonEle?.click()
 					}
 				}}
 			/>
@@ -315,9 +310,10 @@
 			<button
 				data-testid="send-button"
 				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
-				type="submit"
+				type="button"
 				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
+				on:click={() => sendNewMessage()}
 			>
 				<ArrowRightSvg />
 			</button>
@@ -356,4 +352,4 @@
 			{/if}
 		{/if}
 	</div>
-</form>
+</div>

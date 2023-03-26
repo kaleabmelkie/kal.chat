@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import MessageForm from '$lib/components/message-form.svelte'
+	import MessageBox from '$lib/components/message-box.svelte'
 	import MessageList from '$lib/components/message-list.svelte'
 	import SideBar from '$lib/components/side-bar.svelte'
 	import ArrowRight from '$lib/icons/arrow-right.svg.svelte'
@@ -77,7 +77,7 @@
 	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList bind:data bind:isSendingMessage />
 
-		<MessageForm
+		<MessageBox
 			bind:data
 			bind:innerWidth
 			bind:innerHeight
