@@ -10,7 +10,6 @@
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
-	import { prevent_default } from 'svelte/internal'
 	import { fade } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
 
@@ -65,24 +64,42 @@
 
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	$: {
-		;[innerWidth, innerHeight, message, isSendingMessage, isVoiceTyping] // deps
-		if (messageBoxEle) {
-			messageBoxEle.style.height = `${Math.min(messageBoxEle.scrollHeight, maxMessageBoxHeight)}px`
-			messageBoxEle.style.maxHeight = `${maxMessageBoxHeight}px`
-			messageBoxEle.style.overflowY =
-				messageBoxEle.scrollHeight < maxMessageBoxHeight ? 'hidden' : 'auto'
-
-			const heightBackup = messageBoxEle.style.height
-			messageBoxEle.style.transitionProperty = 'none'
-			messageBoxEle.style.height = `3.5rem`
-
-			const newHeight = `${messageBoxEle.scrollHeight}px`
-			messageBoxEle.style.height = heightBackup
-			;[messageBoxEle.scrollHeight] // deps
-
-			messageBoxEle.style.transitionProperty = 'all'
-			messageBoxEle.style.height = newHeight
+		;[
+			innerWidth,
+			innerHeight,
+			message,
+			isSendingMessage,
+			isVoiceTyping,
+			isSideBarOpen,
+			isCreatingThread,
+			$latestNewMessageSentAt,
+			$page,
+			data.thread.Message,
+		] // deps
+		adjustMessageBoxHeight()
+	}
+	async function adjustMessageBoxHeight() {
+		if (!messageBoxEle) {
+			return
 		}
+
+		await tick()
+
+		messageBoxEle.style.height = `${Math.min(messageBoxEle.scrollHeight, maxMessageBoxHeight)}px`
+		messageBoxEle.style.maxHeight = `${maxMessageBoxHeight}px`
+		messageBoxEle.style.overflowY =
+			messageBoxEle.scrollHeight < maxMessageBoxHeight ? 'hidden' : 'auto'
+
+		const heightBackup = messageBoxEle.style.height
+		messageBoxEle.style.transitionProperty = 'none'
+		messageBoxEle.style.height = `3.5rem`
+
+		const newHeight = `${messageBoxEle.scrollHeight}px`
+		messageBoxEle.style.height = heightBackup
+		;[messageBoxEle.scrollHeight] // deps (I know... weird, but it works)
+
+		messageBoxEle.style.transitionProperty = 'all'
+		messageBoxEle.style.height = newHeight
 	}
 
 	$: userAgentParser = Bowser.getParser(
@@ -100,8 +117,6 @@
 			return
 		}
 		isSendingMessage = true
-
-		message = message.trim()
 
 		await tick()
 		messageBoxEle?.focus()
@@ -132,6 +147,7 @@
 		]
 
 		message = ''
+		await tick()
 
 		dispatch('scrollToBottom')
 

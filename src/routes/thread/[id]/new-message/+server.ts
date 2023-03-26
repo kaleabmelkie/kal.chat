@@ -15,6 +15,9 @@ export async function POST(event) {
 	if (!data.message || typeof data.message !== 'string') {
 		throw error(400, `Invalid message: ${data.message}`)
 	}
+	if (!data.message.trim()) {
+		throw error(400, `Empty message`)
+	}
 
 	const session = await event.locals.getSession()
 	if (!session?.user?.email) {
