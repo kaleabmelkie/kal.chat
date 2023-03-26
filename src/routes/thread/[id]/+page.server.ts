@@ -1,4 +1,4 @@
-import { contextLength, maxTokens, modelName } from '$lib/utils/constants'
+import { contextLength, maxTokensForUser, modelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
@@ -109,7 +109,7 @@ export const actions = {
 		for (const message of recentRequestMessages) {
 			tokenCount += await countTokens(message.content)
 		}
-		if (tokenCount > maxTokens) {
+		if (tokenCount > maxTokensForUser) {
 			throw error(413, 'Too many tokens')
 		}
 

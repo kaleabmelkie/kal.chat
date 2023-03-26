@@ -7,7 +7,7 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
-	import { maxTokens } from '$lib/utils/constants'
+	import { maxTokensForUser } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -260,7 +260,7 @@
 				class="pointer-events-auto h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 read-only:ring-offset-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-offset-2 focus:ring-offset-primary-50 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 disabled:ring-offset-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
-				maxTokens
+				maxTokensForUser
 					? '!ring-red-600/75 !ring-offset-red-50'
 					: ''}"
 				name="message"
@@ -326,7 +326,7 @@
 
 	<div
 		class="flex gap-4 py-5 text-sm"
-		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokens}."
+		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
 	>
 		<a
 			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline lg:left-6"
@@ -338,17 +338,19 @@
 		</a>
 		<span class="flex-1" />
 		{#if tokensActive > 0}
-			{#if tokensActive > maxTokens}
+			{#if tokensActive > maxTokensForUser}
 				<span class="pointer-events-auto text-red-500/95" transition:fade={{ duration: 150 }}>
-					<span class="font-black">{Intl.NumberFormat().format(tokensActive - maxTokens)}</span> words
-					over
+					<span class="font-black"
+						>{Intl.NumberFormat().format(tokensActive - maxTokensForUser)}</span
+					> words over
 				</span>
 			{:else}
 				<span class="pointer-events-auto text-primary-900/50" transition:fade={{ duration: 150 }}>
 					<span
-						class="font-semibold {tokensActive > maxTokens - maxTokens / 10
+						class="font-semibold {tokensActive > maxTokensForUser - maxTokensForUser / 10
 							? 'text-amber-500/95'
-							: 'text-emerald-500/95'}">{Intl.NumberFormat().format(maxTokens - tokensActive)}</span
+							: 'text-emerald-500/95'}"
+						>{Intl.NumberFormat().format(maxTokensForUser - tokensActive)}</span
 					> words left
 				</span>
 			{/if}

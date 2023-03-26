@@ -1,4 +1,4 @@
-import { modelName } from '$lib/utils/constants'
+import { maxTokensForUser, modelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
@@ -23,6 +23,11 @@ export async function PUT({ locals, params, url }) {
 		throw error(400, 'Thread already has a title')
 	}
 
+	const prompt = `Generate a short title for this chat conversation. Limit the title to a absolute maximum of just 48 characters. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not label the title. Do not mention the characters length or limit. Do not include any quotation marks and periods.${
+		session.user?.name ? ` Do not mention the user's name (i.e. "${session.user.name}").` : ''
+	} Do not include any other text. If there are multiple topics, choose the most talked about.`
+	const promptTokens = await countTokens(prompt)
+
 	const reversedMessages = await prisma.message.findMany({
 		where: {
 			role: { in: ['assistant', 'user'] },
@@ -39,7 +44,7 @@ export async function PUT({ locals, params, url }) {
 	let tokensCount = 0
 	for (const message of reversedMessages) {
 		const currentCount = await countTokens(message.content)
-		if (tokensCount + currentCount > 100) {
+		if (tokensCount + currentCount > maxTokensForUser - promptTokens) {
 			break
 		}
 		messagesToAnalyze.push(message)
@@ -53,28 +58,32 @@ export async function PUT({ locals, params, url }) {
 			...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
 			{
 				role: 'system',
-				content: `Generate a short and accurate title for this chat conversation. Limit the title to a maximum of 5 words. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not include any quotation marks and periods.${
-					session.user?.name ? ` Do not include "${session.user.name.split(' ')[0]}".` : ''
-				} Do not include any other text. If there are multiple topics, choose the most talked about.`, // 86 tokens (max is 96 minus the response message)
+				content: prompt,
 			},
 		],
 	})
 	const newTitle = chatCompletionResponse.data.choices
 		?.map((c) => c.message?.content ?? '')
 		.join('')
+		.replace(/Chat Intro: /i, '')
+		.replace(/Chat Name: /i, '')
 		.replace(/Chat Title: /i, '')
 		.replace(/Chat Topic: /i, '')
 		.replace(/Title: /i, '')
 		.replace(/Topic: /i, '')
 		.replace(/"/g, '')
 		.replace(/\.$/, '')
+		.replace(/\(\d+ characters\)$/, '')
+		.replace(/\(Limit: \d+ characters\)$/, '')
+		.trim()
+		.substring(0, 64)
 	if (!newTitle) {
 		throw error(500, 'Could not generate a title')
 	}
 
 	thread = await prisma.thread.update({
 		where: {
-			id: Number(params.id),
+			id: thread.id,
 			user: {
 				email: session.user.email,
 			},
