@@ -43,10 +43,11 @@
 
 		const q = $page.url.searchParams.get('q') ?? null
 		if (browser && q && data.thread.Message.length === 1 && messageBoxEle && submitButtonEle) {
-			messageBoxEle.value = q
+			message = q
+			await tick()
 			submitButtonEle.click()
 			await tick()
-			messageBoxEle.value = ''
+			message = ''
 		}
 	})
 
@@ -141,7 +142,7 @@
 		})
 
 		let result: {
-			error?: { message: string }
+			message?: string // for errors
 			thread?: typeof data.thread
 			threads?: typeof data.threads
 		} | null = null
@@ -152,7 +153,7 @@
 		}
 
 		if (!response.ok) {
-			alert(`Error: ${result?.error?.message ?? 'Unknown cause'}`)
+			alert(`Error: ${result?.message ?? 'Unknown cause'}`)
 			data.thread.Message = data.thread.Message.slice(0, -1)
 			message = valueBackup + message
 		} else {
