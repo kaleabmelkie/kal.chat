@@ -186,9 +186,6 @@
 
 		isSendingMessage = false
 
-		
-	
-
 		$latestNewMessageSentAt = Date.now()
 	}
 
