@@ -256,7 +256,7 @@
 		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+1px)]"
 	>
 		<a
-			data-sveltekit-preload-data="tap"
+			data-sveltekit-preload-data="off"
 			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
 				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
 				: ''}"
