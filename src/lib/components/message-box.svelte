@@ -201,7 +201,7 @@
 	let recognition: any
 	$: isBlacklistedBrowserForVoiceInput =
 		userAgentParser.getOS().name === 'Android' ||
-		(userAgentParser.getPlatformType() === 'desktop' &&
+		(userAgentParser.getOS().name === 'macOS' &&
 			userAgentParser.getBrowserName() === 'Microsoft Edge')
 	$: isVoiceTypingSupported =
 		browser && 'webkitSpeechRecognition' in window && !isBlacklistedBrowserForVoiceInput
