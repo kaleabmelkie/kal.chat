@@ -1,58 +1,12 @@
 <script lang="ts">
-	// prism import must come first
-	import Prism from 'prismjs'
-	import 'prismjs/themes/prism-okaidia.min.css'
-
-	// then, prism plugins can follow (don't auto-sort, order matters)
-	import 'prismjs/plugins/autoloader/prism-autoloader.js'
-	import 'prismjs/plugins/autolinker/prism-autolinker.css'
-	import 'prismjs/plugins/autolinker/prism-autolinker.js'
-	import 'prismjs/plugins/match-braces/prism-match-braces.css'
-	import 'prismjs/plugins/match-braces/prism-match-braces.js'
-	import 'prismjs/plugins/toolbar/prism-toolbar.css'
-	import 'prismjs/plugins/toolbar/prism-toolbar.js'
-	import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
-
-	// normal imports
-	import { marked } from 'marked'
+	import 'highlight.js/styles/github-dark.css'
 	import type { ChatCompletionRequestMessage } from 'openai'
-	import loadLanguages from 'prismjs/components/index.js'
-	import sanitizeHtml from 'sanitize-html'
 	import { slide } from 'svelte/transition'
-	import { tick } from 'svelte'
 
 	let className = ''
 	export { className as class }
 	export let articleClassName = ''
 	export let message: ChatCompletionRequestMessage
-
-	$: if (Prism.plugins.autoloader) {
-		Prism.plugins.autoloader.languages_path = '/assets/prismjs-components/'
-	}
-
-	loadLanguages.silent = false
-
-	$: parsedContent = marked(message.content, {
-		highlight: (code, lang, callback) => {
-			try {
-				loadLanguages([lang])
-			} catch {
-				// do nothing
-			}
-			tick().then(() =>
-				callback?.(
-					null,
-					Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang], lang) : code,
-				),
-			)
-		},
-		breaks: true,
-		gfm: true,
-		mangle: false,
-		silent: true,
-		smartLists: true,
-		smartypants: true,
-	})
 </script>
 
 <li
@@ -70,17 +24,12 @@
 	</div>
 
 	<article
-		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr py-3 px-4 text-lg shadow-md shadow-primary-600/10 {message.role ===
+		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr px-4 py-3 text-lg shadow-md shadow-primary-600/10 {message.role ===
 		'user'
 			? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white'
 			: 'rounded-tl from-white/95 to-white/75 text-black'} {articleClassName}"
 	>
-		{@html sanitizeHtml(parsedContent, {
-			allowedClasses: {
-				pre: [/^language-/],
-				code: [/^language-/],
-			},
-		})}
+		{@html message.content}
 	</article>
 </li>
 

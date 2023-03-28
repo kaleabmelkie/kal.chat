@@ -2,6 +2,7 @@ import { contextLength } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { prisma } from '$lib/utils/prisma.server'
+import { transformMessage } from '$lib/utils/transform-message.server'
 import { error, redirect } from '@sveltejs/kit'
 
 export const load = async (event) => {
@@ -39,7 +40,6 @@ export const load = async (event) => {
 
 	return {
 		userAgent: event.request.headers.get('user-agent'),
-		thread,
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 		contextLength,
 		threads: prisma.thread.findMany({
@@ -56,5 +56,14 @@ export const load = async (event) => {
 			},
 			orderBy: { updatedAt: 'desc' },
 		}),
+		thread: (async () => ({
+			...thread,
+			Message: await Promise.all(
+				thread.Message.map(async (message) => ({
+					...message,
+					content: await transformMessage(message.content),
+				})),
+			),
+		}))(),
 	}
 }
