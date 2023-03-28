@@ -6,7 +6,7 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
-	import { maxTokensForUser } from '$lib/utils/constants'
+	import { maxTokensForUser, smallScreenThresholdInPx } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -62,9 +62,12 @@
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
 
+	let submitButtonEleLastFocusChangedAt = 0 // this is needed to be just a dependency for the $: below
+
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	$: {
 		;[
+			submitButtonEleLastFocusChangedAt,
 			innerWidth,
 			innerHeight,
 			message,
@@ -78,7 +81,7 @@
 		] // deps
 		adjustMessageBoxHeight()
 	}
-	async function adjustMessageBoxHeight() {
+	async function adjustMessageBoxHeight(repeat = true) {
 		if (!messageBoxEle) {
 			return
 		}
@@ -100,6 +103,12 @@
 
 		messageBoxEle.style.transitionProperty = 'all'
 		messageBoxEle.style.height = newHeight
+
+		if (repeat) {
+			setTimeout(() => {
+				adjustMessageBoxHeight(false)
+			}, 150)
+		}
 	}
 
 	$: userAgentParser = Bowser.getParser(
@@ -241,7 +250,8 @@
 </script>
 
 <div
-	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen
+	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen &&
+	innerWidth > smallScreenThresholdInPx
 		? 'left-[18rem]'
 		: 'left-0'}"
 >
@@ -315,6 +325,8 @@
 						}
 					}
 				}}
+				on:focus={() => (submitButtonEleLastFocusChangedAt = Date.now())}
+				on:blur={() => (submitButtonEleLastFocusChangedAt = Date.now())}
 			/>
 
 			{#if isVoiceTypingSupported}
