@@ -8,6 +8,10 @@ const config = {
 			colors: {
 				primary: colors.blue,
 			},
+
+			transitionDuration: {
+				DEFAULT: '150ms',
+			},
 		},
 	},
 
