@@ -203,7 +203,7 @@
 				</a>
 				{#if optionsExpandedForThreadId === thread.id}
 					<div
-						class="shadow-blur-900/25 absolute top-12 right-4 z-30 flex flex-col rounded bg-white/75 p-1 shadow-lg backdrop-blur-sm"
+						class="absolute top-12 right-4 z-30 flex flex-col rounded bg-white/90 p-1 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForThreadId = null)}
 					>
