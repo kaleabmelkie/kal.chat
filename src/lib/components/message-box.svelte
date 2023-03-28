@@ -62,12 +62,9 @@
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
 
-	let submitButtonEleLastFocusChangedAt = 0 // this is needed to be just a dependency for the $: below
-
 	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
 	$: {
 		;[
-			submitButtonEleLastFocusChangedAt,
 			innerWidth,
 			innerHeight,
 			message,
@@ -280,7 +277,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="pointer-events-auto h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-primary-600 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-primary-600 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokensForUser
@@ -316,8 +313,6 @@
 						}
 					}
 				}}
-				on:focus={() => (submitButtonEleLastFocusChangedAt = Date.now())}
-				on:blur={() => (submitButtonEleLastFocusChangedAt = Date.now())}
 			/>
 
 			{#if isVoiceTypingSupported}
