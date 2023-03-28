@@ -15,7 +15,12 @@ const config = {
 		},
 	},
 
-	plugins: [require('@tailwindcss/typography'), require('@tailwindcss/line-clamp')],
+	plugins: [
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/forms'),
+		require('@tailwindcss/line-clamp'),
+		require('@tailwindcss/aspect-ratio'),
+	],
 }
 
 module.exports = config

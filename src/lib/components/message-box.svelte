@@ -92,7 +92,7 @@
 
 		const heightBackup = messageBoxEle.style.height
 		messageBoxEle.classList.remove('transition-all')
-		messageBoxEle.style.height = `calc(3.5rem)`
+		messageBoxEle.style.height = `3.5rem`
 
 		const newHeight = `${messageBoxEle.scrollHeight}px`
 		messageBoxEle.style.height = heightBackup
@@ -257,7 +257,7 @@
 	>
 		<a
 			data-sveltekit-preload-data="off"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
 				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
 				: ''}"
 			title="New thread"
@@ -277,7 +277,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-primary-600 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokensForUser
@@ -291,7 +291,7 @@
 				autocorrect="on"
 				spellcheck="true"
 				autocomplete="off"
-				tabindex={-1}
+				tabindex="-1"
 				autofocus
 				required
 				bind:this={messageBoxEle}
