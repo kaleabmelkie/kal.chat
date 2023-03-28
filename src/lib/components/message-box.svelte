@@ -257,8 +257,8 @@
 	>
 		<a
 			data-sveltekit-preload-data="tap"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
-				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline outline-2 outline-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:outline-primary-600 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
+				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none outline-0'
 				: ''}"
 			title="New thread"
 			href="/thread/new"
@@ -277,11 +277,11 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-primary-600 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none rounded-[1.75rem] bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline outline-2 outline-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:outline-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:outline-primary-600 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:outline-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokensForUser
-					? '!ring-red-600/75'
+					? '!outline-red-600/75'
 					: ''}"
 				name="message"
 				placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
@@ -317,7 +317,7 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
+					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
 						? 'animate-ping !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
@@ -336,7 +336,7 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
+				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
 				type="button"
 				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
