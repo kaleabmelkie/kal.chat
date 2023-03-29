@@ -4,7 +4,10 @@ import { redirect } from '@sveltejs/kit'
 export const load = async (event) => {
 	const { session } = await event.parent()
 	if (!session?.user?.email) {
-		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/thread/latest`)}`)
+		throw redirect(
+			302,
+			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
+		)
 	}
 
 	const thread = await prisma.thread.findFirst({

@@ -7,14 +7,14 @@ import type { Profile } from '@auth/core/types'
 export async function load(event) {
 	const { session } = await event.parent()
 
-	const redirectTo = event.url.searchParams.get('redirectTo') || null
+	const redirectTo = `/${event.url.searchParams.get('redirectTo')?.slice(1) ?? ''}`
 
 	if (session?.user?.email && redirectTo !== null) {
 		throw redirect(302, redirectTo)
 	}
 
 	return {
-		redirectTo: redirectTo ?? '/',
+		redirectTo,
 		providers: authHookConfig.providers
 			.filter((p) => p.type === 'oauth' || p.type === 'oidc')
 			.map((p) => ({
