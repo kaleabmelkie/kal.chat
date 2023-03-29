@@ -3,6 +3,7 @@ import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
+import { transformMessage } from '$lib/utils/transform-message.server'
 import { error, json, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
 
@@ -141,7 +142,15 @@ export async function POST(event) {
 	])
 
 	return json({
-		thread,
+		thread: await (async () => ({
+			...thread,
+			Message: await Promise.all(
+				thread.Message.map(async (m) => ({
+					...m,
+					content: await transformMessage(m.content),
+				})),
+			),
+		}))(),
 		threads,
 	})
 }
