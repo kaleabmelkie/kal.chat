@@ -155,7 +155,7 @@
 				transition:slide|local={{ duration: 150 }}
 			>
 				<a
-					class="group flex gap-1 py-3 px-4 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 lg:px-6 {$page
+					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 lg:px-6 {$page
 						.url.pathname === `/thread/${thread.id}`
 						? 'bg-white/50'
 						: ''}"
@@ -168,7 +168,7 @@
 				>
 					<div class="flex-1">
 						<div
-							class="text-sm line-clamp-2 group-hover:text-primary-600 group-focus:text-primary-600 {!thread.title
+							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 {!thread.title
 								? 'italic'
 								: ''} {$page.url.pathname === `/thread/${thread.id}`
 								? 'font-semibold text-primary-600'
@@ -203,7 +203,7 @@
 				</a>
 				{#if optionsExpandedForThreadId === thread.id}
 					<div
-						class="absolute top-12 right-4 z-30 flex flex-col rounded bg-white/90 p-1 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
+						class="absolute right-4 top-12 z-30 flex flex-col rounded bg-white/90 p-1 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForThreadId = null)}
 					>

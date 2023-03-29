@@ -247,7 +247,7 @@
 </script>
 
 <div
-	class="pointer-events-none fixed right-0 bottom-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen &&
+	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen &&
 	innerWidth > smallScreenThresholdInPx
 		? 'left-[18rem]'
 		: 'left-0'}"
@@ -277,7 +277,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 py-4 px-6 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokensForUser
@@ -285,7 +285,7 @@
 					: ''}"
 				name="message"
 				placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
-				title="For a new line either one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter works"
+				title="For a new line, use any one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter"
 				maxlength={15000}
 				autocapitalize="sentences"
 				autocorrect="on"
@@ -296,7 +296,7 @@
 				required
 				bind:this={messageBoxEle}
 				bind:value={message}
-				on:input={(e) => adjustMessageBoxHeight(true)}
+				on:input={() => adjustMessageBoxHeight(true)}
 				on:keydown={async (e) => {
 					if (e.key === 'Enter') {
 						if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) {
@@ -318,7 +318,7 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="pointer-events-auto absolute top-0 right-[4rem] bottom-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
+					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
 						? 'animate-ping !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
@@ -333,7 +333,7 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute top-0 right-0 bottom-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
+				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
 				type="button"
 				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
