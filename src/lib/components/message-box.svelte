@@ -8,7 +8,6 @@
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { maxTokensForUser, smallScreenThresholdInPx } from '$lib/utils/constants'
 	import Bowser from 'bowser'
-	import orderBy from 'lodash/orderBy'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
@@ -222,7 +221,11 @@
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
 			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
 				.map((alternatives) =>
-					orderBy(alternatives, (a) => a.confidence, 'desc')[0].transcript.trim(),
+					Array.from(alternatives)
+						.sort(
+							(a, b) => (a.confidence < b.confidence ? 1 : a.confidence > b.confidence ? -1 : 0), // desc
+						)[0]
+						.transcript.trim(),
 				)
 				.join(' ')
 				.trim()}`
