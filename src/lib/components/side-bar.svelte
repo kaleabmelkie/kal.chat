@@ -11,7 +11,6 @@
 	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
-	import _ from 'lodash'
 	import { onDestroy, onMount, tick } from 'svelte'
 	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/thread/[id]/$types'
@@ -86,7 +85,6 @@
 				if (typeof response?.title !== 'string') {
 					throw new Error(`Expected a title but did not get one.`)
 				}
-				thread.title = _.startCase(response.title)
 				thread.updatedAt = response.updatedAt
 				const threadIndex = data.threads.findIndex((t) => t.id === thread.id)
 				if (threadIndex !== -1) {
