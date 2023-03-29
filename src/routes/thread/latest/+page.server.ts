@@ -16,11 +16,24 @@ export const load = async (event) => {
 				email: session.user.email,
 			},
 		},
+		select: {
+			id: true,
+			title: true,
+		},
 		orderBy: {
 			id: 'desc',
 		},
 		take: 1,
 	})
 
-	throw redirect(302, `/thread/${thread?.id ?? 'new'}`)
+	throw redirect(
+		302,
+		`/thread/${
+			(thread?.id ?? null) && !(thread?.title ?? null)
+				? // If there is a thread with no title, redirect to that thread
+				  thread?.id
+				: // Otherwise, redirect to create a new thread
+				  'new'
+		}`,
+	)
 }
