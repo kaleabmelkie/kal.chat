@@ -50,9 +50,9 @@
 				resolveUrl: (url) => {
 					if (url.hostname === 'www.clarity.ms') {
 						return new URL(
-							`${
-								window.location.origin
-							}/partytown/proxy-microsoft-clarity?href=${encodeURIComponent(url.href)}`,
+							`https://kal.chat/partytown/proxy-microsoft-clarity?href=${encodeURIComponent(
+								url.href,
+							)}`,
 						)
 					}
 					return url
