@@ -47,6 +47,12 @@
 		<script>
 			partytown = {
 				forward: ['dataLayer.push'],
+				resolveUrl: (url) => {
+					if (url.hostname === 'www.clarity.ms') {
+						return new URL(`/~partytown/proxytown/clarity${url.pathname}${url.search}${url.hash}`)
+					}
+					return url
+				},
 			}
 		</script>
 
