@@ -49,7 +49,9 @@
 				forward: ['dataLayer.push'],
 				resolveUrl: (url) => {
 					if (url.hostname === 'www.clarity.ms') {
-						return new URL(`/~partytown/proxytown/clarity${url.pathname}${url.search}${url.hash}`)
+						return new URL(
+							`/partytown/proxy-microsoft-clarity?href=${encodeURIComponent(url.href)}`,
+						)
 					}
 					return url
 				},
