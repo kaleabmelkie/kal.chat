@@ -17,12 +17,14 @@
 			scrollToBottom()
 		})
 
-		isSideBarOpen = innerWidth >= smallScreenThresholdInPx
+		if (data.user.prefersSideBarOpen) {
+			isSideBarOpen = innerWidth >= smallScreenThresholdInPx
+		}
 	})
 
 	let innerWidth = 0
 	let innerHeight = 0
-	let isSideBarOpen = false
+	let isSideBarOpen = data.user.prefersSideBarOpen
 	let isSendingMessage = false
 	let bottomEle: HTMLSpanElement | null = null
 	let message = ''
@@ -63,7 +65,13 @@
 		<button
 			class="group fixed left-0 top-[4.75rem] z-30 flex h-14 w-[4.5rem] transform-gpu items-center rounded-r-full bg-white/75 p-4 text-primary-900 shadow-sm shadow-primary-600/10 transition-all hover:w-36 hover:bg-white/95 hover:text-primary-600 hover:shadow focus:w-36 focus:bg-white/95 focus:text-primary-600 focus:shadow active:w-36 active:bg-primary-500/5 active:shadow-none sm:backdrop-blur-sm lg:pl-6 lg:backdrop-blur"
 			type="button"
-			on:click={() => (isSideBarOpen = true)}
+			on:click={async () => {
+				isSideBarOpen = true
+				await fetch('/account/set-prefers-side-bar-open', {
+					method: 'PUT',
+					body: JSON.stringify({ prefersSideBarOpen: true }),
+				})
+			}}
 		>
 			<MenuSvg class="block !h-5 !w-5 transition-all group-hover:hidden group-focus:hidden" />
 			<span

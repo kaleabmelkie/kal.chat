@@ -59,6 +59,12 @@ export const load = async (event) => {
 			},
 			orderBy: { updatedAt: 'desc' },
 		}),
+		user: prisma.user.findFirstOrThrow({
+			where: { email: session.user.email },
+			select: {
+				prefersSideBarOpen: true,
+			},
+		}),
 		thread: (async () => ({
 			...thread,
 			Message: await Promise.all(

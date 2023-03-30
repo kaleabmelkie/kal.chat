@@ -134,7 +134,13 @@
 		<button
 			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 sm:backdrop-blur-sm lg:pr-6 lg:backdrop-blur"
 			type="button"
-			on:click={() => (isOpen = false)}
+			on:click={async () => {
+				isOpen = false
+				await fetch('/account/set-prefers-side-bar-open', {
+					method: 'PUT',
+					body: JSON.stringify({ prefersSideBarOpen: false }),
+				})
+			}}
 		>
 			<ArrowRightSvg
 				class="mr-2 !h-5 !w-5 rotate-180 transition-all group-hover:mr-0 group-focus:mr-0 group-active:mr-0"

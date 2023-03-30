@@ -15,10 +15,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name  String       @db.VarChar(64)
-  email String       @unique @db.VarChar(320)
-  image String?      @db.VarChar(1024)
-  plan  UserPlanType @default(free)
+  name  String  @db.VarChar(64)
+  email String  @unique @db.VarChar(320)
+  image String? @db.VarChar(1024)
+
+  plan UserPlanType @default(free)
+
+  prefersSideBarOpen Boolean @default(false)
 
   Thread Thread[]
 }
