@@ -1,9 +1,0 @@
-{
-	"rewrites": [
-		{
-			"source": "/~partytown/proxytown/clarity/:slug*",
-			"destination": "https://www.clarity.ms/:slug*",
-			"statusCode": 200
-		}
-	]
-}
