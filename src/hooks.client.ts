@@ -1,9 +1,9 @@
-import { PUBLIC_SENTRY_BROWSER_DSN } from '$env/static/public'
+import { PUBLIC_SENTRY_SVELTE_DSN } from '$env/static/public'
 import * as SentrySvelte from '@sentry/svelte'
 import { BrowserTracing } from '@sentry/tracing'
 
 SentrySvelte.init({
-	dsn: PUBLIC_SENTRY_BROWSER_DSN,
+	dsn: PUBLIC_SENTRY_SVELTE_DSN,
 	integrations: [new BrowserTracing()],
 	tracesSampleRate: 1.0,
 })
