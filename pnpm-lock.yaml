@@ -16,6 +16,15 @@ devDependencies:
   '@prisma/client':
     specifier: 4.12.0
     version: 4.12.0(prisma@4.12.0)
+  '@sentry/node':
+    specifier: 7.46.0
+    version: 7.46.0
+  '@sentry/svelte':
+    specifier: 7.46.0
+    version: 7.46.0(svelte@3.57.0)
+  '@sentry/tracing':
+    specifier: 7.46.0
+    version: 7.46.0
   '@sveltejs/adapter-vercel':
     specifier: 2.4.1
     version: 2.4.1(@sveltejs/kit@1.14.0)
@@ -710,6 +719,96 @@ packages:
       picomatch: 2.3.1
     dev: true
 
+  /@sentry-internal/tracing@7.46.0:
+    resolution: {integrity: sha512-KYoppa7PPL8Er7bdPoxTNUfIY804JL7hhOEomQHYD22rLynwQ4AaLm3YEY75QWwcGb0B7ZDMV+tSumW7Rxuwuw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.46.0
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+      tslib: 1.14.1
+    dev: true
+
+  /@sentry/browser@7.46.0:
+    resolution: {integrity: sha512-4rX9hKPjxzfH5LhZzO5DlS5NXQ8qZg2ibepaqEgcDHrpYh5813mjjnE4OQA8wiZ6WuG3xKFgHBrGeliD5jXz9w==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.46.0
+      '@sentry/core': 7.46.0
+      '@sentry/replay': 7.46.0
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+      tslib: 1.14.1
+    dev: true
+
+  /@sentry/core@7.46.0:
+    resolution: {integrity: sha512-BnNHGh/ZTztqQedFko7vb2u6yLs/kWesOQNivav32ZbsEpVCjcmG1gOJXh2YmGIvj3jXOC9a4xfIuh+lYFcA6A==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+      tslib: 1.14.1
+    dev: true
+
+  /@sentry/node@7.46.0:
+    resolution: {integrity: sha512-+GrgJMCye2WXGarRiU5IJHCK27xg7xbPc2XjGojBKbBoZfqxVAWbXEK4bnBQgRGP1pCmrU/M6ZhVgR3dP580xA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.46.0
+      '@sentry/core': 7.46.0
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+      cookie: 0.4.2
+      https-proxy-agent: 5.0.1
+      lru_map: 0.3.3
+      tslib: 1.14.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sentry/replay@7.46.0:
+    resolution: {integrity: sha512-rHsAFdeEu47JRy6mEwwN+M+zTTWlOFWw9sR/eDCvik2lxAXBN2mXvf/N/MN9zQB3+QnS13ke+SvwVW7CshLOXg==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry/core': 7.46.0
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+    dev: true
+
+  /@sentry/svelte@7.46.0(svelte@3.57.0):
+    resolution: {integrity: sha512-nLq/AMrwRyWCmZy5wEvXahDmZPbJ1OqqUSG5NF4ALaLQIwEo6tFuI9jDmt7u9jzKC4VxSpzout70n+b9L1cGfg==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      svelte: 3.x
+    dependencies:
+      '@sentry/browser': 7.46.0
+      '@sentry/types': 7.46.0
+      '@sentry/utils': 7.46.0
+      magic-string: 0.26.7
+      svelte: 3.57.0
+      tslib: 1.14.1
+    dev: true
+
+  /@sentry/tracing@7.46.0:
+    resolution: {integrity: sha512-7qBtzmu7CDHclSKp+ZRrxoDcMyrev6/rxD2rSVJgB3o8gd2XGcO5vx9vuUOoYF0xTfOMXscR6Ft6JXE49xovYg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.46.0
+    dev: true
+
+  /@sentry/types@7.46.0:
+    resolution: {integrity: sha512-2FMEMgt2h6u7AoELhNhu9L54GAh67KKfK2pJ1kEXJHmWxM9FSCkizjLs/t+49xtY7jEXr8qYq8bV967VfDPQ9g==}
+    engines: {node: '>=8'}
+    dev: true
+
+  /@sentry/utils@7.46.0:
+    resolution: {integrity: sha512-elRezDAF84guMG0OVIIZEWm6wUpgbda4HGks98CFnPsrnMm3N1bdBI9XdlxYLtf+ir5KsGR5YlEIf/a0kRUwAQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.46.0
+      tslib: 1.14.1
+    dev: true
+
   /@sveltejs/adapter-vercel@2.4.1(@sveltejs/kit@1.14.0):
     resolution: {integrity: sha512-7YOHBq8onxqD5ZshQhveuSzJg9ZOicKoNZQtOnAj++0MJmPElxQ5Mjqp6aQfIhHAHl8tn5UbacCpvR39mPejgw==}
     peerDependencies:
@@ -1241,6 +1340,11 @@ packages:
 
   /console-control-strings@1.1.0:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
+    dev: true
+
+  /cookie@0.4.2:
+    resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
+    engines: {node: '>= 0.6'}
     dev: true
 
   /cookie@0.5.0:
@@ -2005,6 +2109,17 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /lru_map@0.3.3:
+    resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
+    dev: true
+
+  /magic-string@0.26.7:
+    resolution: {integrity: sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==}
+    engines: {node: '>=12'}
+    dependencies:
+      sourcemap-codec: 1.4.8
+    dev: true
+
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
@@ -2731,6 +2846,11 @@ packages:
   /source-map@0.7.4:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
     engines: {node: '>= 8'}
+    dev: true
+
+  /sourcemap-codec@1.4.8:
+    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: true
 
   /streamsearch@1.1.0:
