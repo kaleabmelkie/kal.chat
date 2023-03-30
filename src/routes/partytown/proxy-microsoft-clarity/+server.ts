@@ -11,11 +11,11 @@ export async function GET(event) {
 
 	const targetUrl = `${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`
 
-	return new Response(null, {
-		status: 302,
+	return await fetch(targetUrl, {
+		...event.request,
 		headers: {
+			...event.request.headers,
 			'Access-Control-Allow-Origin': '*',
-			Location: targetUrl,
 		},
 	})
 }
