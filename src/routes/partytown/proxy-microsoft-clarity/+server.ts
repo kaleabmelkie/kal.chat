@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 
 const clarityDomain = 'https://www.clarity.ms'
 
@@ -9,5 +9,13 @@ export async function GET(event) {
 		throw error(400, 'Invalid URL')
 	}
 
-	throw redirect(302, `${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`)
+	const targetUrl = `${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`
+
+	return new Response(null, {
+		status: 302,
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			Location: targetUrl,
+		},
+	})
 }
