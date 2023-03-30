@@ -136,10 +136,12 @@
 			type="button"
 			on:click={async () => {
 				isOpen = false
-				await fetch('/account/set-prefers-side-bar-open', {
-					method: 'PUT',
-					body: JSON.stringify({ prefersSideBarOpen: false }),
-				})
+				if (innerWidth >= smallScreenThresholdInPx) {
+					await fetch('/account/set-prefers-side-bar-open', {
+						method: 'PUT',
+						body: JSON.stringify({ prefersSideBarOpen: false }),
+					})
+				}
 			}}
 		>
 			<ArrowRightSvg

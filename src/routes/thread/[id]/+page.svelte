@@ -67,10 +67,12 @@
 			type="button"
 			on:click={async () => {
 				isSideBarOpen = true
-				await fetch('/account/set-prefers-side-bar-open', {
-					method: 'PUT',
-					body: JSON.stringify({ prefersSideBarOpen: true }),
-				})
+				if (innerWidth >= smallScreenThresholdInPx) {
+					await fetch('/account/set-prefers-side-bar-open', {
+						method: 'PUT',
+						body: JSON.stringify({ prefersSideBarOpen: true }),
+					})
+				}
 			}}
 		>
 			<MenuSvg class="block !h-5 !w-5 transition-all group-hover:hidden group-focus:hidden" />
