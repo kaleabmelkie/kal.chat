@@ -23,6 +23,6 @@ export async function GET({ locals }) {
 		302,
 		`${LEMON_SQUEEZY_BASE_URL}/checkout/buy/${LEMON_SQUEEZY_PRODUCT_ID}?checkout[email]=${
 			session.user.email
-		}&checkout[name]=${session.user.name ?? ''}&button_color=%232563EB`,
+		}&checkout[name]=${session.user.name ?? ''}`, // TODO: appending &button_color=%232563EB is making the request fail, investigate and fix
 	)
 }
