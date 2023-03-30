@@ -9,11 +9,12 @@ export async function GET(event) {
 		throw error(400, 'Invalid URL')
 	}
 
-	const targetUrl = `${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`
+	const response = await fetch(`${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`)
 
-	return await fetch(targetUrl, {
+	return new Response(response.body, {
+		status: response.status,
 		headers: {
-			...event.request.headers,
+			...response.headers,
 			'Access-Control-Allow-Origin': '*',
 		},
 	})
