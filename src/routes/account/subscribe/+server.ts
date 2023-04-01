@@ -1,4 +1,4 @@
-import { LEMON_SQUEEZY_BASE_URL, LEMON_SQUEEZY_PRODUCT_ID } from '$env/static/private'
+import { LEMON_SQUEEZY_BASE_URL, LEMON_SQUEEZY_VARIANT_ID } from '$env/static/private'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, redirect } from '@sveltejs/kit'
 
@@ -21,7 +21,7 @@ export async function GET({ locals }) {
 
 	throw redirect(
 		302,
-		`${LEMON_SQUEEZY_BASE_URL}/checkout/buy/${LEMON_SQUEEZY_PRODUCT_ID}?checkout[email]=${
+		`${LEMON_SQUEEZY_BASE_URL}/checkout/buy/${LEMON_SQUEEZY_VARIANT_ID}?checkout[email]=${
 			session.user.email
 		}&checkout[name]=${session.user.name ?? ''}`, // TODO: appending &button_color=%232563EB is making the request fail, investigate and fix
 	)
