@@ -7,9 +7,10 @@ import type { Profile } from '@auth/core/types'
 export async function load(event) {
 	const { session } = await event.parent()
 
-	const redirectTo = `/${event.url.searchParams.get('redirectTo')?.slice(1) ?? ''}`
+	const requestedRedirectTo = event.url.searchParams.get('redirectTo') ?? null
+	const redirectTo = `/${requestedRedirectTo?.slice(1) ?? ''}`
 
-	if (session?.user?.email && redirectTo !== null) {
+	if (session?.user?.email && requestedRedirectTo !== null) {
 		throw redirect(302, redirectTo)
 	}
 
