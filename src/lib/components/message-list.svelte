@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Message from '$lib/components/message.svelte'
-	import type { PageData } from '../../routes/thread/[id]/$types'
+	import type { PageData } from '../../routes/topic/[id]/$types'
 
 	export let data: PageData
 	export let isSendingMessage: boolean
@@ -17,7 +17,7 @@
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
-	{#each data.thread.Message.filter((m) => m.role !== 'system') as message (message.id)}
+	{#each data.topic.Message.filter((m) => m.role !== 'system') as message (message.id)}
 		<Message {message} />
 	{/each}
 

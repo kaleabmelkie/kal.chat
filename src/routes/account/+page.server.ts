@@ -24,11 +24,11 @@ export async function load(event) {
 				type: p.type,
 				style: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).style,
 			})),
-		threadsCount: !session?.user?.email
+		topicsCount: !session?.user?.email
 			? 0
-			: prisma.thread.count({ where: { user: { email: session.user.email } } }),
+			: prisma.topic.count({ where: { user: { email: session.user.email } } }),
 		messagesCount: !session?.user?.email
 			? 0
-			: prisma.message.count({ where: { thread: { user: { email: session.user.email } } } }),
+			: prisma.message.count({ where: { topic: { user: { email: session.user.email } } } }),
 	}
 }

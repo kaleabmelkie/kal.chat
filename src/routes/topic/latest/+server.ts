@@ -10,7 +10,7 @@ export async function GET(event) {
 		)
 	}
 
-	const latestThread = await prisma.thread.findFirst({
+	const latestTopic = await prisma.topic.findFirst({
 		where: {
 			user: {
 				email: session.user.email,
@@ -26,12 +26,12 @@ export async function GET(event) {
 		take: 1,
 	})
 
-	if (!latestThread) {
-		throw redirect(302, '/thread/new')
-	} else if (!latestThread.title) {
-		throw redirect(302, `/thread/${latestThread.id}`)
+	if (!latestTopic) {
+		throw redirect(302, '/topic/new')
+	} else if (!latestTopic.title) {
+		throw redirect(302, `/topic/${latestTopic.id}`)
 	} else {
-		const latestUntitledThread = await prisma.thread.findFirst({
+		const latestUntitledTopic = await prisma.topic.findFirst({
 			where: {
 				user: {
 					email: session.user.email,
@@ -46,10 +46,10 @@ export async function GET(event) {
 			},
 			take: 1,
 		})
-		if (latestUntitledThread) {
-			throw redirect(302, `/thread/${latestUntitledThread.id}`)
+		if (latestUntitledTopic) {
+			throw redirect(302, `/topic/${latestUntitledTopic.id}`)
 		} else {
-			throw redirect(302, '/thread/new')
+			throw redirect(302, '/topic/new')
 		}
 	}
 }

@@ -10,7 +10,7 @@
 	import Bowser from 'bowser'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
-	import type { PageData } from '../../routes/thread/[id]/$types'
+	import type { PageData } from '../../routes/topic/[id]/$types'
 
 	export let data: PageData
 	export let innerWidth: number
@@ -25,9 +25,9 @@
 	}>()
 
 	onMount(async () => {
-		isCreatingThread = false
+		isCreatingTopic = false
 		page.subscribe(() => {
-			isCreatingThread = false
+			isCreatingTopic = false
 		})
 
 		setUpVoiceTyping()
@@ -40,7 +40,7 @@
 		}
 
 		const q = $page.url.searchParams.get('q') ?? null
-		if (browser && q && data.thread.Message.length === 1 && messageBoxEle && submitButtonEle) {
+		if (browser && q && data.topic.Message.length === 1 && messageBoxEle && submitButtonEle) {
 			message = q
 			await tick()
 			submitButtonEle.click()
@@ -57,7 +57,7 @@
 		}
 	})
 
-	let isCreatingThread = false
+	let isCreatingTopic = false
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
 
@@ -70,10 +70,10 @@
 			isSendingMessage,
 			isVoiceTyping,
 			isSideBarOpen,
-			isCreatingThread,
+			isCreatingTopic,
 			$latestNewMessageSentAt,
 			$page,
-			data.thread.Message,
+			data.topic.Message,
 		] // deps
 		adjustMessageBoxHeight()
 	}
@@ -128,26 +128,23 @@
 
 		const messageBackup = message
 
-		const thread = data.threads.find((t) => t.id === Number($page.params.id))
-		if (thread) {
-			thread.updatedAt = new Date()
-			data.threads = [
-				thread,
-				...(data.threads.filter((t) => t.id !== Number($page.params.id)) ?? []),
-			]
+		const topic = data.topics.find((t) => t.id === Number($page.params.id))
+		if (topic) {
+			topic.updatedAt = new Date()
+			data.topics = [topic, ...(data.topics.filter((t) => t.id !== Number($page.params.id)) ?? [])]
 		}
 
-		data.thread.Message = [
-			...data.thread.Message,
+		data.topic.Message = [
+			...data.topic.Message,
 			{
-				id: data.thread.Message[data.thread.Message.length - 1]
-					? data.thread.Message[data.thread.Message.length - 1].id + 1
+				id: data.topic.Message[data.topic.Message.length - 1]
+					? data.topic.Message[data.topic.Message.length - 1].id + 1
 					: 0, // to be replaced
 				createdAt: new Date(), // to be replaced
 				updatedAt: new Date(), // to be replaced
 				role: 'user',
 				content: message,
-				threadId: Number($page.params.id), // to be replaced
+				topicId: Number($page.params.id), // to be replaced
 			},
 		]
 
@@ -156,21 +153,21 @@
 
 		dispatch('scrollToBottom')
 
-		const response = await fetch(`/thread/${$page.params.id}/new-message`, {
+		const response = await fetch(`/topic/${$page.params.id}/new-message`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				threadId: Number($page.params.id),
+				topicId: Number($page.params.id),
 				message: messageBackup,
 			}),
 		})
 
 		let result: {
 			message?: string // for errors
-			thread?: typeof data.thread
-			threads?: typeof data.threads
+			topic?: typeof data.topic
+			topics?: typeof data.topics
 		} | null = null
 		try {
 			result = await response.json()
@@ -180,11 +177,11 @@
 
 		if (!response.ok) {
 			alert(`Error: ${result?.message ?? 'Unknown cause'}`)
-			data.thread.Message = data.thread.Message.slice(0, -1)
+			data.topic.Message = data.topic.Message.slice(0, -1)
 			message = messageBackup + message
 		} else {
-			data.thread = result?.thread ?? data.thread
-			data.threads = result?.threads ?? data.threads
+			data.topic = result?.topic ?? data.topic
+			data.topics = result?.topics ?? data.topics
 		}
 
 		dispatch('scrollToBottom')
@@ -260,14 +257,14 @@
 	>
 		<a
 			data-sveltekit-preload-data="off"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingThread
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingTopic
 				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
 				: ''}"
-			title="New thread"
-			href="/thread/new"
+			title="New topic"
+			href="/topic/new"
 			on:click={(e) => {
-				if (!isCreatingThread) {
-					isCreatingThread = true
+				if (!isCreatingTopic) {
+					isCreatingTopic = true
 				} else {
 					e.preventDefault()
 				}

@@ -31,9 +31,7 @@
 
 	let tokensActive = 0
 	$: countTokens(
-		[...data.thread.Message.slice(-1 * data.contextLength).map((m) => m.content), message].join(
-			' ',
-		),
+		[...data.topic.Message.slice(-1 * data.contextLength).map((m) => m.content), message].join(' '),
 	).then((count) => (tokensActive = data.systemPromptTokensCount + count))
 
 	async function scrollToBottom(repeat = true) {
@@ -52,8 +50,8 @@
 
 <svelte:head>
 	<title>
-		{data.thread.title
-			? `Chat: ${data.thread.title} | kal.chat`
+		{data.topic.title
+			? `Chat: ${data.topic.title} | kal.chat`
 			: 'Chat | kal.chat — Better Chat Interface for GPT'}
 	</title>
 </svelte:head>
@@ -79,7 +77,7 @@
 			<span
 				class="hidden flex-1 pr-1 text-center font-semibold transition-all group-hover:inline group-focus:inline"
 			>
-				Threads
+				Topics
 			</span>
 			<ArrowRight class="hidden !h-5 !w-5 transition-all group-hover:block group-focus:block" />
 		</button>

@@ -7,10 +7,10 @@ import { error, json } from '@sveltejs/kit'
 export async function PUT({ locals, params, url }) {
 	const session = await locals.getSession()
 	if (!session?.user?.email) {
-		throw error(401, `You must be logged in to change a thread's title`)
+		throw error(401, `You must be logged in to change a topic's title`)
 	}
 
-	let thread = await prisma.thread.findFirstOrThrow({
+	let topic = await prisma.topic.findFirstOrThrow({
 		where: {
 			id: Number(params.id),
 			user: {
@@ -19,8 +19,8 @@ export async function PUT({ locals, params, url }) {
 		},
 	})
 
-	if (thread.title && url.searchParams.get('force') !== 'true') {
-		throw error(400, 'Thread already has a title')
+	if (topic.title && url.searchParams.get('force') !== 'true') {
+		throw error(400, 'Topic already has a title')
 	}
 
 	const prompt = `Generate a short title for this chat conversation. Limit the title to a absolute maximum of just 48 characters. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not label the title. Do not mention the characters length or limit. Do not include any quotation marks and periods.${
@@ -31,7 +31,7 @@ export async function PUT({ locals, params, url }) {
 	const reversedMessages = await prisma.message.findMany({
 		where: {
 			role: { in: ['assistant', 'user'] },
-			threadId: thread.id,
+			topicId: topic.id,
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -81,9 +81,9 @@ export async function PUT({ locals, params, url }) {
 		throw error(500, 'Could not generate a title')
 	}
 
-	thread = await prisma.thread.update({
+	topic = await prisma.topic.update({
 		where: {
-			id: thread.id,
+			id: topic.id,
 			user: {
 				email: session.user.email,
 			},
@@ -94,7 +94,7 @@ export async function PUT({ locals, params, url }) {
 	})
 
 	return json({
-		updatedAt: thread.updatedAt,
+		updatedAt: topic.updatedAt,
 		title: newTitle,
 	})
 }

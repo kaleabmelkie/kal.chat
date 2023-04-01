@@ -15,7 +15,7 @@ export async function GET(event) {
 
 	const q = event.url.searchParams.get('q') || null
 
-	const thread = await prisma.thread.create({
+	const topic = await prisma.topic.create({
 		data: {
 			user: {
 				connect: {
@@ -41,5 +41,5 @@ export async function GET(event) {
 		},
 	})
 
-	throw redirect(302, `/thread/${thread.id}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
+	throw redirect(302, `/topic/${topic.id}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
 }

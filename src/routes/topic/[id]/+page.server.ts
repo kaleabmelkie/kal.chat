@@ -14,7 +14,7 @@ export const load = async (event) => {
 		)
 	}
 
-	const thread = await prisma.thread.findFirst({
+	const topic = await prisma.topic.findFirst({
 		where: {
 			id: Number(event.params.id),
 			user: {
@@ -34,10 +34,10 @@ export const load = async (event) => {
 		},
 	})
 
-	if (!thread) {
+	if (!topic) {
 		throw error(
 			404,
-			`Thread (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
+			`Topic (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
 		)
 	}
 
@@ -45,7 +45,7 @@ export const load = async (event) => {
 		userAgent: event.request.headers.get('user-agent'),
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 		contextLength,
-		threads: prisma.thread.findMany({
+		topics: prisma.topic.findMany({
 			where: { user: { email: session.user.email } },
 			select: {
 				id: true,
@@ -65,10 +65,10 @@ export const load = async (event) => {
 				prefersSideBarOpen: true,
 			},
 		}),
-		thread: (async () => ({
-			...thread,
+		topic: (async () => ({
+			...topic,
 			Message: await Promise.all(
-				thread.Message.map(async (message) => ({
+				topic.Message.map(async (message) => ({
 					...message,
 					content: await transformMessage(message.content),
 				})),

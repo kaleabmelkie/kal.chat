@@ -28,13 +28,13 @@
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75"> Stats </span>
 				<span class="text-lg font-semibold text-primary-700/90">
-					{data.messagesCount ?? 0} messages in {data.threadsCount ?? 0} threads
+					{data.messagesCount ?? 0} messages in {data.topicsCount ?? 0} topics
 				</span>
 			</p>
 			<div />
 			<a
 				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
-				href="/thread/latest"
+				href="/topic/latest"
 			>
 				Go chat
 			</a>

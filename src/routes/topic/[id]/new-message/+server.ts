@@ -10,8 +10,8 @@ import type { ChatCompletionRequestMessage } from 'openai'
 export async function POST(event) {
 	const data = await event.request.json()
 
-	if (!data.threadId || typeof data.threadId !== 'number') {
-		throw error(400, `Invalid threadId: ${data.threadId}`)
+	if (!data.topicId || typeof data.topicId !== 'number') {
+		throw error(400, `Invalid topicId: ${data.topicId}`)
 	}
 	if (!data.message || typeof data.message !== 'string') {
 		throw error(400, `Invalid message: ${data.message}`)
@@ -22,15 +22,15 @@ export async function POST(event) {
 
 	const session = await event.locals.getSession()
 	if (!session?.user?.email) {
-		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/thread/${data.threadId}`)}`)
+		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${data.topicId}`)}`)
 	}
 
 	const oldMessages = (
 		await prisma.message.findMany({
 			where: {
 				role: { in: ['assistant', 'user'] },
-				thread: {
-					id: data.threadId,
+				topic: {
+					id: data.topicId,
 					user: {
 						email: session.user.email,
 					},
@@ -79,7 +79,7 @@ export async function POST(event) {
 				{
 					role: 'user',
 					content: data.message,
-					threadId: data.threadId,
+					topicId: data.topicId,
 				},
 				// new messages:
 				...chatCompletionResponse.data.choices
@@ -89,14 +89,14 @@ export async function POST(event) {
 					.map((m) => ({
 						role: m.role,
 						content: m.content,
-						threadId: data.threadId,
+						topicId: data.topicId,
 					})),
 			],
 		}),
 
-		prisma.thread.update({
+		prisma.topic.update({
 			where: {
-				id: data.threadId,
+				id: data.topicId,
 			},
 			data: {
 				updatedAt: new Date(),
@@ -104,8 +104,8 @@ export async function POST(event) {
 		}),
 	])
 
-	const [thread, threads] = await Promise.all([
-		prisma.thread.findFirstOrThrow({
+	const [topic, topics] = await Promise.all([
+		prisma.topic.findFirstOrThrow({
 			where: {
 				id: Number(event.params.id),
 				user: {
@@ -125,7 +125,7 @@ export async function POST(event) {
 			},
 		}),
 
-		prisma.thread.findMany({
+		prisma.topic.findMany({
 			where: { user: { email: session.user.email } },
 			select: {
 				id: true,
@@ -142,15 +142,15 @@ export async function POST(event) {
 	])
 
 	return json({
-		thread: await (async () => ({
-			...thread,
+		topic: await (async () => ({
+			...topic,
 			Message: await Promise.all(
-				thread.Message.map(async (m) => ({
+				topic.Message.map(async (m) => ({
 					...m,
 					content: await transformMessage(m.content),
 				})),
 			),
 		}))(),
-		threads,
+		topics,
 	})
 }
