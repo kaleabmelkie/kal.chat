@@ -180,7 +180,7 @@
 								? 'font-semibold text-primary-600'
 								: 'text-primary-900/90'}"
 						>
-							{topic.title ?? 'Untitled topic'}
+							{topic.title ?? 'New topic'}
 						</div>
 						{#key minuteKey}
 							<div
