@@ -2,6 +2,9 @@ import { LEMON_SQUEEZY_BASE_URL, LEMON_SQUEEZY_VARIANT_ID } from '$env/static/pr
 import { prisma } from '$lib/utils/prisma.server'
 import { error, redirect } from '@sveltejs/kit'
 
+/**
+ * @deprecated // TODO: Remove this if it has no use in the near future. It has been replaced by lemon.js in the front-end.
+ */
 export async function GET({ locals }) {
 	const session = await locals.getSession()
 	if (!session?.user?.email) {
@@ -23,6 +26,6 @@ export async function GET({ locals }) {
 		302,
 		`${LEMON_SQUEEZY_BASE_URL}/checkout/buy/${LEMON_SQUEEZY_VARIANT_ID}?checkout[email]=${
 			session.user.email
-		}&checkout[name]=${session.user.name ?? ''}`, // TODO: appending &button_color=%232563EB is making the request fail, investigate and fix
+		}&checkout[name]=${session.user.name ?? ''}`,
 	)
 }

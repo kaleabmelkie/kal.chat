@@ -21,9 +21,17 @@
 	<div class="flex-1" />
 
 	{#if $page.data.session}
+		<!-- 
+		// TODO: Appending '&button_color=%232563EB' to the checkout URL below is failing with HTTP 500. Append it when it's fixed from Lemon Squeezy's side.
+		-->
 		<a
-			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
-			href="/account/subscribe"
+			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
+			href="https://kal-chat.lemonsqueezy.com/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1{$page
+				.data.session.user?.name
+				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
+				: ''}{$page.data.session.user?.email
+				? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`
+				: ''}"
 			on:click={(e) => {
 				if (
 					!confirm(
