@@ -15,7 +15,6 @@
 	stroke-linecap="round"
 	stroke-linejoin="round"
 >
-	<line x1="3" y1="12" x2="21" y2="12" />
-	<line x1="3" y1="6" x2="21" y2="6" />
-	<line x1="3" y1="18" x2="21" y2="18" />
+	<circle cx="12" cy="12" r="10" />
+	<polyline points="12 6 12 12 16 14" />
 </svg>
