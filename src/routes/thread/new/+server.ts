@@ -4,8 +4,8 @@ import { prisma } from '$lib/utils/prisma.server'
 import type { RoleType } from '@prisma/client'
 import { redirect } from '@sveltejs/kit'
 
-export const load = async (event) => {
-	const { session } = await event.parent()
+export async function GET(event) {
+	const session = await event.locals.getSession()
 	if (!session?.user?.email) {
 		throw redirect(
 			302,

@@ -14,7 +14,7 @@
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
 	<div class="grid w-full max-w-xs gap-4">
 		{#if $page.data.session}
-			<h2 class="text-2xl">You're logged in!</h2>
+			<h2 class="text-2xl">Your Account</h2>
 			<p class="grid gap-2">
 				<span class="mt-4 text-xs uppercase text-primary-900/75"> Name </span>
 				<span class="text-lg font-semibold text-primary-700/90">
@@ -26,7 +26,7 @@
 					{data.session?.user?.email ?? 'Unknown email'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-primary-900/75"> Usage </span>
+				<span class="mt-4 text-xs uppercase text-primary-900/75"> Stats </span>
 				<span class="text-lg font-semibold text-primary-700/90">
 					{data.messagesCount ?? 0} messages in {data.threadsCount ?? 0} threads
 				</span>
