@@ -46,21 +46,32 @@ export const load = async (event) => {
 		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 		contextLength,
 		topics: prisma.topic.findMany({
-			where: { user: { email: session.user.email } },
+			where: {
+				user: {
+					email: session.user.email,
+				},
+			},
 			select: {
 				id: true,
 				title: true,
 				updatedAt: true,
 				Message: {
+					where: {
+						role: { not: 'system' },
+					},
 					select: {
 						id: true,
 					},
 				},
 			},
-			orderBy: { updatedAt: 'desc' },
+			orderBy: {
+				updatedAt: 'desc',
+			},
 		}),
 		user: prisma.user.findFirstOrThrow({
-			where: { email: session.user.email },
+			where: {
+				email: session.user.email,
+			},
 			select: {
 				prefersSideBarOpen: true,
 			},

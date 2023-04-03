@@ -1,8 +1,8 @@
 import { authHookConfig } from '$lib/utils/auth-hook.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { redirect } from '@sveltejs/kit'
 import type { OAuth2Config, OIDCConfig } from '@auth/core/src/providers/oauth'
 import type { Profile } from '@auth/core/types'
+import { redirect } from '@sveltejs/kit'
 
 export async function load(event) {
 	const { session } = await event.parent()
@@ -26,9 +26,24 @@ export async function load(event) {
 			})),
 		topicsCount: !session?.user?.email
 			? 0
-			: prisma.topic.count({ where: { user: { email: session.user.email } } }),
+			: prisma.topic.count({
+					where: {
+						user: {
+							email: session.user.email,
+						},
+					},
+			  }),
 		messagesCount: !session?.user?.email
 			? 0
-			: prisma.message.count({ where: { topic: { user: { email: session.user.email } } } }),
+			: prisma.message.count({
+					where: {
+						role: { not: 'system' },
+						topic: {
+							user: {
+								email: session.user.email,
+							},
+						},
+					},
+			  }),
 	}
 }
