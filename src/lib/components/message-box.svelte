@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
+	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -46,6 +47,10 @@
 			submitButtonEle.click()
 			await tick()
 			message = ''
+		}
+		if (q) {
+			$page.url.searchParams.delete('q')
+			await goto($page.url)
 		}
 	})
 
