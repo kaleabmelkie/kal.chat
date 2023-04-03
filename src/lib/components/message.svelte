@@ -10,7 +10,7 @@
 </script>
 
 <li
-	class="grid max-w-screen-sm gap-2 {message.role === 'user'
+	class="grid max-w-screen-md gap-2 {message.role === 'user'
 		? 'ml-auto pl-8'
 		: 'mr-auto pr-8'} {className}"
 	transition:slide|local={{ duration: 150 }}
@@ -24,7 +24,7 @@
 	</div>
 
 	<article
-		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr px-4 py-3 text-lg shadow-md shadow-primary-600/10 {message.role ===
+		class="match-braces prose relative rounded-[1.75rem] bg-gradient-to-tr p-[1rem] text-lg shadow-md shadow-primary-600/10 {message.role ===
 		'user'
 			? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white'
 			: 'rounded-tl from-white/95 to-white/75 text-black'} {articleClassName}"
@@ -39,6 +39,6 @@
 	}
 
 	article :global(pre) {
-		@apply bg-black bg-gradient-to-tr from-primary-600/30 to-primary-400/30 text-sm leading-6;
+		@apply !rounded-[calc(1.75rem-1rem/2)] bg-black bg-gradient-to-tr from-primary-600/30 to-primary-400/30 p-[1rem] text-sm leading-6;
 	}
 </style>
