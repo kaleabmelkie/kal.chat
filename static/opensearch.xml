@@ -1,7 +1,0 @@
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>kal.chat</ShortName>
-  <Description>Use kal.chat search to start a new topic.</Description>
-  <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://kal.chat/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://kal.chat/topic/new?q={searchTerms}" />
-</OpenSearchDescription>
