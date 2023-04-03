@@ -83,6 +83,17 @@
 	</head>
 
 	<body data-sveltekit-preload-code="viewport" data-sveltekit-preload-data="hover">
+		<form
+			class="sr-only pointer-events-none"
+			rel="search"
+			method="get"
+			action="/topic/new"
+			onsubmit="return false"
+		>
+			<input type="search" name="q" onfocus="this.blur()" />
+			<button type="submit" onfocus="this.blur()">Start a new topic</button>
+		</form>
+
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
