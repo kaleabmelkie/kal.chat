@@ -52,7 +52,7 @@
 	<title>
 		{data.topic.title
 			? `${data.topic.title} | kal.chat`
-			: 'Chat | kal.chat — Better Chat Interface for GPT'}
+			: 'New topic | kal.chat — Better Chat Interface for GPT'}
 	</title>
 </svelte:head>
 
