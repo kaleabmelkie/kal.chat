@@ -26,7 +26,7 @@
 		-->
 		<a
 			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
-			href="https://kal-chat.lemonsqueezy.com/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1{$page
+			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&media=0&logo=0&desc=0{$page
 				.data.session.user?.name
 				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
 				: ''}{$page.data.session.user?.email
