@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = env("PRISMA_BINARY_TARGETS")
-  previewFeatures = ["extendedWhereUnique", "fieldReference", "filteredRelationCount", "fullTextIndex", "fullTextSearch", "metrics", "orderByNulls"]
+  previewFeatures = ["clientExtensions", "deno", "extendedWhereUnique", "fieldReference", "filteredRelationCount", "fullTextIndex", "fullTextSearch", "jsonProtocol", "metrics", "multiSchema", "orderByNulls", "postgresqlExtensions", "tracing", "views"]
 }
 
 datasource db {
