@@ -32,7 +32,9 @@
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75"> Stats </span>
 				<span class="text-lg font-semibold text-primary-700/90">
-					{data.messagesCount ?? 0} messages in {data.topicsCount ?? 0} topics
+					{data.messagesCount ?? 0}
+					{data.messagesCount === 1 ? 'message' : 'messages'} in {data.topicsCount ?? 0}
+					{data.topicsCount === 1 ? 'topic' : 'topics'}
 				</span>
 			</p>
 
