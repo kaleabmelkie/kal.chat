@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores'
+	import ChevronRightSvg from '$lib/icons/chevron-right.svg.svelte'
 	import { signIn, signOut } from '@auth/sveltekit/client'
+	import { slide } from 'svelte/transition'
 
 	export let data
 
 	let isActive = false
+	let isAdvancedSettingsOpen = false
 </script>
 
 <svelte:head>
@@ -15,6 +18,7 @@
 	<div class="grid w-full max-w-xs gap-4">
 		{#if $page.data.session}
 			<h2 class="text-2xl">Your Account</h2>
+
 			<p class="grid gap-2">
 				<span class="mt-4 text-xs uppercase text-primary-900/75"> Name </span>
 				<span class="text-lg font-semibold text-primary-700/90">
@@ -31,10 +35,13 @@
 					{data.messagesCount ?? 0} messages in {data.topicsCount ?? 0} topics
 				</span>
 			</p>
+
 			<div />
+
 			<a
 				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
 				href="/topic/latest"
+				data-sveltekit-preload-data="tap"
 			>
 				Go chat
 			</a>
@@ -62,6 +69,86 @@
 			>
 				Logout
 			</button>
+
+			<div />
+
+			<button
+				class="flex items-center gap-2 text-left text-primary-900/75"
+				type="button"
+				on:click={() => (isAdvancedSettingsOpen = !isAdvancedSettingsOpen)}
+			>
+				<ChevronRightSvg
+					class="h-5 w-5 transition-all {isAdvancedSettingsOpen ? 'rotate-90' : ''}"
+				/>
+				<span>Advanced Settings</span>
+			</button>
+
+			{#if isAdvancedSettingsOpen}
+				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
+					<button
+						class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
+						type="button"
+						disabled={isActive}
+						on:click={async () => {
+							if (
+								!confirm(
+									'This deletes all your messages and topics and anything related to your account.\n\nAre you sure you want to continue?\n\nThis action cannot be undone.',
+								)
+							) {
+								return
+							}
+							if (
+								prompt(
+									'Please type "DELETE ACCOUNT" to confirm account deletion.',
+								)?.toUpperCase() !== 'DELETE ACCOUNT'
+							) {
+								alert('Wrong confirmation input. Account deletion cancelled.')
+								return
+							}
+							isActive = true
+							try {
+								const response = await fetch('/account/delete', {
+									method: 'DELETE',
+									headers: {
+										'Content-Type': 'application/json',
+									},
+								})
+								if (!response.ok) {
+									let message = 'Unknown error.'
+									try {
+										message = (await response.json())?.message ?? message
+										console.error(message)
+									} catch {
+										console.error(response)
+									}
+									throw new Error(message)
+								}
+
+								alert('Account deleted successfully.')
+							} catch (e) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								alert(`Account deletion error: ${e?.message}`)
+								isActive = false
+								return
+							}
+							try {
+								await signOut({
+									callbackUrl: data.redirectTo,
+								})
+							} catch (e) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								alert(`Sign out error: ${e?.message}`)
+							} finally {
+								isActive = false
+							}
+						}}
+					>
+						Delete account
+					</button>
+				</div>
+			{/if}
 		{:else}
 			<h2 class="text-2xl">Continue with</h2>
 			<div />
