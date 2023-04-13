@@ -212,7 +212,7 @@
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
-						{#if topic.Message.length > 3}
+						{#if topic.Message.length > 2}
 							<button
 								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
 								type="button"
