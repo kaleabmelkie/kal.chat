@@ -36,7 +36,7 @@
 		</div>
 
 		<article
-			class="match-braces prose relative rounded-[1rem] bg-gradient-to-tr p-[1rem] text-lg shadow-md shadow-primary-600/10 {message.role ===
+			class="match-braces prose relative rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 {message.role ===
 			'user'
 				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white'
 				: 'rounded-tl from-white/95 to-white/75 text-black'} {articleClassName}"
@@ -110,7 +110,6 @@
 									},
 								})
 								if (response.ok) {
-									alert('Message deleted!')
 									data.topic.Message = data.topic.Message.filter((msg) => msg.id !== message.id)
 									for (let i = 0; i < data.topics.length; i++) {
 										const isMessageInThread = data.topics[i].Message.find(
@@ -153,6 +152,6 @@
 	}
 
 	article :global(pre) {
-		@apply !rounded-[calc(1rem-1rem/2)] bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6;
+		@apply !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6;
 	}
 </style>
