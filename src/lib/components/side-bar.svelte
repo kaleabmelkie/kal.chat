@@ -208,7 +208,7 @@
 				</a>
 				{#if optionsExpandedForTopicId === topic.id}
 					<div
-						class="absolute right-4 top-9 z-30 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
+						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>

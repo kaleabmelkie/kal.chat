@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation'
+	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ClipboardSvg from '$lib/icons/clipboard.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
@@ -6,9 +8,11 @@
 	import 'highlight.js/styles/github-dark.css'
 	import type { ChatCompletionRequestMessage } from 'openai'
 	import { slide } from 'svelte/transition'
+	import type { PageData } from '../../routes/topic/[id]/$types'
 
 	let className = ''
 	export { className as class }
+	export let data: PageData
 	export let articleClassName = ''
 	export let message: { id: number } & ChatCompletionRequestMessage
 
@@ -56,7 +60,7 @@
 
 				{#if isOptionsExpanded}
 					<div
-						class="absolute top-14 z-10 grid w-max rounded-[1rem] bg-white/90 p-2 shadow-lg shadow-primary-900/20 backdrop-blur-sm {message.role ===
+						class="absolute top-14 z-50 grid w-max rounded-[1rem] bg-white/90 p-2 shadow-lg shadow-primary-900/20 backdrop-blur-sm {message.role ===
 						'user'
 							? 'left-0 -ml-2'
 							: 'right-0 -mr-2'}"
@@ -107,6 +111,20 @@
 								})
 								if (response.ok) {
 									alert('Message deleted!')
+									data.topic.Message = data.topic.Message.filter((msg) => msg.id !== message.id)
+									for (let i = 0; i < data.topics.length; i++) {
+										const isMessageInThread = data.topics[i].Message.find(
+											(msg) => msg.id === message.id,
+										)
+										if (isMessageInThread) {
+											data.topics[i].Message = data.topics[i].Message.filter(
+												(msg) => msg.id !== message.id,
+											)
+											break
+										}
+										data = data
+										await invalidate($page.url)
+									}
 								} else {
 									try {
 										const json = await response.json()

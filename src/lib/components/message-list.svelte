@@ -18,7 +18,7 @@
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
 	{#each data.topic.Message.filter((m) => m.role !== 'system') as message (message.id)}
-		<Message {message} />
+		<Message {message} bind:data />
 	{/each}
 
 	{#if isSendingMessage}
@@ -30,6 +30,7 @@
 					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
 				}}
 				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-primary-900 !shadow-none"
+				bind:data
 			/>
 		{/key}
 	{/if}
