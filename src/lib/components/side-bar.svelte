@@ -4,7 +4,6 @@
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
-	import EditBoxSvg from '$lib/icons/edit-box.svg.svelte'
 	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
@@ -200,7 +199,7 @@
 					<button
 						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 {optionsExpandedForTopicId ===
 						topic.id
-							? 'animate-pulse !bg-primary-200 -mt-2'
+							? '-mt-2 animate-pulse !bg-primary-200'
 							: ''}"
 						on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
 					>

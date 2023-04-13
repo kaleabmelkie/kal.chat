@@ -25,6 +25,7 @@
 		{#key 'Typing...'}
 			<Message
 				message={{
+					id: -1,
 					role: 'system',
 					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
 				}}

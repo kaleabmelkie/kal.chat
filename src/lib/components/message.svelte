@@ -10,7 +10,7 @@
 	let className = ''
 	export { className as class }
 	export let articleClassName = ''
-	export let message: ChatCompletionRequestMessage
+	export let message: { id: number } & ChatCompletionRequestMessage
 
 	let articleEle: HTMLElement | null = null
 	let isOptionsExpanded = false
@@ -41,64 +41,91 @@
 			{@html message.content}
 		</article>
 
-		<div use:clickOutside={() => (isOptionsExpanded = false)}>
-			<button
-				class="absolute top-9 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 {isOptionsExpanded
-					? '!top-6 animate-pulse !bg-primary-200 !shadow-none'
-					: 'sm:opacity-0'} {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
-				type="button"
-				title="Message Options"
-				on:click={() => (isOptionsExpanded = !isOptionsExpanded)}
-			>
-				<MoreVerticalSvg class="h-5 w-5 rotate-90 transition-all" />
-			</button>
-
-			{#if isOptionsExpanded}
-				<div
-					class="absolute top-14 z-10 grid w-max rounded-[1rem] bg-white/90 p-2 shadow-lg shadow-primary-900/20 backdrop-blur-sm {message.role ===
-					'user'
-						? 'left-0 -ml-2'
-						: 'right-0 -mr-2'}"
-					transition:slide={{ duration: 150 }}
+		{#if message.id !== -1}
+			<div use:clickOutside={() => (isOptionsExpanded = false)}>
+				<button
+					class="absolute top-9 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 {isOptionsExpanded
+						? '!top-6 animate-pulse !bg-primary-200 !shadow-none'
+						: 'sm:opacity-0'} {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
+					type="button"
+					title="Message Options"
+					on:click={() => (isOptionsExpanded = !isOptionsExpanded)}
 				>
-					<button
-						class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
-						type="button"
-						on:click={async () => {
-							const text = articleEle?.textContent
-							if (text) {
-								await navigator.clipboard.writeText(text)
+					<MoreVerticalSvg class="h-5 w-5 rotate-90 transition-all" />
+				</button>
+
+				{#if isOptionsExpanded}
+					<div
+						class="absolute top-14 z-10 grid w-max rounded-[1rem] bg-white/90 p-2 shadow-lg shadow-primary-900/20 backdrop-blur-sm {message.role ===
+						'user'
+							? 'left-0 -ml-2'
+							: 'right-0 -mr-2'}"
+						transition:slide={{ duration: 150 }}
+					>
+						<button
+							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							type="button"
+							on:click={async () => {
+								const text = articleEle?.textContent
+								if (text) {
+									await navigator.clipboard.writeText(text)
+									alert('Copied to clipboard!')
+									isOptionsExpanded = false
+								} else {
+									alert('Failed to copy to clipboard!')
+								}
+							}}
+						>
+							<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
+							<span>Copy as plain text</span>
+						</button>
+						<button
+							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							type="button"
+							on:click={async () => {
+								await navigator.clipboard.writeText(message.content)
 								alert('Copied to clipboard!')
 								isOptionsExpanded = false
-							} else {
-								alert('Failed to copy to clipboard!')
-							}
-						}}
-					>
-						<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
-						<span>Copy plain text</span>
-					</button>
-					<button
-						class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
-						type="button"
-						on:click={async () => {
-							await navigator.clipboard.writeText(message.content)
-							alert('Copied to clipboard!')
-							isOptionsExpanded = false
-						}}
-					>
-						<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
-						<span>Copy HTML</span>
-					</button>
-					<!-- <button
-						class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
-					>
-						<TrashSvg class="h-5 w-5" />
-						<span>Delete</span>
-					</button> -->
-				</div>
-			{/if}
-		</div>
+							}}
+						>
+							<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
+							<span>Copy as HTML</span>
+						</button>
+						<button
+							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							type="button"
+							on:click={async () => {
+								if (!confirm('Are you sure you want to delete this message?')) {
+									return
+								}
+
+								const response = await fetch(`/message/${message.id}/delete`, {
+									method: 'DELETE',
+									headers: {
+										'Content-Type': 'application/json',
+									},
+								})
+								if (response.ok) {
+									alert('Message deleted!')
+								} else {
+									try {
+										const json = await response.json()
+										alert(json.message)
+									} catch (err) {
+										alert('Failed to delete message!')
+									}
+								}
+
+								isOptionsExpanded = false
+							}}
+						>
+							<TrashSvg class="h-5 w-5" />
+							<span>Delete</span>
+						</button>
+					</div>
+				{/if}
+			</div>
+		{/if}
 	</div>
 </li>
 
