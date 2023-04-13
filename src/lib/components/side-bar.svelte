@@ -212,25 +212,28 @@
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
-						<button
-							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
-							type="button"
-							on:click={() => {
-								if (
-									topic.title &&
-									!confirm(
-										'This topic already has a title. Are you sure you want to auto-regenerate it?',
-									)
-								) {
-									return
-								}
-								optionsExpandedForTopicId = null
-								handleGenerateTitle(topic, true)
-							}}
-						>
-							<EditSvg class="h-5 w-5 text-primary-600/90" />
-							<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
-						</button>
+						{#if topic.Message.length > 3}
+							<button
+								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+								type="button"
+								on:click={() => {
+									if (
+										topic.title &&
+										!confirm(
+											'This topic already has a title. Are you sure you want to auto-regenerate it?',
+										)
+									) {
+										return
+									}
+									optionsExpandedForTopicId = null
+									handleGenerateTitle(topic, true)
+								}}
+								transition:slide={{ duration: 150 }}
+							>
+								<EditSvg class="h-5 w-5 text-primary-600/90" />
+								<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
+							</button>
+						{/if}
 
 						<button
 							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
@@ -266,7 +269,7 @@
 							}}
 						>
 							<EditSvg class="h-5 w-5 text-primary-600/90" />
-							<span>Change title</span>
+							<span>{topic.title ? 'Change' : 'Set'} title</span>
 						</button>
 
 						<button
