@@ -198,9 +198,9 @@
 						{/key}
 					</div>
 					<button
-						class="-mr-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 {optionsExpandedForTopicId ===
+						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 {optionsExpandedForTopicId ===
 						topic.id
-							? 'bg-primary-100/50'
+							? 'animate-pulse !bg-primary-200 -mt-2'
 							: ''}"
 						on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
 					>
@@ -209,12 +209,12 @@
 				</a>
 				{#if optionsExpandedForTopicId === topic.id}
 					<div
-						class="absolute right-4 top-12 z-30 flex flex-col rounded bg-white/90 p-1 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
+						class="absolute right-4 top-9 z-30 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
 						<button
-							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
 							type="button"
 							on:click={() => {
 								if (
@@ -229,12 +229,12 @@
 								handleGenerateTitle(topic, true)
 							}}
 						>
-							<EditSvg class="h-4 w-4 text-primary-500/95" />
-							<span>{topic.title ? 'Regenerate' : 'Generate'} title</span>
+							<EditSvg class="h-5 w-5 text-primary-600/90" />
+							<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
 						</button>
 
 						<button
-							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
 							type="button"
 							on:click={async () => {
 								const newTitle = prompt('New topic title:')
@@ -266,12 +266,12 @@
 									)
 							}}
 						>
-							<EditBoxSvg class="h-4 w-4 text-primary-500/95" />
+							<EditSvg class="h-5 w-5 text-primary-600/90" />
 							<span>Change title</span>
 						</button>
 
 						<button
-							class="flex items-center gap-2 rounded py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
 							type="button"
 							on:click={async () => {
 								if (!confirm('Are you sure you want to delete this topic?')) {
@@ -301,7 +301,7 @@
 									)
 							}}
 						>
-							<TrashSvg class="h-4 w-4 text-red-500/95" />
+							<TrashSvg class="h-5 w-5 text-red-500/95" />
 							<span>Delete</span>
 						</button>
 					</div>
