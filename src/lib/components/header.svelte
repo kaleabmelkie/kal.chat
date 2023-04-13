@@ -32,15 +32,10 @@
 				: ''}{$page.data.session.user?.email
 				? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`
 				: ''}"
-			on:click={(e) => {
-				if (
-					!confirm(
-						`Upgrading to the paid monthly subscription while the app is in the free Early Access period will not get you any special perks.\n\nYou'll be notified by email when launch officially.\n\nUpgrading now would be just a sign of support for the development of the project (which is really appreciated).\n\nDo you still want to continue?`,
-					)
-				) {
-					e.preventDefault()
-				}
-			}}
+			on:click={() =>
+				alert(
+					`Upgrading to the paid monthly subscription while the app is in the free Early Access period will not get you any special perks.\n\nYou'll be notified by email when launch officially.\n\nUpgrading now would be just a sign of support for the development of the project (which is really appreciated).`,
+				)}
 		>
 			<div class="text-lg">✨</div>
 			<div class="pr-2">Upgrade</div>
