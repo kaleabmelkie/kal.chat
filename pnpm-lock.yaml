@@ -6,10 +6,10 @@ devDependencies:
     version: 0.5.1
   '@auth/sveltekit':
     specifier: 0.3.0
-    version: 0.3.0(@sveltejs/kit@1.15.4)(svelte@3.58.0)
+    version: 0.3.0(@sveltejs/kit@1.15.5)(svelte@3.58.0)
   '@builder.io/partytown':
-    specifier: 0.7.6
-    version: 0.7.6
+    specifier: 0.8.0
+    version: 0.8.0
   '@playwright/test':
     specifier: 1.32.3
     version: 1.32.3
@@ -27,10 +27,10 @@ devDependencies:
     version: 7.47.0
   '@sveltejs/adapter-vercel':
     specifier: 2.4.1
-    version: 2.4.1(@sveltejs/kit@1.15.4)
+    version: 2.4.1(@sveltejs/kit@1.15.5)
   '@sveltejs/kit':
-    specifier: 1.15.4
-    version: 1.15.4(svelte@3.58.0)(vite@4.2.1)
+    specifier: 1.15.5
+    version: 1.15.5(svelte@3.58.0)(vite@4.2.1)
   '@tailwindcss/aspect-ratio':
     specifier: 0.4.2
     version: 0.4.2(tailwindcss@3.3.1)
@@ -137,27 +137,27 @@ packages:
     dependencies:
       '@panva/hkdf': 1.0.4
       cookie: 0.5.0
-      jose: 4.13.1
-      oauth4webapi: 2.2.0
+      jose: 4.13.2
+      oauth4webapi: 2.2.1
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: true
 
-  /@auth/sveltekit@0.3.0(@sveltejs/kit@1.15.4)(svelte@3.58.0):
+  /@auth/sveltekit@0.3.0(@sveltejs/kit@1.15.5)(svelte@3.58.0):
     resolution: {integrity: sha512-J9uwaKadzPaQMYec9CYpa9WAjV5EIMEhj4vTuJH6HTp2FJOOJQB5t19WqWv9rYzBVm2rBTPPplQXPI5UKOvg4Q==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
       svelte: ^3.54.0
     dependencies:
       '@auth/core': 0.5.1
-      '@sveltejs/kit': 1.15.4(svelte@3.58.0)(vite@4.2.1)
+      '@sveltejs/kit': 1.15.5(svelte@3.58.0)(vite@4.2.1)
       svelte: 3.58.0
     transitivePeerDependencies:
       - nodemailer
     dev: true
 
-  /@builder.io/partytown@0.7.6:
-    resolution: {integrity: sha512-snXIGNiZpqjno3XYQN2lbBB+05hsQR/LSttbtIW1c0gmZ7Kh/DIo0YrxlDxCDulAMFPFM8J+4voLwvYepSj3sw==}
+  /@builder.io/partytown@0.8.0:
+    resolution: {integrity: sha512-M6H7nSMwW2dHd1/MQ+9J1Jqdw22uhl1nKv90kIiL9G7gjFVqqouQp4qSS1oZclmtW1XjAa4Q5UnbHB4iytmxZA==}
     hasBin: true
     dev: true
 
@@ -827,12 +827,12 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sveltejs/adapter-vercel@2.4.1(@sveltejs/kit@1.15.4):
+  /@sveltejs/adapter-vercel@2.4.1(@sveltejs/kit@1.15.5):
     resolution: {integrity: sha512-7YOHBq8onxqD5ZshQhveuSzJg9ZOicKoNZQtOnAj++0MJmPElxQ5Mjqp6aQfIhHAHl8tn5UbacCpvR39mPejgw==}
     peerDependencies:
       '@sveltejs/kit': ^1.5.0
     dependencies:
-      '@sveltejs/kit': 1.15.4(svelte@3.58.0)(vite@4.2.1)
+      '@sveltejs/kit': 1.15.5(svelte@3.58.0)(vite@4.2.1)
       '@vercel/nft': 0.22.6
       esbuild: 0.16.17
     transitivePeerDependencies:
@@ -840,8 +840,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit@1.15.4(svelte@3.58.0)(vite@4.2.1):
-    resolution: {integrity: sha512-m+Tid9nbtFawmiu85lDlal0AQ7UeuV48UsuKMe06QLr3ntMQSUzIPqyswNRZqFrar6NhVTUXQ0aO61M3U4MWpQ==}
+  /@sveltejs/kit@1.15.5(svelte@3.58.0)(vite@4.2.1):
+    resolution: {integrity: sha512-NyNtgIJBNo3AXMkl0iN10VrKgQS6VM6E+rcqZnZMn12dOo7SwFflj1du0ZgXNCZ1tx6VuEpSz9+FpPjswr4gEg==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -1257,7 +1257,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001478
-      electron-to-chromium: 1.4.359
+      electron-to-chromium: 1.4.361
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10(browserslist@4.21.5)
     dev: true
@@ -1487,8 +1487,8 @@ packages:
       domhandler: 5.0.3
     dev: true
 
-  /electron-to-chromium@1.4.359:
-    resolution: {integrity: sha512-OoVcngKCIuNXtZnsYoqlCvr0Cf3NIPzDIgwUfI9bdTFjXCrr79lI0kwQstLPZ7WhCezLlGksZk/BFAzoXC7GDw==}
+  /electron-to-chromium@1.4.361:
+    resolution: {integrity: sha512-VocVwjPp05HUXzf3xmL0boRn5b0iyqC7amtDww84Jb1QJNPBc7F69gJyEeXRoriLBC4a5pSyckdllrXAg4mmRA==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -2056,8 +2056,8 @@ packages:
     hasBin: true
     dev: true
 
-  /jose@4.13.1:
-    resolution: {integrity: sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ==}
+  /jose@4.13.2:
+    resolution: {integrity: sha512-GMUKtV+l05F6NY/06nM7rucHM6Ktvw6sxnyRqINBNWS/hCM/bBk7kanOEckRP8xtC/jzuGfTRVZvkjjuy+g4dA==}
     dev: true
 
   /js-sdsl@4.4.0:
@@ -2333,8 +2333,8 @@ packages:
       set-blocking: 2.0.0
     dev: true
 
-  /oauth4webapi@2.2.0:
-    resolution: {integrity: sha512-yHJIXtjeQil8BfBvu0PUu38a2DNPOPcEOhzNdg/HytfKPGQk1hTg5j94zZ3bon9YBIAhW5PSmFv+n6bqq0v0uQ==}
+  /oauth4webapi@2.2.1:
+    resolution: {integrity: sha512-VDQVDa0Fw/xvUbB9eA8c3MnJU7BM47TL4Y6F/qQvt+qxLRvEvYZ4KibGfceL7QzxaNtC2XdyN/hVL+Ap+G9CMA==}
     dev: true
 
   /object-assign@4.1.1:
