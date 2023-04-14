@@ -3,10 +3,10 @@
 </script>
 
 <header
-	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-primary-100/0 to-primary-100 p-4 lg:px-6"
+	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-t from-primary-100/0 to-primary-100 p-4 dark:from-black/0 dark:to-black/0 lg:px-6"
 >
 	<h1
-		class="relative grid h-11 bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent"
+		class="relative grid h-11 bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent dark:from-primary-600/95 dark:to-primary-400/95"
 	>
 		<a class="pointer-events-auto" href="/" title="Go home">kal.chat</a>
 		<a
@@ -25,7 +25,7 @@
 		// TODO: Appending '&button_color=%232563EB' to the checkout URL below is failing with HTTP 500. Append it when it's fixed from Lemon Squeezy's side.
 		-->
 		<a
-			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
+			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75 sm:backdrop-blur lg:backdrop-blur"
 			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&media=0&logo=0&desc=0{$page
 				.data.session.user?.name
 				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
@@ -41,13 +41,13 @@
 			<div class="pr-2">Upgrade</div>
 		</a>
 		<a
-			class="pointer-events-auto my-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-1 py-1 text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:pr-4 sm:backdrop-blur-sm lg:backdrop-blur"
+			class="pointer-events-auto my-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-1 py-1 text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75 sm:pr-4 sm:backdrop-blur lg:backdrop-blur"
 			href="/account"
 			title={$page.data.session.user?.email}
 		>
 			{#if $page.data.session.user?.image}
 				<img
-					class="h-[2.25rem] w-[2.25rem] rounded-full bg-primary-100 object-cover shadow shadow-primary-900/10"
+					class="h-[2.25rem] w-[2.25rem] rounded-full bg-primary-100 object-cover shadow shadow-primary-900/10 dark:bg-primary-800"
 					alt=""
 					src={$page.data.session.user?.image ??
 						`https://ui-avatars.com/api/?name=${
@@ -57,9 +57,11 @@
 			{/if}
 
 			<div class="pointer-events-auto my-auto hidden sm:grid">
-				<div class="text-xs uppercase text-primary-900/75">Logged in as</div>
+				<div class="text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
+					Logged in as
+				</div>
 				<div
-					class="line-clamp-1 max-w-[8rem] text-sm font-bold text-primary-900"
+					class="line-clamp-1 max-w-[8rem] text-sm font-bold text-primary-900 dark:text-primary-100"
 					title={$page.data.session.user?.name ?? undefined}
 				>
 					{$page.data.session.user?.name ?? 'User'}
@@ -68,7 +70,7 @@
 		</a>
 	{:else if $page.url.pathname !== '/account'}
 		<a
-			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-4 py-2 text-sm font-semibold uppercase text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none sm:backdrop-blur-sm lg:backdrop-blur"
+			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-4 py-2 text-sm font-semibold uppercase text-primary-600 transition-all hover:bg-white/50 hover:shadow hover:shadow-primary-600/10 focus:bg-white/90 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/50 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75 sm:backdrop-blur lg:backdrop-blur"
 			href="/account?redirectTo={encodeURIComponent($page.url.pathname)}"
 		>
 			<div>Login</div>

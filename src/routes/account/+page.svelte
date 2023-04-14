@@ -20,18 +20,18 @@
 			<h2 class="text-2xl">Your Account</h2>
 
 			<p class="grid gap-2">
-				<span class="mt-4 text-xs uppercase text-primary-900/75"> Name </span>
-				<span class="text-lg font-semibold text-primary-700/90">
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Name </span>
+				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.session?.user?.name ?? 'Unknown name'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-primary-900/75"> Email </span>
-				<span class="text-lg font-semibold text-primary-700/90">
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Email </span>
+				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.session?.user?.email ?? 'Unknown email'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-primary-900/75"> Stats </span>
-				<span class="text-lg font-semibold text-primary-700/90">
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Stats </span>
+				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.messagesCount ?? 0}
 					{data.messagesCount === 1 ? 'message' : 'messages'} in {data.topicsCount ?? 0}
 					{data.topicsCount === 1 ? 'topic' : 'topics'}
@@ -41,14 +41,14 @@
 			<div />
 
 			<a
-				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
+				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50 sm:backdrop-blur lg:backdrop-blur"
 				href="/topic/latest"
 				data-sveltekit-preload-data="tap"
 			>
 				Go chat
 			</a>
 			<button
-				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
+				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50 sm:backdrop-blur lg:backdrop-blur"
 				type="button"
 				disabled={isActive}
 				on:click={async () => {
@@ -75,7 +75,7 @@
 			<div />
 
 			<button
-				class="flex items-center gap-2 text-left text-primary-900/75"
+				class="flex items-center gap-2 text-left text-primary-900/75 dark:text-primary-100/75"
 				type="button"
 				on:click={() => (isAdvancedSettingsOpen = !isAdvancedSettingsOpen)}
 			>
@@ -88,7 +88,7 @@
 			{#if isAdvancedSettingsOpen}
 				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
 					<button
-						class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
+						class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50 sm:backdrop-blur lg:backdrop-blur"
 						type="button"
 						disabled={isActive}
 						on:click={async () => {
@@ -156,7 +156,7 @@
 			<div />
 			{#each data.providers as provider (provider.id)}
 				<button
-					class="pointer-events-auto flex w-full transform-gpu items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 sm:backdrop-blur-sm lg:backdrop-blur"
+					class="pointer-events-auto flex w-full transform-gpu items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg font-semibold text-primary-600 transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50 sm:backdrop-blur lg:backdrop-blur"
 					style={provider.style?.bgDark && provider.style.textDark
 						? `background-color: ${provider.style.bgDark}; color: ${provider.style.textDark};`
 						: ''}

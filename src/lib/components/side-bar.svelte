@@ -119,19 +119,23 @@
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] sm:static sm:w-[18rem] sm:bg-white/25"
+	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/10"
 	transition:fly={{ duration: 150, x: -32 }}
 	bind:this={scrollableEle}
 >
 	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
 
 	<div class="pointer-events-none sticky top-0 z-10 flex items-center p-4 lg:px-6">
-		<h2 class="text-primary-600/50 transition-all {isAtTheTop ? 'opacity-100' : 'opacity-0'}">
+		<h2
+			class="text-primary-600/50 transition-all dark:text-primary-400/50 {isAtTheTop
+				? 'opacity-100'
+				: 'opacity-0'}"
+		>
 			Topics
 		</h2>
 		<span class="flex-1" />
 		<button
-			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 sm:backdrop-blur-sm lg:pr-6 lg:backdrop-blur"
+			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 dark:bg-primary-950/50 dark:text-primary-100 dark:hover:bg-primary-950/95 dark:hover:text-primary-300 dark:focus:bg-primary-950/95 dark:focus:text-primary-300 dark:active:text-primary-500 sm:backdrop-blur lg:pr-6 lg:backdrop-blur"
 			type="button"
 			on:click={async () => {
 				isOpen = false
@@ -160,9 +164,9 @@
 				transition:slide|local={{ duration: 150 }}
 			>
 				<a
-					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 lg:px-6 {$page
+					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 lg:px-6 {$page
 						.url.pathname === `/topic/${topic.id}`
-						? 'bg-white/50'
+						? 'bg-white/50 dark:bg-primary-950/50'
 						: ''}"
 					href="/topic/{topic.id}"
 					on:click={() => {
@@ -173,17 +177,17 @@
 				>
 					<div class="flex-1">
 						<div
-							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 {!topic.title
+							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 dark:group-hover:text-primary-400 dark:group-focus:text-primary-400 {!topic.title
 								? 'italic'
 								: ''} {$page.url.pathname === `/topic/${topic.id}`
-								? 'font-semibold text-primary-600'
-								: 'text-primary-900/90'}"
+								? 'font-semibold text-primary-600 dark:text-primary-400'
+								: 'text-primary-900/90 dark:text-primary-200/90'}"
 						>
 							{topic.title ?? 'New topic'}
 						</div>
 						{#key minuteKey}
 							<div
-								class="text-xs text-primary-900/50"
+								class="text-xs text-primary-900/50 dark:text-primary-200/50"
 								title="Last message in this topic was sent on {dayjs(topic.updatedAt).format(
 									'MMMM DD, YYYY hh:mm A',
 								)}"
@@ -197,24 +201,24 @@
 						{/key}
 					</div>
 					<button
-						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 {optionsExpandedForTopicId ===
+						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-primary-900/50 transition-all hover:bg-primary-100/50 dark:text-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
 						topic.id
-							? '-mt-2 animate-pulse !bg-primary-200'
+							? '-mt-2 animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
 							: ''}"
 						on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
 					>
-						<MoreVerticalSvg class="h-4 w-4 text-primary-900/50" />
+						<MoreVerticalSvg class="h-4 w-4" />
 					</button>
 				</a>
 				{#if optionsExpandedForTopicId === topic.id}
 					<div
-						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur-sm"
+						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/90 dark:shadow-black/30"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
 						{#if topic.Message.length > 2}
 							<button
-								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 								type="button"
 								on:click={() => {
 									if (
@@ -228,7 +232,6 @@
 									optionsExpandedForTopicId = null
 									handleGenerateTitle(topic, true)
 								}}
-								transition:slide={{ duration: 150 }}
 							>
 								<EditSvg class="h-5 w-5 text-primary-600/90" />
 								<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
@@ -236,7 +239,7 @@
 						{/if}
 
 						<button
-							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 							type="button"
 							on:click={async () => {
 								const newTitle = prompt('New topic title:')
@@ -273,7 +276,7 @@
 						</button>
 
 						<button
-							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100"
+							class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 							type="button"
 							on:click={async () => {
 								if (!confirm('Are you sure you want to delete this topic?')) {

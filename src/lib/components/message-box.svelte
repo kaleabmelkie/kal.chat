@@ -252,7 +252,7 @@
 </script>
 
 <div
-	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all lg:px-6 {isSideBarOpen &&
+	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 to-primary-500/0 px-4 transition-all dark:from-black lg:px-6 {isSideBarOpen &&
 	innerWidth > smallScreenThresholdInPx
 		? 'left-[18rem]'
 		: 'left-0'}"
@@ -262,7 +262,7 @@
 	>
 		<a
 			data-sveltekit-preload-data="off"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/20 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 sm:backdrop-blur-sm lg:backdrop-blur {isCreatingTopic
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 dark:!ring-primary-400 transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/10 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 dark:bg-primary-950/50 dark:text-primary-100 dark:ring-primary-400/75 dark:!ring-offset-primary-950/75 dark:hover:bg-primary-900/75 dark:focus:bg-primary-900/75 sm:backdrop-blur lg:backdrop-blur {isCreatingTopic
 				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
 				: ''}"
 			title="New topic"
@@ -282,7 +282,7 @@
 			<!-- svelte-ignore a11y-autofocus -->
 			<textarea
 				data-testid="message-box"
-				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 sm:backdrop-blur-sm lg:backdrop-blur {isVoiceTypingSupported
+				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 dark:!ring-primary-400 transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/75 dark:text-white dark:ring-primary-400/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-200/50 dark:hover:bg-primary-950 dark:focus:bg-primary-950 sm:backdrop-blur lg:backdrop-blur {isVoiceTypingSupported
 					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
 				maxTokensForUser
@@ -323,7 +323,7 @@
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 {isVoiceTyping
+					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50 {isVoiceTyping
 						? 'animate-ping !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
@@ -338,7 +338,7 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50"
+				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50"
 				type="button"
 				disabled={isSendingMessage}
 				bind:this={submitButtonEle}
@@ -354,7 +354,7 @@
 		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
 	>
 		<a
-			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline lg:left-6"
+			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline dark:text-primary-100/75 lg:left-6"
 			href="mailto:support@kal.chat"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"
@@ -370,7 +370,10 @@
 					> words over
 				</span>
 			{:else}
-				<span class="pointer-events-auto text-primary-900/50" transition:fade={{ duration: 150 }}>
+				<span
+					class="pointer-events-auto text-primary-900/50 dark:text-primary-100/50"
+					transition:fade={{ duration: 150 }}
+				>
 					<span
 						class="font-semibold {tokensActive > maxTokensForUser - maxTokensForUser / 10
 							? 'text-amber-500/95'
