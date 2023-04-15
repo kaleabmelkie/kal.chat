@@ -20,17 +20,23 @@
 			<h2 class="text-2xl">Your Account</h2>
 
 			<p class="grid gap-2">
-				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Name </span>
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
+					Name
+				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.session?.user?.name ?? 'Unknown name'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Email </span>
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
+					Email
+				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.session?.user?.email ?? 'Unknown email'}
 				</span>
 
-				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75"> Stats </span>
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
+					Stats
+				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{data.messagesCount ?? 0}
 					{data.messagesCount === 1 ? 'message' : 'messages'} in {data.topicsCount ?? 0}
