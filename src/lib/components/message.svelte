@@ -49,7 +49,7 @@
 		{#if message.id !== -1}
 			<div use:clickOutside={() => (isOptionsExpanded = false)}>
 				<button
-					class="absolute top-9 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 dark:bg-primary-950/50 dark:text-primary-200/50 dark:shadow-primary-900/20 dark:hover:bg-primary-950 dark:hover:text-primary-300 dark:focus:bg-primary-900 dark:active:bg-primary-800 dark:active:text-primary-400 {isOptionsExpanded
+					class="absolute top-9 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 dark:bg-primary-950/50 dark:text-primary-200/50 dark:shadow-black/20 dark:hover:bg-primary-950 dark:hover:text-primary-300 dark:focus:bg-primary-900 dark:active:bg-primary-800 dark:active:text-primary-400 {isOptionsExpanded
 						? '!top-6 animate-pulse !bg-primary-200/50 !shadow-none dark:!bg-primary-950/50'
 						: 'sm:opacity-0'} {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
 					type="button"
