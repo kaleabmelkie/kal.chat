@@ -26,7 +26,7 @@
 		-->
 		<a
 			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
-			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&media=0&logo=0&desc=0{$page
+			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&dark=1&media=0&logo=0&desc=0{$page
 				.data.session.user?.name
 				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
 				: ''}{$page.data.session.user?.email
