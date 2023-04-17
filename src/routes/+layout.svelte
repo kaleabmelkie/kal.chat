@@ -1,8 +1,8 @@
 <script>
 	import '../app.postcss'
 
-	import Header from '$lib/components/header.svelte'
 	import { page } from '$app/stores'
+	import Header from '$lib/components/header.svelte'
 </script>
 
 <svelte:head>
@@ -10,7 +10,7 @@
 </svelte:head>
 
 <main
-	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:bg-primary-900 dark:from-black/90 dark:to-black/75"
+	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/25 dark:to-primary-950/50"
 >
 	<div
 		class="no-repeat pointer-events-none fixed inset-0 z-0 block bg-fixed dark:hidden"
