@@ -61,7 +61,7 @@
 
 				{#if isOptionsExpanded}
 					<div
-						class="absolute top-14 z-50 grid w-max rounded-[1rem] bg-white/90 p-2 shadow-lg shadow-primary-900/20 backdrop-blur-sm dark:bg-primary-950/90 dark:shadow-black/30 {message.role ===
+						class="absolute top-14 z-50 grid w-max rounded-[1rem] bg-white/95 p-2 shadow-lg shadow-primary-900/20 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30 {message.role ===
 						'user'
 							? 'left-0 -ml-2'
 							: 'right-0 -mr-2'}"
@@ -81,7 +81,7 @@
 								}
 							}}
 						>
-							<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
+							<ClipboardSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 							<span>Copy as plain text</span>
 						</button>
 						<button
@@ -93,7 +93,7 @@
 								isOptionsExpanded = false
 							}}
 						>
-							<ClipboardSvg class="h-5 w-5 text-primary-600/90" />
+							<ClipboardSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 							<span>Copy as HTML</span>
 						</button>
 						<button

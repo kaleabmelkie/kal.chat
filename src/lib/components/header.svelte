@@ -25,7 +25,7 @@
 		// TODO: Appending '&button_color=%232563EB' to the checkout URL below is failing with HTTP 500. Append it when it's fixed from Lemon Squeezy's side.
 		-->
 		<a
-			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
+			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
 			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&dark=1&media=0&logo=0&desc=0{$page
 				.data.session.user?.name
 				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
@@ -41,7 +41,7 @@
 			<div class="pr-2">Upgrade</div>
 		</a>
 		<a
-			class="pointer-events-auto my-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-1 py-1 text-primary-600 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75 sm:pr-4"
+			class="pointer-events-auto my-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-1 py-1 text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75 sm:pr-4"
 			href="/account"
 			title={$page.data.session.user?.email}
 		>
@@ -70,7 +70,7 @@
 		</a>
 	{:else if $page.url.pathname !== '/account'}
 		<a
-			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-4 py-2 text-sm font-semibold uppercase text-primary-600 backdrop-blur-sm transition-all hover:bg-white/50 hover:shadow hover:shadow-primary-600/10 focus:bg-white/90 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/50 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
+			class="pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/90 px-4 py-2 text-sm font-semibold uppercase text-primary-600 backdrop-blur transition-all hover:bg-white/50 hover:shadow hover:shadow-primary-600/10 focus:bg-white/90 active:bg-white/75 active:shadow-none dark:bg-primary-900/90 dark:text-primary-400 dark:hover:bg-primary-900/50 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
 			href="/account?redirectTo={encodeURIComponent($page.url.pathname)}"
 		>
 			<div>Login</div>

@@ -47,14 +47,14 @@
 			<div />
 
 			<a
-				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
+				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
 				href="/topic/latest"
 				data-sveltekit-preload-data="tap"
 			>
 				Go chat
 			</a>
 			<button
-				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
+				class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
 				type="button"
 				disabled={isActive}
 				on:click={async () => {
@@ -94,7 +94,7 @@
 			{#if isAdvancedSettingsOpen}
 				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
 					<button
-						class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
+						class="pointer-events-auto flex w-full transform-gpu items-center justify-center rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg text-red-500 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
 						type="button"
 						disabled={isActive}
 						on:click={async () => {
@@ -162,7 +162,7 @@
 			<div />
 			{#each data.providers as provider (provider.id)}
 				<button
-					class="pointer-events-auto flex w-full transform-gpu items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg font-semibold text-primary-600 backdrop-blur-sm transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
+					class="pointer-events-auto flex w-full transform-gpu items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg font-semibold text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
 					style={provider.style?.bgDark && provider.style.textDark
 						? `background-color: ${provider.style.bgDark}; color: ${provider.style.textDark};`
 						: ''}

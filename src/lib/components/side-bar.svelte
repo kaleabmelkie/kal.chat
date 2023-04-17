@@ -135,7 +135,7 @@
 		</h2>
 		<span class="flex-1" />
 		<button
-			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 backdrop-blur-sm transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 dark:bg-primary-950/50 dark:text-primary-100 dark:hover:bg-primary-950/95 dark:hover:text-primary-300 dark:focus:bg-primary-950/95 dark:focus:text-primary-300 dark:active:text-primary-500 lg:pr-6"
+			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 backdrop-blur transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 dark:bg-primary-950/50 dark:text-primary-100 dark:hover:bg-primary-950/95 dark:hover:text-primary-300 dark:focus:bg-primary-950/95 dark:focus:text-primary-300 dark:active:text-primary-500 lg:pr-6"
 			type="button"
 			on:click={async () => {
 				isOpen = false
@@ -212,7 +212,7 @@
 				</a>
 				{#if optionsExpandedForTopicId === topic.id}
 					<div
-						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/90 p-2 shadow-lg shadow-primary-600/10 backdrop-blur-sm dark:bg-primary-950/90 dark:shadow-black/30"
+						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
@@ -233,7 +233,7 @@
 									handleGenerateTitle(topic, true)
 								}}
 							>
-								<EditSvg class="h-5 w-5 text-primary-600/90" />
+								<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 								<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
 							</button>
 						{/if}
@@ -271,7 +271,7 @@
 									)
 							}}
 						>
-							<EditSvg class="h-5 w-5 text-primary-600/90" />
+							<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 							<span>{topic.title ? 'Change' : 'Set'} title</span>
 						</button>
 
