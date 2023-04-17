@@ -29,7 +29,7 @@
 					role: 'system',
 					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
 				}}
-				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !text-primary-900 !shadow-none"
+				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !py-2 !text-primary-600/75 !shadow-none dark:!text-primary-300/75"
 				bind:data
 			/>
 		{/key}

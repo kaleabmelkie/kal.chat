@@ -28,7 +28,8 @@
 		transition:slide|local={{ duration: 150 }}
 	>
 		<div
-			class="text-xs font-semibold uppercase text-primary-600 {message.role === 'user'
+			class="text-xs font-semibold uppercase text-primary-600 dark:text-primary-400 {message.role ===
+			'user'
 				? 'text-right'
 				: 'text-left'}"
 		>
@@ -38,8 +39,8 @@
 		<article
 			class="match-braces prose relative rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
 			'user'
-				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white'
-				: 'rounded-tl from-white/95 to-white/75 text-black dark:bg-primary-500 dark:from-black/80 dark:to-black/75 dark:text-white'} {articleClassName}"
+				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-900/90 dark:to-primary-700/90'
+				: 'rounded-tl from-white/95 to-white/75 dark:prose-invert dark:bg-primary-500 dark:from-black/75 dark:to-black/70'} {articleClassName}"
 			bind:this={articleEle}
 		>
 			{@html message.content}
@@ -149,10 +150,6 @@
 <style lang="postcss">
 	article {
 		@apply w-full max-w-full overflow-x-auto;
-	}
-
-	article :global(code) {
-		@apply !text-primary-800 dark:!text-primary-200;
 	}
 
 	article :global(pre) {
