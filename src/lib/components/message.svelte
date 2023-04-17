@@ -39,8 +39,8 @@
 		<article
 			class="match-braces prose relative rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
 			'user'
-				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-900/90 dark:to-primary-700/90'
-				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-500 dark:from-black/75 dark:to-black/70 dark:text-white'} {articleClassName}"
+				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-900/90 dark:to-primary-600/90'
+				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-500 dark:from-black/75 dark:to-black/60 dark:text-white'} {articleClassName}"
 			bind:this={articleEle}
 		>
 			{@html message.content}

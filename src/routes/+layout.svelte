@@ -10,7 +10,7 @@
 </svelte:head>
 
 <main
-	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/25 dark:to-primary-950/50"
+	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/40 dark:to-primary-950/60"
 >
 	<div
 		class="no-repeat pointer-events-none fixed inset-0 z-0 block bg-fixed dark:hidden"
