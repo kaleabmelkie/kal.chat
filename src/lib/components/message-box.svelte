@@ -252,7 +252,7 @@
 </script>
 
 <div
-	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black/50 lg:px-6 {isSideBarOpen &&
+	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6 {isSideBarOpen &&
 	innerWidth > smallScreenThresholdInPx
 		? 'left-[18rem]'
 		: 'left-0'}"
