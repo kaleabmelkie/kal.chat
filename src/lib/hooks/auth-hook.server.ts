@@ -3,8 +3,6 @@ import {
 	AUTH_GITHUB_SECRET,
 	AUTH_GOOGLE_ID,
 	AUTH_GOOGLE_SECRET,
-	AUTH_SECRET,
-	AUTH_TRUST_HOST,
 	AUTH_USE_SECURE_COOKIES,
 } from '$env/static/private'
 import { prisma } from '$lib/utils/prisma.server'
@@ -26,8 +24,6 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			: Google({ clientId: AUTH_GOOGLE_ID, clientSecret: AUTH_GOOGLE_SECRET }),
 	].filter((p) => p !== null),
 
-	secret: AUTH_SECRET,
-	trustHost: AUTH_TRUST_HOST === 'true',
 	useSecureCookies: AUTH_USE_SECURE_COOKIES === 'true',
 
 	callbacks: {
