@@ -20,12 +20,11 @@
 	let isOptionsExpanded = false
 </script>
 
-<li class="group flex {className}">
+<li class="group flex overflow-hidden {className}" transition:slide|local={{ duration: 150 }}>
 	<div
 		class="relative grid max-w-screen-md gap-2 {message.role === 'user'
 			? 'ml-auto pl-8'
 			: 'mr-auto pr-8'}"
-		transition:slide|local={{ duration: 150 }}
 	>
 		<div
 			class="text-xs font-semibold uppercase text-primary-600 dark:text-primary-400 {message.role ===

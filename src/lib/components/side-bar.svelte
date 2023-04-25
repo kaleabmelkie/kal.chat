@@ -11,6 +11,7 @@
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { onDestroy, onMount, tick } from 'svelte'
+	import { flip } from 'svelte/animate'
 	import { fly, slide } from 'svelte/transition'
 	import type { PageData } from '../../routes/topic/[id]/$types'
 
@@ -162,6 +163,7 @@
 				class="relative"
 				title={topic.title ?? undefined}
 				transition:slide|local={{ duration: 150 }}
+				animate:flip={{ duration: 150 }}
 			>
 				<a
 					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 lg:px-6 {$page
