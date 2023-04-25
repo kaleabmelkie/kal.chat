@@ -8,9 +8,12 @@ import { sequence } from '@sveltejs/kit/hooks'
 if (!dev) {
 	SentryNode.init({
 		dsn: SENTRY_NODE_DSN,
-		tracesSampleRate: 1.0,
+
 		integrations: [new SentryNode.Integrations.Http()],
+
+		tracesSampleRate: 1.0,
 	})
+
 	SentryNode.setTag('svelteKit', 'server')
 }
 
