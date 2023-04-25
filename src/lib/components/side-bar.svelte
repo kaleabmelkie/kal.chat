@@ -7,7 +7,7 @@
 	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
-	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
+	import { latestNewMessageSentAtStore } from '$lib/stores/latest-new-message-sent-at-store'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { onDestroy, onMount, tick } from 'svelte'
@@ -28,7 +28,7 @@
 			scrollableEle?.addEventListener('scroll', updateIsAtTheTop)
 		}
 
-		latestNewMessageSentAt.subscribe(() => {
+		latestNewMessageSentAtStore.subscribe(() => {
 			generateTitleForUnnamedAndEligibleTopics(data.topics).catch(console.error)
 		})
 	})

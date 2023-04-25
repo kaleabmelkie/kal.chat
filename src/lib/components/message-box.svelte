@@ -6,7 +6,7 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
-	import { latestNewMessageSentAt } from '$lib/stores/latest-new-message-sent-at'
+	import { latestNewMessageSentAtStore } from '$lib/stores/latest-new-message-sent-at-store'
 	import { maxTokensForUser, smallScreenThresholdInPx } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -76,7 +76,7 @@
 			isVoiceTyping,
 			isSideBarOpen,
 			isCreatingTopic,
-			$latestNewMessageSentAt,
+			$latestNewMessageSentAtStore,
 			$page,
 			data.topic.Message,
 		] // deps
@@ -193,7 +193,7 @@
 
 		isSendingMessage = false
 
-		$latestNewMessageSentAt = Date.now()
+		$latestNewMessageSentAtStore = Date.now()
 	}
 
 	let isVoiceTyping = false

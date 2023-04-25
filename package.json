@@ -10,9 +10,9 @@
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
 		"sync": "svelte-kit sync",
-		"dev": "prisma generate && svelte-kit sync && vite dev",
+		"dev": "prisma generate && svelte-kit sync && vite dev --port 5173",
 		"build": "prisma generate && svelte-kit sync && vite build",
-		"preview": "vite preview",
+		"preview": "vite preview --port 5173",
 		"test": "playwright test --pass-with-no-tests",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

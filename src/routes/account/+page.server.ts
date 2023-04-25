@@ -1,4 +1,4 @@
-import { authHookConfig } from '$lib/utils/auth-hook.server'
+import { authHookConfig } from '$lib/hooks/auth-hook.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { redirect } from '@sveltejs/kit'
 

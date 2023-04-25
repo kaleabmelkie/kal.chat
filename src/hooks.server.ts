@@ -1,5 +1,5 @@
 import { SENTRY_NODE_DSN } from '$env/static/private'
-import { authHook } from '$lib/utils/auth-hook.server'
+import { authHook } from '$lib/hooks/auth-hook.server'
 import * as SentryNode from '@sentry/node'
 import '@sentry/tracing'
 import { sequence } from '@sveltejs/kit/hooks'
