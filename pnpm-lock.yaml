@@ -22,9 +22,6 @@ devDependencies:
   '@sentry/svelte':
     specifier: 7.49.0
     version: 7.49.0(svelte@3.58.0)
-  '@sentry/tracing':
-    specifier: 7.49.0
-    version: 7.49.0
   '@sveltejs/adapter-vercel':
     specifier: 2.4.2
     version: 2.4.2(@sveltejs/kit@1.15.8)
@@ -818,13 +815,6 @@ packages:
       magic-string: 0.26.7
       svelte: 3.58.0
       tslib: 1.14.1
-    dev: true
-
-  /@sentry/tracing@7.49.0:
-    resolution: {integrity: sha512-RtyTt1DvX7s1M2ca9qnevOkuwn8HjbKXrSVHtMbQYoT3uGvjT8Pm71D5WtWMWH2QLpFgcqQq/1ifZBUAG4Y7qA==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@sentry-internal/tracing': 7.49.0
     dev: true
 
   /@sentry/types@7.49.0:
