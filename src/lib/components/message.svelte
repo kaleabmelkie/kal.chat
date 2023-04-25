@@ -20,7 +20,7 @@
 	let isOptionsExpanded = false
 </script>
 
-<li class="group flex overflow-hidden {className}" transition:slide|local={{ duration: 150 }}>
+<li class="group flex {className}" transition:slide|local={{ duration: 150 }}>
 	<div
 		class="relative grid max-w-screen-md gap-2 {message.role === 'user'
 			? 'ml-auto pl-8'
