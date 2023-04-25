@@ -1,13 +1,8 @@
 <script>
 	import '../app.postcss'
 
-	import { dev } from '$app/environment'
 	import { page } from '$app/stores'
 	import Header from '$lib/components/header.svelte'
-
-	import('@vercel/analytics')
-		.then(({ inject }) => inject({ mode: dev ? 'development' : 'production' }))
-		.catch(console.error)
 </script>
 
 <svelte:head>
