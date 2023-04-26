@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores'
+
+	let lemonSqueezyButtonColor = '#2563EB'
 </script>
 
 <header
-	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-b from-primary-100 p-4 dark:from-black/50 lg:px-6"
+	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-b from-primary-100 p-4 dark:from-black/25 lg:px-6"
 >
 	<h1
 		class="relative grid h-11 bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent dark:from-primary-600/95 dark:to-primary-400/95"
@@ -21,13 +23,11 @@
 	<div class="flex-1" />
 
 	{#if $page.data.session}
-		<!-- 
-		// TODO: Appending '&button_color=%232563EB' to the checkout URL below is failing with HTTP 500. Append it when it's fixed from Lemon Squeezy's side.
-		-->
 		<a
 			class="lemonsqueezy-button pointer-events-auto flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/50 px-4 py-2 text-sm font-semibold text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900/95 dark:hover:shadow-primary-900/20 dark:focus:bg-primary-900/95 dark:active:bg-primary-900/75"
-			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&dark=1&media=0&logo=0&desc=0{$page
-				.data.session.user?.name
+			href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&dark=1&button_color={encodeURIComponent(
+				lemonSqueezyButtonColor,
+			)}&media=0&logo=0&desc=0{$page.data.session.user?.name
 				? `&checkout[name]=${encodeURIComponent($page.data.session.user.name)}`
 				: ''}{$page.data.session.user?.email
 				? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`

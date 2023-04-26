@@ -309,9 +309,8 @@
 					data-testid="message-box"
 					class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/50 dark:text-white dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/50 dark:focus:bg-primary-950/50 {isVoiceTypingSupported
 						? 'pr-[calc(1.5rem+3.5rem+4rem)]'
-						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.newMessage.isVoiceTyping
-						? 'animate-pulse'
-						: ''} {$chatStore.activeTopic.tokensCountInContext > maxTokensForUser
+						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.tokensCountInContext >
+					maxTokensForUser
 						? '!ring-red-600/75'
 						: ''}"
 					name="message"
@@ -360,7 +359,7 @@
 				<button
 					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:!bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50 {$chatStore
 						?.activeTopic.newMessage.isVoiceTyping
-						? 'animate-ping !bg-transparent !text-primary-500'
+						? 'animate-pulse !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
 					title="Type using voice"

@@ -107,7 +107,7 @@
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-black dark:bg-gradient-to-t dark:from-primary-950/10 dark:to-primary-950/50 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-black"
+	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-black dark:bg-gradient-to-t dark:from-black/25 dark:to-primary-950/25 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-black/25"
 	transition:fly|local={{ duration: 150, x: -32 }}
 	on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
 >
