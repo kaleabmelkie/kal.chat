@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
@@ -7,55 +6,31 @@
 	import EditSvg from '$lib/icons/edit.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
-	import { latestNewMessageSentAtStore } from '$lib/stores/latest-new-message-sent-at-store'
+	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { onDestroy, onMount, tick } from 'svelte'
-	import { flip } from 'svelte/animate'
 	import { fly, slide } from 'svelte/transition'
-	import type { PageData } from '../../routes/topic/[id]/$types'
 
-	export let data: PageData
-	export let innerWidth: number
-	export let isOpen: boolean
-
-	onMount(async () => {
-		if (browser) {
-			minuteInterval = setInterval(() => {
-				minuteKey = Date.now()
-			}, 1000) as unknown as number
-
-			scrollableEle?.addEventListener('scroll', updateIsAtTheTop)
-		}
-
-		latestNewMessageSentAtStore.subscribe(() => {
-			generateTitleForUnnamedAndEligibleTopics(data.topics).catch(console.error)
-		})
+	onMount(() => {
+		minuteInterval = setInterval(() => {
+			minuteKey = Date.now()
+		}, 1000) as unknown as number
 	})
 
 	onDestroy(() => {
-		if (browser) {
-			if (minuteInterval) {
-				clearInterval(minuteInterval)
-			}
-
-			scrollableEle?.removeEventListener('scroll', updateIsAtTheTop)
+		if (minuteInterval !== null) {
+			clearInterval(minuteInterval)
 		}
 	})
 
-	let scrollableEle: HTMLDivElement | null = null
-	let isAtTheTop = true
-	let topEle: HTMLDivElement | null = null
-	let optionsExpandedForTopicId: number | null = null
-	let minuteInterval: number
+	let minuteInterval: number | null = null
 	let minuteKey = Date.now()
 
-	async function updateIsAtTheTop() {
-		if (!scrollableEle) {
-			return
-		}
-		isAtTheTop = scrollableEle.scrollTop === 0
-	}
+	let optionsExpandedForTopicId: number | null = null
+
+	let topEle: HTMLDivElement | null = null
+	let isAtTheTop = true
 
 	async function scrollToTop() {
 		if (!topEle) {
@@ -71,11 +46,17 @@
 		}, 150)
 	}
 
-	async function handleGenerateTitle(topic: PageData['topics'][number], force: boolean) {
-		await fetch(`/topic/${topic.id}/generate-title?force=${force}`, {
+	async function handleGenerateTitle(
+		topicHistory: ChatStoreType['topicsHistory'][number],
+		force: boolean,
+	) {
+		await fetch(`/topic/${topicHistory.id}/generate-title?force=${force}`, {
 			method: 'PUT',
 		})
 			.then(async (r) => {
+				if (!$chatStore) {
+					return
+				}
 				if (!r.ok) {
 					throw new Error(
 						`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
@@ -85,20 +66,20 @@
 				if (typeof response?.title !== 'string') {
 					throw new Error(`Expected a title but did not get one.`)
 				}
-				topic.updatedAt = response.updatedAt
-				const topicIndex = data.topics.findIndex((t) => t.id === topic.id)
-				if (topicIndex !== -1) {
-					data.topics[topicIndex].title = response.title
-					data.topics[topicIndex].updatedAt = response.updatedAt
-					data.topics.splice(topicIndex, 1)
-					data.topics.unshift(topic)
+				topicHistory.updatedAt = response.updatedAt
+				const topicHistoryIndex = $chatStore.topicsHistory.findIndex(
+					(t) => t.id === topicHistory.id,
+				)
+				if (topicHistoryIndex !== -1) {
+					$chatStore.topicsHistory[topicHistoryIndex].title = response.title
+					$chatStore.topicsHistory[topicHistoryIndex].updatedAt = response.updatedAt
 				}
 				scrollToTop()
 			})
 			.catch((e) => {
 				if (force) {
 					alert(
-						`The title of the topic (ID: ${topic.id}) could not be auto-generated.\n\n${
+						`The title of the topic (ID: ${topicHistory.id}) could not be auto-generated.\n\n${
 							e?.message ?? 'Unknown error.'
 						}`,
 					)
@@ -108,21 +89,27 @@
 			})
 	}
 
-	async function generateTitleForUnnamedAndEligibleTopics(topics: PageData['topics']) {
-		for (const topic of topics) {
-			if (!topic.title && topic.Message.length > 2) {
-				console.log(`Generating title for unnamed topic (ID: ${topic.id})...`)
+	async function generateTitleForUnnamedAndEligibleTopics() {
+		if (!$chatStore) {
+			return
+		}
+		for (const topic of $chatStore.topicsHistory) {
+			if (!topic.title && topic.messagesCount > 2) {
 				await handleGenerateTitle(topic, false)
 			}
 		}
 	}
-	generateTitleForUnnamedAndEligibleTopics(data.topics).catch(console.error)
+	$: activeTopicMessagesCount = $chatStore?.activeTopic.messages.length ?? 0
+	$: {
+		;[activeTopicMessagesCount] // deps
+		generateTitleForUnnamedAndEligibleTopics().catch(console.error)
+	}
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/10"
-	transition:fly={{ duration: 150, x: -32 }}
-	bind:this={scrollableEle}
+	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-black dark:bg-gradient-to-t dark:from-primary-950/10 dark:to-primary-950/50 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-black"
+	transition:fly|local={{ duration: 150, x: -32 }}
+	on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
 >
 	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
 
@@ -139,8 +126,12 @@
 			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 backdrop-blur transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 dark:bg-primary-950/50 dark:text-primary-100 dark:hover:bg-primary-950/95 dark:hover:text-primary-300 dark:focus:bg-primary-950/95 dark:focus:text-primary-300 dark:active:text-primary-500 lg:pr-6"
 			type="button"
 			on:click={async () => {
-				isOpen = false
-				if (innerWidth >= smallScreenThresholdInPx) {
+				if (!$chatStore) {
+					return
+				}
+				$chatStore.sideBar.isOpen = false
+				if ($chatStore.window.innerWidth >= smallScreenThresholdInPx) {
+					$chatStore.sideBar.prefersOpen = false
 					await fetch('/account/set-prefers-side-bar-open', {
 						method: 'PUT',
 						body: JSON.stringify({ prefersSideBarOpen: false }),
@@ -158,73 +149,76 @@
 	</div>
 
 	<ul>
-		{#each data.topics as topic (topic.id)}
+		{#each $chatStore?.topicsHistory ?? [] as topicHistory (topicHistory.id)}
 			<li
 				class="relative"
-				title={topic.title ?? undefined}
+				title={topicHistory.title ?? undefined}
 				transition:slide|local={{ duration: 150 }}
-				animate:flip={{ duration: 150 }}
 			>
 				<a
 					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 lg:px-6 {$page
-						.url.pathname === `/topic/${topic.id}`
+						.url.pathname === `/topic/${topicHistory.id}`
 						? 'bg-white/50 dark:bg-primary-950/50'
 						: ''}"
-					href="/topic/{topic.id}"
+					href="/topic/{topicHistory.id}"
 					on:click={() => {
-						if (innerWidth < smallScreenThresholdInPx) {
-							isOpen = false
+						if (!$chatStore) {
+							return
+						}
+						if ($chatStore.window.innerWidth < smallScreenThresholdInPx) {
+							$chatStore.sideBar.isOpen = false
 						}
 					}}
 				>
 					<div class="flex-1">
 						<div
-							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 dark:group-hover:text-primary-400 dark:group-focus:text-primary-400 {!topic.title
+							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 dark:group-hover:text-primary-400 dark:group-focus:text-primary-400 {!topicHistory.title
 								? 'italic'
-								: ''} {$page.url.pathname === `/topic/${topic.id}`
+								: ''} {$page.url.pathname === `/topic/${topicHistory.id}`
 								? 'font-semibold text-primary-600 dark:text-primary-400'
 								: 'text-primary-900/90 dark:text-primary-200/90'}"
 						>
-							{topic.title ?? 'New topic'}
+							{topicHistory.title ?? 'New topic'}
 						</div>
 						{#key minuteKey}
 							<div
 								class="text-xs text-primary-900/50 dark:text-primary-200/50"
-								title="Last message in this topic was sent on {dayjs(topic.updatedAt).format(
+								title="Last message in this topic was sent on {dayjs(topicHistory.updatedAt).format(
 									'MMMM DD, YYYY hh:mm A',
 								)}"
 							>
-								<span>{dayjs(topic.updatedAt).fromNow()}</span>,
-								<span title="Messages in this topic plus the system prompt."
-									>{topic.Message.length}
-									{topic.Message.length === 1 ? 'message' : 'messages'}</span
-								>
+								<span>{dayjs(topicHistory.updatedAt).fromNow()}</span>,
+								<span title="Messages in this topic plus the system prompt.">
+									{topicHistory.messagesCount}
+									{topicHistory.messagesCount === 1 ? 'message' : 'messages'}
+								</span>
 							</div>
 						{/key}
 					</div>
 					<button
 						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-primary-900/50 transition-all hover:bg-primary-100/50 dark:text-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
-						topic.id
+						topicHistory.id
 							? '-mt-2 animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
 							: ''}"
-						on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
+						on:click|preventDefault|stopPropagation={() =>
+							(optionsExpandedForTopicId = topicHistory.id)}
 					>
 						<MoreVerticalSvg class="h-4 w-4" />
 					</button>
 				</a>
-				{#if optionsExpandedForTopicId === topic.id}
+				{#if optionsExpandedForTopicId === topicHistory.id}
 					<div
-						class="absolute right-4 top-9 z-50 flex flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
+						class="absolute right-4 top-9 z-50 flex transform-gpu flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
 						transition:slide={{ duration: 150 }}
 						use:clickOutside={() => (optionsExpandedForTopicId = null)}
 					>
-						{#if topic.Message.length > 2}
+						{#if topicHistory.messagesCount > 2}
 							<button
 								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 								type="button"
 								on:click={() => {
 									if (
-										topic.title &&
+										topicHistory.title &&
 										!confirm(
 											'This topic already has a title. Are you sure you want to auto-regenerate it?',
 										)
@@ -232,11 +226,11 @@
 										return
 									}
 									optionsExpandedForTopicId = null
-									handleGenerateTitle(topic, true)
+									handleGenerateTitle(topicHistory, true)
 								}}
 							>
 								<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
-								<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
+								<span>{topicHistory.title ? 'Regenerate' : 'Generate'} title with AI</span>
 							</button>
 						{/if}
 
@@ -250,7 +244,7 @@
 									return
 								}
 								optionsExpandedForTopicId = null
-								await fetch(`/topic/${topic.id}/change-title`, {
+								await fetch(`/topic/${topicHistory.id}/change-title`, {
 									method: 'PUT',
 									body: JSON.stringify({
 										title: newTitle,
@@ -262,11 +256,11 @@
 												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
 											)
 										}
-										topic.title = newTitle
+										topicHistory.title = newTitle
 									})
 									.catch((e) =>
 										alert(
-											`The title of the topic (ID: ${topic.id}) could not be changed.\n\n${
+											`The title of the topic (ID: ${topicHistory.id}) could not be changed.\n\n${
 												e?.message ?? 'Unknown error.'
 											}`,
 										),
@@ -274,7 +268,7 @@
 							}}
 						>
 							<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
-							<span>{topic.title ? 'Change' : 'Set'} title</span>
+							<span>{topicHistory.title ? 'Change' : 'Set'} title</span>
 						</button>
 
 						<button
@@ -285,23 +279,28 @@
 									return
 								}
 								optionsExpandedForTopicId = null
-								await fetch(`/topic/${topic.id}/delete`, {
+								await fetch(`/topic/${topicHistory.id}/delete`, {
 									method: 'DELETE',
 								})
 									.then(async (r) => {
+										if (!$chatStore) {
+											return
+										}
 										if (!r.ok) {
 											throw new Error(
 												`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
 											)
 										}
-										data.topics = data.topics.filter((t) => t.id !== topic.id)
-										if (data.topic.id === topic.id) {
+										$chatStore.topicsHistory = $chatStore.topicsHistory.filter(
+											(t) => t.id !== topicHistory.id,
+										)
+										if ($chatStore.activeTopic.id === topicHistory.id) {
 											await goto('/topic/latest')
 										}
 									})
 									.catch((e) =>
 										alert(
-											`Topic (ID: ${topic.id}) could not be deleted.\n\n${
+											`Topic (ID: ${topicHistory.id}) could not be deleted.\n\n${
 												e?.message ?? 'Unknown error.'
 											}`,
 										),
@@ -316,7 +315,7 @@
 			</li>
 		{:else}
 			<li class="p-4 text-sm text-primary-900/75 lg:p-6">
-				Start a new conversation and they will appear here.
+				Conversations will show up here as they happen.
 			</li>
 		{/each}
 	</ul>

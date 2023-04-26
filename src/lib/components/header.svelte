@@ -3,7 +3,7 @@
 </script>
 
 <header
-	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-b from-primary-100 p-4 dark:from-black/25 lg:px-6"
+	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 bg-gradient-to-b from-primary-100 p-4 dark:from-black/50 lg:px-6"
 >
 	<h1
 		class="relative grid h-11 bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent dark:from-primary-600/95 dark:to-primary-400/95"

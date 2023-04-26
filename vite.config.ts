@@ -1,8 +1,8 @@
 import { partytownVite } from '@builder.io/partytown/utils'
 import { sveltekit } from '@sveltejs/kit/vite'
 import path from 'path'
-import type { UserConfig } from 'vite'
 import { visualizer } from 'rollup-plugin-visualizer'
+import type { UserConfig } from 'vite'
 
 export default {
 	plugins: [

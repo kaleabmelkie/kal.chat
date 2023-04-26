@@ -1,26 +1,22 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation'
-	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ClipboardSvg from '$lib/icons/clipboard.svg.svelte'
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
+	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import 'highlight.js/styles/github-dark.css'
-	import type { ChatCompletionRequestMessage } from 'openai'
 	import { slide } from 'svelte/transition'
-	import type { PageData } from '../../routes/topic/[id]/$types'
 
 	let className = ''
 	export { className as class }
-	export let data: PageData
 	export let articleClassName = ''
-	export let message: { id: number } & ChatCompletionRequestMessage
+	export let message: ChatStoreType['activeTopic']['messages'][number]
 
 	let articleEle: HTMLElement | null = null
 	let isOptionsExpanded = false
 </script>
 
-<li class="group flex {className}" transition:slide|local={{ duration: 150 }}>
+<li class="group flex {className}">
 	<div
 		class="relative grid max-w-screen-md gap-2 {message.role === 'user'
 			? 'ml-auto pl-8'
@@ -39,7 +35,7 @@
 			class="match-braces prose relative rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
 			'user'
 				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-900/90 dark:to-primary-600/90'
-				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-500 dark:from-black/75 dark:to-black/60 dark:text-white'} {articleClassName}"
+				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-500 dark:from-black/80 dark:to-black/70 dark:text-white'} {articleClassName}"
 			bind:this={articleEle}
 		>
 			{@html message.content}
@@ -60,7 +56,7 @@
 
 				{#if isOptionsExpanded}
 					<div
-						class="absolute top-14 z-50 grid w-max rounded-[1rem] bg-white/95 p-2 shadow-lg shadow-primary-900/20 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30 {message.role ===
+						class="absolute top-14 z-50 grid w-max transform-gpu rounded-[1rem] bg-white/95 p-2 shadow-lg shadow-primary-900/20 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30 {message.role ===
 						'user'
 							? 'left-0 -ml-2'
 							: 'right-0 -mr-2'}"
@@ -83,6 +79,7 @@
 							<ClipboardSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 							<span>Copy as plain text</span>
 						</button>
+
 						<button
 							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 							type="button"
@@ -95,10 +92,14 @@
 							<ClipboardSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
 							<span>Copy as HTML</span>
 						</button>
+
 						<button
 							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 							type="button"
 							on:click={async () => {
+								if (!$chatStore) {
+									return
+								}
 								if (!confirm('Are you sure you want to delete this message?')) {
 									return
 								}
@@ -110,19 +111,14 @@
 									},
 								})
 								if (response.ok) {
-									data.topic.Message = data.topic.Message.filter((msg) => msg.id !== message.id)
-									for (let i = 0; i < data.topics.length; i++) {
-										const isMessageInThread = data.topics[i].Message.find(
-											(msg) => msg.id === message.id,
-										)
-										if (isMessageInThread) {
-											data.topics[i].Message = data.topics[i].Message.filter(
-												(msg) => msg.id !== message.id,
-											)
-											break
-										}
-										data = data
-										await invalidate($page.url)
+									$chatStore.activeTopic.messages = $chatStore.activeTopic.messages.filter(
+										(m) => m.id !== message.id,
+									)
+									const currentHistoryIndex = $chatStore.topicsHistory.findIndex(
+										(t) => t.id === $chatStore?.activeTopic.id,
+									)
+									if (currentHistoryIndex >= 0) {
+										$chatStore.topicsHistory[currentHistoryIndex].messagesCount -= 1
 									}
 								} else {
 									try {

@@ -1,11 +1,12 @@
-import { contextLength } from '$lib/utils/constants'
+import type { ChatStoreType } from '$lib/stores/chat-store.js'
+import { messagesCountInContext } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
+import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
 import { prisma } from '$lib/utils/prisma.server'
-import { transformMessage } from '$lib/utils/transform-message.server'
 import { error, redirect } from '@sveltejs/kit'
 
-export const load = async (event) => {
+export async function load(event) {
 	const { session } = await event.parent()
 	if (!session?.user?.email) {
 		throw redirect(
@@ -14,38 +15,22 @@ export const load = async (event) => {
 		)
 	}
 
-	const topic = await prisma.topic.findFirst({
-		where: {
-			id: Number(event.params.id),
-			user: {
-				email: session.user.email ?? 'kaleabmelkie@gmail.com',
-			},
-		},
-		orderBy: {
-			id: 'desc',
-		},
-		take: 1,
-		include: {
-			Message: {
-				orderBy: {
-					id: 'asc',
-				},
-			},
-		},
-	})
+	const [systemPromptTokensCount, loggedInUser, topicsHistory, activeTopic] = await Promise.all([
+		// systemPromptTokensCountPromise
+		countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 
-	if (!topic) {
-		throw error(
-			404,
-			`Topic (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
-		)
-	}
+		// loggedInUserPromise
+		prisma.user.findFirstOrThrow({
+			where: {
+				email: session.user.email,
+			},
+			select: {
+				prefersSideBarOpen: true,
+			},
+		}),
 
-	return {
-		userAgent: event.request.headers.get('user-agent'),
-		systemPromptTokensCount: countTokens(generateSystemPrompt(session.user.name ?? undefined)),
-		contextLength,
-		topics: prisma.topic.findMany({
+		// topicsHistoryPromise
+		prisma.topic.findMany({
 			where: {
 				user: {
 					email: session.user.email,
@@ -68,22 +53,74 @@ export const load = async (event) => {
 				updatedAt: 'desc',
 			},
 		}),
-		user: prisma.user.findFirstOrThrow({
+
+		// activeTopic
+		await prisma.topic.findFirst({
 			where: {
-				email: session.user.email,
+				id: Number(event.params.id),
+				user: {
+					email: session.user.email,
+				},
+			},
+			orderBy: {
+				updatedAt: 'desc',
 			},
 			select: {
-				prefersSideBarOpen: true,
+				id: true,
+				Message: {
+					orderBy: {
+						createdAt: 'asc',
+					},
+					select: {
+						id: true,
+						role: true,
+						content: true,
+					},
+				},
 			},
 		}),
-		topic: (async () => ({
-			...topic,
-			Message: await Promise.all(
-				topic.Message.map(async (message) => ({
-					...message,
-					content: await transformMessage(message.content),
-				})),
-			),
-		}))(),
+	])
+
+	if (!activeTopic) {
+		throw error(
+			404,
+			`Topic (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
+		)
 	}
+
+	return {
+		activeTopic: {
+			id: activeTopic.id,
+			messages: activeTopic.Message.map((m) => ({
+				...m,
+				content: markdownToHtml(m.content),
+			})),
+			newMessage: {
+				queue: [],
+				content: '',
+				isVoiceTyping: false,
+			},
+			systemPromptTokensCount: systemPromptTokensCount,
+			messagesCountInContext: messagesCountInContext,
+			tokensCountInContext: 0,
+		},
+		newTopic: {
+			isCreating: false,
+		},
+		sideBar: {
+			isOpen: false,
+			prefersOpen: loggedInUser.prefersSideBarOpen,
+		},
+		topicsHistory: topicsHistory.map((t) => ({
+			id: t.id,
+			updatedAt: t.updatedAt,
+			title: t.title,
+			messagesCount: t.Message.length,
+		})),
+		window: {
+			innerWidth: 0,
+			innerHeight: 0,
+			userAgentFromHeader: event.request.headers.get('user-agent'),
+		},
+	} satisfies ChatStoreType
 }

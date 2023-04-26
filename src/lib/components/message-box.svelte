@@ -6,47 +6,50 @@
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
-	import { latestNewMessageSentAtStore } from '$lib/stores/latest-new-message-sent-at-store'
+	import { chatStore } from '$lib/stores/chat-store'
+	import type { NewMessageOkResponseBody } from '$lib/types/new-message-types'
 	import { maxTokensForUser, smallScreenThresholdInPx } from '$lib/utils/constants'
 	import Bowser from 'bowser'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
-	import type { PageData } from '../../routes/topic/[id]/$types'
-
-	export let data: PageData
-	export let innerWidth: number
-	export let innerHeight: number
-	export let isSideBarOpen: boolean
-	export let isSendingMessage: boolean
-	export let message: string
-	export let tokensActive: number
 
 	const dispatch = createEventDispatcher<{
 		scrollToBottom: undefined
 	}>()
 
 	onMount(async () => {
-		isCreatingTopic = false
+		if (!$chatStore) {
+			return
+		}
+
+		$chatStore.newTopic.isCreating = false
 		page.subscribe(() => {
-			isCreatingTopic = false
+			if (!$chatStore) {
+				return
+			}
+			$chatStore.newTopic.isCreating = false
 		})
 
 		setUpVoiceTyping()
 
 		focusOnInput()
 		if (browser) {
-			window.addEventListener('focus', () => {
-				focusOnInput()
-			})
+			window.addEventListener('focus', focusOnInput)
 		}
 
 		const q = $page.url.searchParams.get('q') ?? null
-		if (browser && q && data.topic.Message.length === 1 && messageBoxEle && submitButtonEle) {
-			message = q
+		if (
+			browser &&
+			q &&
+			$chatStore.activeTopic.messages.length === 1 &&
+			messageBoxEle &&
+			submitButtonEle
+		) {
+			$chatStore.activeTopic.newMessage.content = q
 			await tick()
 			submitButtonEle.click()
 			await tick()
-			message = ''
+			$chatStore.activeTopic.newMessage.content = ''
 		}
 		if (q) {
 			$page.url.searchParams.delete('q')
@@ -56,29 +59,25 @@
 
 	onDestroy(() => {
 		if (browser) {
-			window.removeEventListener('focus', () => {
-				focusOnInput()
-			})
+			window.removeEventListener('focus', focusOnInput)
 		}
 	})
 
-	let isCreatingTopic = false
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
 
-	$: maxMessageBoxHeight = innerHeight ? innerHeight / 2 : 420
+	$: maxMessageBoxHeight = $chatStore?.window.innerHeight ? $chatStore.window.innerHeight / 2 : 420
 	$: {
 		;[
-			innerWidth,
-			innerHeight,
-			message,
-			isSendingMessage,
-			isVoiceTyping,
-			isSideBarOpen,
-			isCreatingTopic,
-			$latestNewMessageSentAtStore,
+			$chatStore?.activeTopic.messages.length,
+			$chatStore?.activeTopic.newMessage.queue.length,
+			$chatStore?.activeTopic.newMessage.content,
+			$chatStore?.activeTopic.newMessage.isVoiceTyping,
+			$chatStore?.newTopic.isCreating,
+			$chatStore?.sideBar.isOpen,
+			$chatStore?.window.innerWidth,
+			$chatStore?.window.innerHeight,
 			$page,
-			data.topic.Message,
 		] // deps
 		adjustMessageBoxHeight()
 	}
@@ -113,7 +112,7 @@
 	}
 
 	$: userAgentParser = Bowser.getParser(
-		browser ? window.navigator.userAgent : data.userAgent ?? ' ',
+		browser ? window.navigator.userAgent : $chatStore?.window.userAgentFromHeader || ' ',
 	)
 
 	function focusOnInput() {
@@ -123,81 +122,77 @@
 	}
 
 	async function sendNewMessage() {
-		if (isSendingMessage) {
+		if (!$chatStore) {
 			return
 		}
-		isSendingMessage = true
 
-		await tick()
+		if ($chatStore.activeTopic.newMessage.queue.length) {
+			return
+		}
+
 		messageBoxEle?.focus()
 
-		const messageBackup = message
+		$chatStore.activeTopic.newMessage.queue = [$chatStore.activeTopic.newMessage.content]
+		$chatStore.activeTopic.newMessage.content = ''
 
-		const topic = data.topics.find((t) => t.id === Number($page.params.id))
-		if (topic) {
-			topic.updatedAt = new Date()
-			data.topics = [topic, ...(data.topics.filter((t) => t.id !== Number($page.params.id)) ?? [])]
-		}
-
-		data.topic.Message = [
-			...data.topic.Message,
-			{
-				id: data.topic.Message[data.topic.Message.length - 1]
-					? data.topic.Message[data.topic.Message.length - 1].id + 1
-					: 0, // to be replaced
-				createdAt: new Date(), // to be replaced
-				updatedAt: new Date(), // to be replaced
-				role: 'user',
-				content: message,
-				topicId: Number($page.params.id), // to be replaced
-			},
-		]
-
-		message = ''
 		await tick()
 
 		dispatch('scrollToBottom')
 
-		const response = await fetch(`/topic/${$page.params.id}/new-message`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				topicId: Number($page.params.id),
-				message: messageBackup,
-			}),
-		})
-
-		let result: {
-			message?: string // for errors
-			topic?: typeof data.topic
-			topics?: typeof data.topics
-		} | null = null
 		try {
-			result = await response.json()
-		} catch {
-			alert(`Error: ${response.statusText ?? 'Unknown cause'}`)
+			const response = await fetch(`/topic/${$page.params.id}/new-message`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					topicId: $chatStore.activeTopic.id,
+					message: $chatStore.activeTopic.newMessage.queue[0],
+				}),
+			})
+
+			let result: App.Error | NewMessageOkResponseBody | null = null
+			try {
+				result = await response.json()
+			} catch {
+				throw new Error('Unable to parse new message response')
+			}
+
+			if (!response.ok) {
+				throw new Error((result as App.Error)?.message ?? 'Unknown error')
+			} else {
+				$chatStore.activeTopic.messages = [
+					...$chatStore.activeTopic.messages,
+					...(result as NewMessageOkResponseBody).newMessages,
+				]
+
+				$chatStore.activeTopic.newMessage.queue = []
+
+				const topicHistoryIndex = $chatStore.topicsHistory.findIndex(
+					(t) => t.id === $chatStore?.activeTopic.id,
+				)
+				if (topicHistoryIndex >= 0) {
+					$chatStore.topicsHistory[topicHistoryIndex].updatedAt = new Date(
+						(result as NewMessageOkResponseBody).topicHistoryUpdatedAtIso,
+					)
+					$chatStore.topicsHistory[topicHistoryIndex].messagesCount += (
+						result as NewMessageOkResponseBody
+					).newMessages.length
+				}
+			}
+
+			dispatch('scrollToBottom')
+		} catch (error) {
+			console.error('New message error:', error)
+			alert(`Error: ${(error as Error).message}`)
+
+			$chatStore.activeTopic.newMessage.content = $chatStore.activeTopic.newMessage.queue[0] ?? ''
+		} finally {
+			$chatStore.activeTopic.newMessage.queue = []
 		}
-
-		if (!response.ok) {
-			alert(`Error: ${result?.message ?? 'Unknown cause'}`)
-			data.topic.Message = data.topic.Message.slice(0, -1)
-			message = messageBackup + message
-		} else {
-			data.topic = result?.topic ?? data.topic
-			data.topics = result?.topics ?? data.topics
-		}
-
-		dispatch('scrollToBottom')
-
-		isSendingMessage = false
-
-		$latestNewMessageSentAtStore = Date.now()
 	}
 
-	let isVoiceTyping = false
-	let originalMessage = message
+	let newMessageContentBeforeVoice = ''
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let recognition: any
 	$: isBlacklistedBrowserForVoiceInput =
@@ -207,7 +202,14 @@
 	$: isVoiceTypingSupported =
 		browser && 'webkitSpeechRecognition' in window && !isBlacklistedBrowserForVoiceInput
 	async function setUpVoiceTyping() {
-		if (isVoiceTyping || !isVoiceTypingSupported || !('webkitSpeechRecognition' in window)) {
+		if (!$chatStore) {
+			return
+		}
+		if (
+			$chatStore.activeTopic.newMessage.isVoiceTyping ||
+			!isVoiceTypingSupported ||
+			!('webkitSpeechRecognition' in window)
+		) {
 			return
 		}
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -216,12 +218,23 @@
 		recognition.continuous = true
 		recognition.interimResults = true
 		recognition.onstart = () => {
-			originalMessage = message
-			isVoiceTyping = true
+			if (!$chatStore) {
+				recognition.stop()
+				return
+			}
+			$chatStore.activeTopic.newMessage.isVoiceTyping = true
+			newMessageContentBeforeVoice = $chatStore.activeTopic.newMessage.content
 		}
 		// eslint-disable-next-line no-undef
 		recognition.onresult = (event: { results: SpeechRecognitionResultList }) => {
-			message = `${originalMessage.replace(/ $/, '')} ${Array.from(event.results)
+			if (!$chatStore) {
+				recognition.stop()
+				return
+			}
+			$chatStore.activeTopic.newMessage.content = `${newMessageContentBeforeVoice.replace(
+				/ $/,
+				'',
+			)} ${Array.from(event.results)
 				.map((alternatives) =>
 					Array.from(alternatives)
 						.sort(
@@ -233,18 +246,25 @@
 				.trim()}`
 		}
 		recognition.onerror = async (event: { error: string }) => {
+			if (!$chatStore) {
+				recognition.stop()
+				return
+			}
 			if (!['aborted', 'no-speech'].includes(event.error)) {
 				console.error('Speech recognition error:', event)
 				alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
 			}
-			originalMessage = message
-			isVoiceTyping = false
+			$chatStore.activeTopic.newMessage.isVoiceTyping = false
+			newMessageContentBeforeVoice = ''
 			await tick()
 			messageBoxEle?.focus()
 		}
 		recognition.onend = async () => {
-			originalMessage = message
-			isVoiceTyping = false
+			if (!$chatStore) {
+				return
+			}
+			$chatStore.activeTopic.newMessage.isVoiceTyping = false
+			newMessageContentBeforeVoice = ''
 			await tick()
 			messageBoxEle?.focus()
 		}
@@ -252,8 +272,8 @@
 </script>
 
 <div
-	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6 {isSideBarOpen &&
-	innerWidth > smallScreenThresholdInPx
+	class="pointer-events-none fixed bottom-0 right-0 z-10 bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6 {$chatStore
+		?.sideBar.isOpen && $chatStore.window.innerWidth > smallScreenThresholdInPx
 		? 'left-[18rem]'
 		: 'left-0'}"
 >
@@ -262,14 +282,18 @@
 	>
 		<a
 			data-sveltekit-preload-data="off"
-			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/10 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 dark:bg-primary-950/50 dark:text-primary-100 dark:!ring-primary-400 dark:ring-primary-400/75 dark:!ring-offset-primary-950/75 dark:hover:bg-primary-900/75 dark:focus:bg-primary-900/75 {isCreatingTopic
+			class="pointer-events-auto flex h-[3.5rem] w-[3.5rem] flex-shrink-0 transform-gpu cursor-pointer appearance-none items-center justify-center rounded-full bg-white/90 text-primary-900 shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all hover:bg-white hover:shadow-primary-900/30 focus:bg-white active:shadow-xl active:shadow-primary-900/10 active:ring-primary-600 active:ring-offset-2 active:ring-offset-primary-100 dark:bg-primary-950/50 dark:text-primary-100 dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:hover:bg-primary-900/75 dark:focus:bg-primary-900/75 {$chatStore
+				?.newTopic.isCreating
 				? 'animate-pulse cursor-default bg-primary-600/25 text-primary-900/50 shadow-none ring-0'
 				: ''}"
 			title="New topic"
 			href="/topic/new"
 			on:click={(e) => {
-				if (!isCreatingTopic) {
-					isCreatingTopic = true
+				if (!$chatStore) {
+					return
+				}
+				if (!$chatStore.newTopic.isCreating) {
+					$chatStore.newTopic.isCreating = true
 				} else {
 					e.preventDefault()
 				}
@@ -279,58 +303,74 @@
 		</a>
 
 		<div class="group relative flex flex-1">
-			<!-- svelte-ignore a11y-autofocus -->
-			<textarea
-				data-testid="message-box"
-				class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/75 dark:text-white dark:!ring-primary-400 dark:ring-primary-400/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/90 dark:focus:bg-primary-950/90 {isVoiceTypingSupported
-					? 'pr-[calc(1.5rem+3.5rem+4rem)]'
-					: 'pr-[calc(1.5rem+4rem)]'} {isVoiceTyping ? 'animate-pulse' : ''} {tokensActive >
-				maxTokensForUser
-					? '!ring-red-600/75'
-					: ''}"
-				name="message"
-				placeholder={isVoiceTyping ? 'Listening...' : 'Ask me anything...'}
-				title="For a new line, use any one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter"
-				maxlength={15000}
-				autocapitalize="sentences"
-				autocorrect="on"
-				spellcheck="true"
-				autocomplete="off"
-				tabindex="-1"
-				autofocus
-				required
-				bind:this={messageBoxEle}
-				bind:value={message}
-				on:input={() => adjustMessageBoxHeight(true)}
-				on:keydown={async (e) => {
-					if (e.key === 'Enter') {
-						if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) {
-							e.preventDefault()
-							const cursorPosition = e.currentTarget.selectionStart
-							message = `${message.slice(0, cursorPosition)}\n${message.slice(cursorPosition)}`
-							await tick()
-							e.currentTarget.selectionStart = cursorPosition + 1
-							e.currentTarget.selectionEnd = cursorPosition + 1
-						} else if (!message.trim()) {
-							e.preventDefault()
-						} else {
-							e.preventDefault()
-							sendNewMessage()
+			{#if $chatStore}
+				<!-- svelte-ignore a11y-autofocus -->
+				<textarea
+					data-testid="message-box"
+					class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/50 dark:text-white dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/50 dark:focus:bg-primary-950/50 {isVoiceTypingSupported
+						? 'pr-[calc(1.5rem+3.5rem+4rem)]'
+						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.newMessage.isVoiceTyping
+						? 'animate-pulse'
+						: ''} {$chatStore.activeTopic.tokensCountInContext > maxTokensForUser
+						? '!ring-red-600/75'
+						: ''}"
+					name="message"
+					placeholder={$chatStore.activeTopic.newMessage.isVoiceTyping
+						? 'Listening...'
+						: 'Ask me anything...'}
+					title="For a new line, use any one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter"
+					maxlength={15000}
+					autocapitalize="sentences"
+					autocorrect="on"
+					spellcheck="true"
+					autocomplete="off"
+					tabindex="-1"
+					autofocus
+					required
+					bind:this={messageBoxEle}
+					bind:value={$chatStore.activeTopic.newMessage.content}
+					on:input={() => adjustMessageBoxHeight(true)}
+					on:keydown={async (e) => {
+						if (!$chatStore) {
+							return
 						}
-					}
-				}}
-			/>
+						if (e.key === 'Enter') {
+							if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) {
+								e.preventDefault()
+								const cursorPosition = e.currentTarget.selectionStart
+								$chatStore.activeTopic.newMessage.content = `${$chatStore.activeTopic.newMessage.content.slice(
+									0,
+									cursorPosition,
+								)}\n${$chatStore.activeTopic.newMessage.content.slice(cursorPosition)}`
+								await tick()
+								e.currentTarget.selectionStart = cursorPosition + 1
+								e.currentTarget.selectionEnd = cursorPosition + 1
+							} else if (!$chatStore.activeTopic.newMessage.content.trim()) {
+								e.preventDefault()
+							} else {
+								e.preventDefault()
+								sendNewMessage()
+							}
+						}
+					}}
+				/>
+			{/if}
 
 			{#if isVoiceTypingSupported}
 				<button
-					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50 {isVoiceTyping
+					class="pointer-events-auto absolute bottom-0 right-[4rem] top-0 flex w-[3.5rem] cursor-pointer items-center justify-center text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:!bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50 {$chatStore
+						?.activeTopic.newMessage.isVoiceTyping
 						? 'animate-ping !bg-transparent !text-primary-500'
 						: ''}"
 					type="button"
 					title="Type using voice"
-					on:click={() => (isVoiceTyping ? recognition?.stop() : recognition?.start())}
+					on:click={() =>
+						$chatStore?.activeTopic.newMessage.isVoiceTyping
+							? recognition?.stop()
+							: recognition?.start()}
 					on:keydown={(e) => (e.key === 'Enter' ? submitButtonEle?.click() : {})}
-					use:clickOutside={() => (isVoiceTyping ? recognition?.stop() : {})}
+					use:clickOutside={() =>
+						$chatStore?.activeTopic.newMessage.isVoiceTyping ? recognition?.stop() : {}}
 				>
 					<MicSvg />
 				</button>
@@ -338,9 +378,9 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50"
+				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:!bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50"
 				type="button"
-				disabled={isSendingMessage}
+				disabled={!$chatStore || $chatStore.activeTopic.newMessage.queue.length > 0}
 				bind:this={submitButtonEle}
 				on:click={() => sendNewMessage()}
 			>
@@ -351,7 +391,9 @@
 
 	<div
 		class="flex gap-4 py-5 text-sm"
-		title="Counts total 'tokens' used by the system prompt, the latest {data.contextLength} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
+		title="Counts total 'tokens' used by the system prompt, the latest {$chatStore?.activeTopic
+			.messagesCountInContext ??
+			0} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
 	>
 		<a
 			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline dark:text-primary-100/75 lg:left-6"
@@ -362,23 +404,28 @@
 			Send Feedback
 		</a>
 		<span class="flex-1" />
-		{#if tokensActive > 0}
-			{#if tokensActive > maxTokensForUser}
-				<span class="pointer-events-auto text-red-500/95" transition:fade={{ duration: 150 }}>
+		{#if $chatStore && $chatStore.activeTopic.tokensCountInContext > 0}
+			{#if $chatStore.activeTopic.tokensCountInContext > maxTokensForUser}
+				<span class="pointer-events-auto text-red-500/95" in:fade={{ duration: 150 }}>
 					<span class="font-black"
-						>{Intl.NumberFormat().format(tokensActive - maxTokensForUser)}</span
+						>{Intl.NumberFormat().format(
+							$chatStore.activeTopic.tokensCountInContext - maxTokensForUser,
+						)}</span
 					> words over
 				</span>
 			{:else}
 				<span
 					class="pointer-events-auto text-primary-900/50 dark:text-primary-100/50"
-					transition:fade={{ duration: 150 }}
+					in:fade={{ duration: 150 }}
 				>
 					<span
-						class="font-semibold {tokensActive > maxTokensForUser - maxTokensForUser / 10
+						class="font-semibold {$chatStore.activeTopic.tokensCountInContext >
+						maxTokensForUser - maxTokensForUser / 10
 							? 'text-amber-500/95'
 							: 'text-emerald-500/95'}"
-						>{Intl.NumberFormat().format(maxTokensForUser - tokensActive)}</span
+						>{Intl.NumberFormat().format(
+							maxTokensForUser - $chatStore.activeTopic.tokensCountInContext,
+						)}</span
 					> words left
 				</span>
 			{/if}

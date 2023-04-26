@@ -1,9 +1,10 @@
-import { contextLength, maxTokensForUser, modelName } from '$lib/utils/constants'
+import type { NewMessageOkResponseBody } from '$lib/types/new-message-types.js'
+import { maxTokensForUser, messagesCountInContext, modelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
+import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
-import { transformMessage } from '$lib/utils/transform-message.server'
 import { error, json, redirect } from '@sveltejs/kit'
 import type { ChatCompletionRequestMessage } from 'openai'
 
@@ -36,7 +37,7 @@ export async function POST(event) {
 					},
 				},
 			},
-			take: contextLength,
+			take: messagesCountInContext,
 			orderBy: {
 				id: 'desc',
 			},
@@ -73,7 +74,7 @@ export async function POST(event) {
 		stream: false,
 	})
 
-	await Promise.all([
+	const [{ count: newMessagesCount }, topic] = await Promise.all([
 		prisma.message.createMany({
 			data: [
 				{
@@ -104,53 +105,27 @@ export async function POST(event) {
 		}),
 	])
 
-	const [topic, topics] = await Promise.all([
-		prisma.topic.findFirstOrThrow({
-			where: {
-				id: Number(event.params.id),
+	const newMessages = await prisma.message.findMany({
+		where: {
+			topic: {
+				id: data.topicId,
 				user: {
 					email: session.user.email,
 				},
 			},
-			orderBy: {
-				id: 'desc',
-			},
-			take: 1,
-			include: {
-				Message: {
-					orderBy: {
-						id: 'asc',
-					},
-				},
-			},
-		}),
-
-		prisma.topic.findMany({
-			where: { user: { email: session.user.email } },
-			select: {
-				id: true,
-				title: true,
-				updatedAt: true,
-				Message: {
-					select: {
-						id: true,
-					},
-				},
-			},
-			orderBy: { updatedAt: 'desc' },
-		}),
-	])
+		},
+		orderBy: { id: 'desc' },
+		take: newMessagesCount,
+		select: { id: true, role: true, content: true },
+	})
 
 	return json({
-		topic: await (async () => ({
-			...topic,
-			Message: await Promise.all(
-				topic.Message.map(async (m) => ({
-					...m,
-					content: await transformMessage(m.content),
-				})),
-			),
-		}))(),
-		topics,
-	})
+		newMessages: newMessages.reverse().map((m) => ({
+			id: m.id,
+			role: m.role,
+			content: markdownToHtml(m.content),
+		})),
+
+		topicHistoryUpdatedAtIso: topic.updatedAt.toISOString(),
+	} satisfies NewMessageOkResponseBody)
 }

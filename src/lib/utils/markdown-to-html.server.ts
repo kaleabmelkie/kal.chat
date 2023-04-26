@@ -2,7 +2,7 @@ import hljs from 'highlight.js'
 import { marked } from 'marked'
 import sanitize from 'sanitize-html'
 
-export async function transformMessage(content: string) {
+export function markdownToHtml(content: string) {
 	content = marked(content, {
 		highlight: (code) => hljs.highlightAuto(code).value,
 		breaks: true,

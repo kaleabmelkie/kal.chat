@@ -1,15 +1,44 @@
 <script lang="ts">
 	import Message from '$lib/components/message.svelte'
-	import type { PageData } from '../../routes/topic/[id]/$types'
+	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
+	import { onDestroy, onMount } from 'svelte'
 
-	export let data: PageData
-	export let isSendingMessage: boolean
+	onMount(() => {
+		typingDotInterval = setInterval(() => {
+			typingDotCount = (typingDotCount + 1) % 4
+		}, 150) as unknown as number
+	})
 
+	onDestroy(() => {
+		if (typingDotInterval !== null) {
+			clearInterval(typingDotInterval)
+		}
+	})
+
+	let typingDotInterval: number | null = null
 	let typingDotCount = 0
 
-	setInterval(() => {
-		typingDotCount = (typingDotCount + 1) % 4
-	}, 150)
+	$: messagesToShow = [
+		...($chatStore?.activeTopic.messages.filter((m) => m.role !== 'system') ?? []),
+
+		...(($chatStore?.activeTopic.newMessage.queue.length
+			? [
+					...$chatStore.activeTopic.newMessage.queue.map(
+						(content, index) =>
+							({
+								id: -2 - index,
+								role: 'user' as const,
+								content,
+							} satisfies ChatStoreType['activeTopic']['messages'][number]),
+					),
+					{
+						id: -1,
+						role: 'system' as const,
+						content: 'Typing', // to be replaced in the template
+					},
+			  ]
+			: []) satisfies ChatStoreType['activeTopic']['messages']),
+	]
 </script>
 
 <ul
@@ -17,21 +46,18 @@
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
-	{#each data.topic.Message.filter((m) => m.role !== 'system') as message (message.id)}
-		<Message {message} bind:data />
+	{#each messagesToShow as message (message.id)}
+		<Message
+			message={{
+				...message,
+				content:
+					message.id === -1
+						? `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`
+						: message.content,
+			}}
+			articleClassName={message.id === -1
+				? '!animate-pulse !bg-transparent !bg-none !px-0 !text-primary-600/75 !shadow-none dark:!text-primary-300/75'
+				: ''}
+		/>
 	{/each}
-
-	{#if isSendingMessage}
-		{#key 'Typing...'}
-			<Message
-				message={{
-					id: -1,
-					role: 'system',
-					content: `Typing${[...Array(typingDotCount)].map(() => '.').join('')}`,
-				}}
-				articleClassName="!animate-pulse !bg-transparent !bg-none !px-0 !py-2 !text-primary-600/75 !shadow-none dark:!text-primary-300/75"
-				bind:data
-			/>
-		{/key}
-	{/if}
 </ul>
