@@ -2,7 +2,7 @@
 	import '../app.postcss'
 
 	import { dev } from '$app/environment'
-	import { page } from '$app/stores'
+	import { page, updated } from '$app/stores'
 	import Header from '$lib/components/header.svelte'
 </script>
 
@@ -19,6 +19,7 @@
 
 <main
 	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/20 dark:to-primary-950/40"
+	data-sveltekit-reload={$updated ? '' : 'off'}
 >
 	<div
 		class="no-repeat pointer-events-none fixed inset-0 z-0 block bg-fixed dark:hidden"
