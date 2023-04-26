@@ -28,7 +28,8 @@ model User {
 enum UserPlanType {
   free
   paid
-  grace // the period when downgrading from praid to free
+  grace // while downgrading from 'paid' to 'free'
+  sponsored // same as 'paid', but got it for free
 }
 
 model Topic {
