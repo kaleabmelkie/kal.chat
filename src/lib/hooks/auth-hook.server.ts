@@ -34,7 +34,9 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				)
 			}
 			await prisma.user.upsert({
-				where: { email: params.user.email },
+				where: {
+					email: params.user.email,
+				},
 				create: {
 					name: params.user.name ?? 'User',
 					email: params.user.email,
@@ -47,6 +49,40 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				},
 			})
 			return true
+		},
+
+		jwt: async (params) => {
+			if (!params.token.email) {
+				throw new Error(`Email not found in your JWT token.`)
+			}
+			const user = await prisma.user.findUnique({
+				where: {
+					email: params.token.email,
+				},
+				select: {
+					id: true,
+					plan: true,
+				},
+			})
+			if (!user) {
+				throw new Error(`User not found in your database.`)
+			}
+			return {
+				...params.token,
+				userId: user.id,
+				userPlan: user.plan,
+			}
+		},
+
+		session: async (params) => {
+			return {
+				...params.session,
+				user: {
+					...params.session.user,
+					id: params.token.userId,
+					plan: params.token.userPlan,
+				},
+			}
 		},
 	},
 

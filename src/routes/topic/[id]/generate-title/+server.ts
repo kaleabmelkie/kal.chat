@@ -6,16 +6,14 @@ import { error, json } from '@sveltejs/kit'
 
 export async function PUT({ locals, params, url }) {
 	const session = await locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw error(401, `You must be logged in to change a topic's title`)
 	}
 
 	let topic = await prisma.topic.findFirstOrThrow({
 		where: {
 			id: Number(params.id),
-			user: {
-				email: session.user.email,
-			},
+			userId: session.user.id,
 		},
 	})
 
@@ -84,9 +82,7 @@ export async function PUT({ locals, params, url }) {
 	topic = await prisma.topic.update({
 		where: {
 			id: topic.id,
-			user: {
-				email: session.user.email,
-			},
+			userId: session.user.id,
 		},
 		data: {
 			title: newTitle,

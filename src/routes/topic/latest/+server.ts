@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit'
 
 export async function GET(event) {
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
@@ -12,9 +12,7 @@ export async function GET(event) {
 
 	const latestTopic = await prisma.topic.findFirst({
 		where: {
-			user: {
-				email: session.user.email,
-			},
+			userId: session.user.id,
 		},
 		select: {
 			id: true,
@@ -33,9 +31,7 @@ export async function GET(event) {
 	} else {
 		const latestUntitledTopic = await prisma.topic.findFirst({
 			where: {
-				user: {
-					email: session.user.email,
-				},
+				userId: session.user.id,
 				title: null,
 			},
 			select: {

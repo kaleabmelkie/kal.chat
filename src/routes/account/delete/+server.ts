@@ -3,13 +3,13 @@ import { error, json } from '@sveltejs/kit'
 
 export async function DELETE(event) {
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw error(401, 'Unauthorized')
 	}
 
 	await prisma.user.delete({
 		where: {
-			email: session.user.email,
+			id: session.user.id,
 		},
 	})
 

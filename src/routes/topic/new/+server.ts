@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit'
 
 export async function GET(event) {
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
@@ -19,7 +19,7 @@ export async function GET(event) {
 		data: {
 			user: {
 				connect: {
-					email: session.user.email,
+					id: session.user.id,
 				},
 			},
 			Message: {

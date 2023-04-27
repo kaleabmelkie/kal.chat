@@ -21,7 +21,7 @@ export async function load(event) {
 	const requestedRedirectTo = event.url.searchParams.get('redirectTo') ?? null
 	const redirectTo = `/${requestedRedirectTo?.slice(1) ?? ''}`
 
-	if (session?.user?.email && requestedRedirectTo !== null) {
+	if (typeof session?.user.id === 'number' && requestedRedirectTo !== null) {
 		throw redirect(302, redirectTo)
 	}
 
@@ -35,26 +35,24 @@ export async function load(event) {
 				type: p.type,
 				style: (p as typeof p & { style?: OAuthProviderButtonStyles }).style,
 			})),
-		topicsCount: !session?.user?.email
-			? 0
-			: prisma.topic.count({
-					where: {
-						user: {
-							email: session.user.email,
+		topicsCount:
+			typeof session?.user.id !== 'number'
+				? 0
+				: prisma.topic.count({
+						where: {
+							userId: session.user.id,
 						},
-					},
-			  }),
-		messagesCount: !session?.user?.email
-			? 0
-			: prisma.message.count({
-					where: {
-						role: { not: 'system' },
-						topic: {
-							user: {
-								email: session.user.email,
+				  }),
+		messagesCount:
+			typeof session?.user.id !== 'number'
+				? 0
+				: prisma.message.count({
+						where: {
+							role: { not: 'system' },
+							topic: {
+								userId: session.user.id,
 							},
 						},
-					},
-			  }),
+				  }),
 	}
 }

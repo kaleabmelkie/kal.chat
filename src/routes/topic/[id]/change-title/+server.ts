@@ -3,7 +3,7 @@ import { error, json } from '@sveltejs/kit'
 
 export async function PUT({ locals, params, request }) {
 	const session = await locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw error(401, `You must be logged in to change a topic's title`)
 	}
 
@@ -15,9 +15,7 @@ export async function PUT({ locals, params, request }) {
 	await prisma.topic.update({
 		where: {
 			id: Number(params.id),
-			user: {
-				email: session.user.email,
-			},
+			userId: session.user.id,
 		},
 		data: {
 			title: data.title,

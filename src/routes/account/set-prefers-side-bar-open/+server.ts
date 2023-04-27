@@ -3,7 +3,7 @@ import { error, json } from '@sveltejs/kit'
 
 export async function PUT(event) {
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw error(401, 'Unauthorized')
 	}
 
@@ -14,14 +14,12 @@ export async function PUT(event) {
 
 	await prisma.user.update({
 		where: {
-			email: session.user.email,
+			id: session.user.id,
 		},
 		data: {
 			prefersSideBarOpen: requestJson.prefersSideBarOpen,
 		},
 	})
 
-	return json({
-		success: true,
-	})
+	return json({ message: 'Preferences updated' })
 }

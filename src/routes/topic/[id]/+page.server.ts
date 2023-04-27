@@ -8,7 +8,7 @@ import { error, redirect } from '@sveltejs/kit'
 
 export async function load(event) {
 	const { session } = await event.parent()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
@@ -22,7 +22,7 @@ export async function load(event) {
 		// loggedInUserPromise
 		prisma.user.findFirstOrThrow({
 			where: {
-				email: session.user.email,
+				id: session.user.id,
 			},
 			select: {
 				prefersSideBarOpen: true,
@@ -32,9 +32,7 @@ export async function load(event) {
 		// topicsHistoryPromise
 		prisma.topic.findMany({
 			where: {
-				user: {
-					email: session.user.email,
-				},
+				userId: session.user.id,
 			},
 			select: {
 				id: true,
@@ -58,9 +56,7 @@ export async function load(event) {
 		await prisma.topic.findFirst({
 			where: {
 				id: Number(event.params.id),
-				user: {
-					email: session.user.email,
-				},
+				userId: session.user.id,
 			},
 			orderBy: {
 				updatedAt: 'desc',

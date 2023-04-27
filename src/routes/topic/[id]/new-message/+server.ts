@@ -22,7 +22,7 @@ export async function POST(event) {
 	}
 
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${data.topicId}`)}`)
 	}
 
@@ -32,9 +32,7 @@ export async function POST(event) {
 				role: { in: ['assistant', 'user'] },
 				topic: {
 					id: data.topicId,
-					user: {
-						email: session.user.email,
-					},
+					userId: session.user.id,
 				},
 			},
 			take: messagesCountInContext,
@@ -109,9 +107,7 @@ export async function POST(event) {
 		where: {
 			topic: {
 				id: data.topicId,
-				user: {
-					email: session.user.email,
-				},
+				userId: session.user.id,
 			},
 		},
 		orderBy: { id: 'desc' },

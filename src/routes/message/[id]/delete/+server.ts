@@ -3,7 +3,7 @@ import { error, json } from '@sveltejs/kit'
 
 export async function DELETE(event) {
 	const session = await event.locals.getSession()
-	if (!session?.user?.email) {
+	if (typeof session?.user.id !== 'number') {
 		throw error(401, 'Unauthorized')
 	}
 
@@ -16,9 +16,7 @@ export async function DELETE(event) {
 		where: {
 			id: messageId,
 			topic: {
-				user: {
-					email: session.user.email,
-				},
+				userId: session.user.id,
 			},
 		},
 	})
