@@ -92,71 +92,69 @@
 			</button>
 
 			{#if isAdvancedSettingsOpen}
-				<div class="overflow-visible" transition:slide>
-					<div class="grid min-h-max gap-4">
-						<button
-							class="button button-danger pointer-events-auto"
-							type="button"
-							disabled={isActive}
-							on:click={async () => {
-								if (
-									!confirm(
-										'This deletes all your messages and topics and anything related to your account.\n\nAre you sure you want to continue?\n\nThis action cannot be undone.',
-									)
-								) {
-									return
-								}
-								if (
-									prompt(
-										'Please type "DELETE ACCOUNT" to confirm account deletion.',
-									)?.toUpperCase() !== 'DELETE ACCOUNT'
-								) {
-									alert('Wrong confirmation input. Account deletion cancelled.')
-									return
-								}
-								isActive = true
-								try {
-									const response = await fetch('/account/delete', {
-										method: 'DELETE',
-										headers: {
-											'Content-Type': 'application/json',
-										},
-									})
-									if (!response.ok) {
-										let message = 'Unknown error.'
-										try {
-											message = (await response.json())?.message ?? message
-											console.error(message)
-										} catch {
-											console.error(response)
-										}
-										throw new Error(message)
+				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
+					<button
+						class="button button-danger pointer-events-auto"
+						type="button"
+						disabled={isActive}
+						on:click={async () => {
+							if (
+								!confirm(
+									'This deletes all your messages and topics and anything related to your account.\n\nAre you sure you want to continue?\n\nThis action cannot be undone.',
+								)
+							) {
+								return
+							}
+							if (
+								prompt(
+									'Please type "DELETE ACCOUNT" to confirm account deletion.',
+								)?.toUpperCase() !== 'DELETE ACCOUNT'
+							) {
+								alert('Wrong confirmation input. Account deletion cancelled.')
+								return
+							}
+							isActive = true
+							try {
+								const response = await fetch('/account/delete', {
+									method: 'DELETE',
+									headers: {
+										'Content-Type': 'application/json',
+									},
+								})
+								if (!response.ok) {
+									let message = 'Unknown error.'
+									try {
+										message = (await response.json())?.message ?? message
+										console.error(message)
+									} catch {
+										console.error(response)
 									}
+									throw new Error(message)
+								}
 
-									alert('Account deleted successfully.')
-								} catch (e) {
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									alert(`Account deletion error: ${e?.message}`)
-									isActive = false
-									return
-								}
-								try {
-									await signOut({
-										callbackUrl: data.redirectTo,
-									})
-								} catch (e) {
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									alert(`Sign out error: ${e?.message}`)
-								} finally {
-									isActive = false
-								}
-							}}
-						>
-							Delete account
-						</button>
-					</div>
+								alert('Account deleted successfully.')
+							} catch (e) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								alert(`Account deletion error: ${e?.message}`)
+								isActive = false
+								return
+							}
+							try {
+								await signOut({
+									callbackUrl: data.redirectTo,
+								})
+							} catch (e) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								alert(`Sign out error: ${e?.message}`)
+							} finally {
+								isActive = false
+							}
+						}}
+					>
+						Delete account
+					</button>
 				</div>
 			{/if}
 		{:else}

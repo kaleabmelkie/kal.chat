@@ -10,7 +10,7 @@
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { onDestroy, onMount, tick } from 'svelte'
-	import { fly, slide } from 'svelte/transition'
+	import { fade, fly, slide } from 'svelte/transition'
 
 	onMount(() => {
 		minuteInterval = setInterval(() => {
@@ -108,12 +108,12 @@
 
 <div
 	class="relative h-full min-h-screen w-0 flex-shrink-0 overflow-visible transition-all sm:w-[18rem]"
-	transition:slide|local={{ axis: 'x' }}
+	transition:slide|local={{ duration: 150, axis: 'x' }}
 >
 	<div
 		class="overflow-y-overlay absolute z-20 h-full w-screen overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/20"
 		on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
-		transition:fly|local={{ x: -32 }}
+		transition:fly|local={{ duration: 150, x: -32 }}
 	>
 		<div
 			class="sticky top-[-4.75rem] z-10 -mt-[4.75rem] h-[4.75rem] bg-gradient-to-b from-primary-100 dark:from-black"
@@ -145,8 +145,7 @@
 						})
 					}
 				}}
-				in:fly|local={{ delay: 300, x: 32 }}
-				out:fly|local={{ x: 32 }}
+				transition:fade|local={{ duration: 150 }}
 			>
 				<ArrowRightSvg
 					class="mr-2 !h-5 !w-5 rotate-180 transition-all group-hover:mr-0 group-focus:mr-0 group-active:mr-0"
@@ -159,7 +158,11 @@
 
 		<ul>
 			{#each $chatStore?.topicsHistory ?? [] as topicHistory (topicHistory.id)}
-				<li class="relative" title={topicHistory.title ?? undefined} transition:slide|local>
+				<li
+					class="relative"
+					title={topicHistory.title ?? undefined}
+					transition:slide|local={{ duration: 150 }}
+				>
 					<a
 						class="button group items-start rounded-none !shadow-none focus:!ring-0 active:bg-primary-300/50 dark:active:bg-primary-700/50 lg:px-6 {$page
 							.url.pathname === `/topic/${topicHistory.id}`
@@ -213,7 +216,7 @@
 					{#if optionsExpandedForTopicId === topicHistory.id}
 						<div
 							class="absolute right-4 top-9 z-50 flex transform-gpu flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
-							transition:fly={{ y: -16 }}
+							transition:slide={{ duration: 150 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
 							{#if topicHistory.messagesCount > 2}

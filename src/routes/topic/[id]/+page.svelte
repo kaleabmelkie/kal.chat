@@ -103,7 +103,7 @@
 		bottomEle.scrollIntoView({ behavior: 'smooth' })
 		await tick()
 		if (repeat) {
-			setTimeout(() => scrollToBottom(false), 300)
+			setTimeout(() => scrollToBottom(false), 150)
 		}
 	}
 
@@ -141,7 +141,7 @@
 					})
 				}
 			}}
-			transition:fly|local={{ x: -32 }}
+			transition:fly|local={{ duration: 150, x: -32 }}
 		>
 			<ClockSvg
 				class="block h-5 w-5 transition-all group-hover:w-0 group-hover:opacity-0 group-focus:w-0 group-focus:opacity-0"
