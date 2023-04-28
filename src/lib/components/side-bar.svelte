@@ -107,15 +107,18 @@
 </script>
 
 <div
-	class="absolute z-20 h-screen w-full flex-shrink-0 overflow-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-black dark:bg-gradient-to-t dark:from-black/25 dark:to-primary-950/25 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-black/25"
+	class="overflow-y-overlay absolute z-20 h-screen w-full flex-shrink-0 overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/20"
 	transition:fly|local={{ duration: 150, x: -32 }}
 	on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
 >
-	<div class="-mt-[4.75rem] mb-[4.75rem]" bind:this={topEle} />
+	<div
+		class="sticky top-[-4.75rem] z-10 -mt-[4.75rem] h-[4.75rem] bg-gradient-to-b from-primary-100 dark:from-black"
+		bind:this={topEle}
+	/>
 
 	<div class="pointer-events-none sticky top-0 z-10 flex items-center p-4 lg:px-6">
 		<h2
-			class="text-primary-600/50 transition-all dark:text-primary-400/50 {isAtTheTop
+			class="text-primary-600/75 transition-all duration-300 dark:text-primary-300/75 {isAtTheTop
 				? 'opacity-100'
 				: 'opacity-0'}"
 		>
@@ -123,7 +126,7 @@
 		</h2>
 		<span class="flex-1" />
 		<button
-			class="group pointer-events-auto absolute -right-2 flex h-14 w-20 transform-gpu items-center justify-center rounded-l-full bg-white/50 p-4 text-primary-900 backdrop-blur transition-all hover:w-32 hover:bg-white/95 hover:text-primary-600 focus:w-32 focus:bg-white/95 focus:text-primary-600 active:w-32 active:bg-primary-500/5 dark:bg-primary-950/50 dark:text-primary-100 dark:hover:bg-primary-950/95 dark:hover:text-primary-300 dark:focus:bg-primary-950/95 dark:focus:text-primary-300 dark:active:text-primary-500 lg:pr-6"
+			class="button group pointer-events-auto absolute -right-2 h-14 w-20 gap-0 rounded-l-full p-4 hover:w-32 focus:w-32 active:w-32"
 			type="button"
 			on:click={async () => {
 				if (!$chatStore) {
@@ -156,10 +159,10 @@
 				transition:slide|local={{ duration: 150 }}
 			>
 				<a
-					class="group flex gap-1 px-4 py-3 transition-all hover:bg-white/95 focus:bg-white/95 active:bg-primary-500/5 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 lg:px-6 {$page
+					class="button group items-start rounded-none text-primary-950 !shadow-none hover:text-primary-600 focus:text-primary-600 dark:text-primary-100 dark:hover:text-primary-300 dark:focus:text-primary-400 lg:px-6 {$page
 						.url.pathname === `/topic/${topicHistory.id}`
-						? 'bg-white/50 dark:bg-primary-950/50'
-						: ''}"
+						? 'button-primary'
+						: 'bg-transparent'}"
 					href="/topic/{topicHistory.id}"
 					on:click={() => {
 						if (!$chatStore) {
@@ -172,17 +175,16 @@
 				>
 					<div class="flex-1">
 						<div
-							class="line-clamp-2 text-sm group-hover:text-primary-600 group-focus:text-primary-600 dark:group-hover:text-primary-400 dark:group-focus:text-primary-400 {!topicHistory.title
-								? 'italic'
-								: ''} {$page.url.pathname === `/topic/${topicHistory.id}`
-								? 'font-semibold text-primary-600 dark:text-primary-400'
-								: 'text-primary-900/90 dark:text-primary-200/90'}"
+							class="line-clamp-2 text-sm {!topicHistory.title ? 'italic' : ''} {$page.url
+								.pathname === `/topic/${topicHistory.id}`
+								? 'font-semibold'
+								: 'font-normal'}"
 						>
 							{topicHistory.title ?? 'New topic'}
 						</div>
 						{#key minuteKey}
 							<div
-								class="text-xs text-primary-900/50 dark:text-primary-200/50"
+								class="text-xs font-normal opacity-60"
 								title="Last message in this topic was sent on {dayjs(topicHistory.updatedAt).format(
 									'MMMM DD, YYYY hh:mm A',
 								)}"
@@ -196,7 +198,7 @@
 						{/key}
 					</div>
 					<button
-						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-primary-900/50 transition-all hover:bg-primary-100/50 dark:text-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
+						class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
 						topicHistory.id
 							? '-mt-2 animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
 							: ''}"

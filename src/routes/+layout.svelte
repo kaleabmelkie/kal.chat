@@ -18,7 +18,7 @@
 </svelte:head>
 
 <main
-	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/20 dark:to-primary-950/40"
+	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/5 dark:to-primary-950/40"
 	data-sveltekit-reload={$updated ? '' : 'off'}
 >
 	<div

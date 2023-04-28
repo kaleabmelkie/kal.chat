@@ -32,10 +32,10 @@
 		</div>
 
 		<article
-			class="match-braces prose relative rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
+			class="match-braces overflow-x-overlay prose relative w-full max-w-full rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
 			'user'
-				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-900/90 dark:to-primary-600/90'
-				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-500 dark:from-black/80 dark:to-black/70 dark:text-white'} {articleClassName}"
+				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-950/90 dark:to-primary-700/75'
+				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-950 dark:from-black/50 dark:to-black/10 dark:text-white'} {articleClassName}"
 			bind:this={articleEle}
 		>
 			{@html message.content}
@@ -143,11 +143,12 @@
 </li>
 
 <style lang="postcss">
-	article {
-		@apply w-full max-w-full overflow-x-auto;
-	}
-
 	article :global(pre) {
-		@apply !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
+		@apply overflow-hidden !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
+	}
+	article :global(pre:hover),
+	article :global(pre:focus),
+	article :global(pre:active) {
+		overflow: overlay;
 	}
 </style>

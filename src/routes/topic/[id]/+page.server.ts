@@ -100,19 +100,23 @@ export async function load(event) {
 			messagesCountInContext: messagesCountInContext,
 			tokensCountInContext: 0,
 		},
+
 		newTopic: {
 			isCreating: false,
 		},
+
 		sideBar: {
 			isOpen: false,
 			prefersOpen: loggedInUser.prefersSideBarOpen,
 		},
+
 		topicsHistory: topicsHistory.map((t) => ({
 			id: t.id,
 			updatedAt: t.updatedAt,
 			title: t.title,
 			messagesCount: t.Message.length,
 		})),
+
 		window: {
 			innerWidth: 0,
 			innerHeight: 0,

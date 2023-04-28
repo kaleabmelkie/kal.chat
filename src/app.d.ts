@@ -1,10 +1,13 @@
 import type { Session } from '@auth/core/types'
 import type { UserPlanType } from '@prisma/client'
 
-declare type EnhancedSessionType = Session & {
-	user: Session['user'] & {
-		id?: number
-		plan?: UserPlanType
+type EnhancedSessionType = Session & {
+	user: {
+		id: number
+		name: string
+		email: string
+		image?: string | null
+		plan: UserPlanType
 	}
 }
 
