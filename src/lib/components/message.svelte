@@ -5,7 +5,7 @@
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import 'highlight.js/styles/github-dark.css'
-	import { slide } from 'svelte/transition'
+	import { fly } from 'svelte/transition'
 
 	let className = ''
 	export { className as class }
@@ -60,7 +60,7 @@
 						'user'
 							? 'left-0 -ml-2'
 							: 'right-0 -mr-2'}"
-						transition:slide={{ duration: 150 }}
+						transition:fly|local={{ duration: 150, y: -16 }}
 					>
 						<button
 							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"

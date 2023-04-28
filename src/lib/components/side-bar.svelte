@@ -216,7 +216,7 @@
 					{#if optionsExpandedForTopicId === topicHistory.id}
 						<div
 							class="absolute right-4 top-9 z-50 flex transform-gpu flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
-							transition:slide={{ duration: 150 }}
+							transition:fly|local={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
 							{#if topicHistory.messagesCount > 2}
