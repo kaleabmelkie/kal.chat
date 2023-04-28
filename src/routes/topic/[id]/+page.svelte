@@ -8,6 +8,7 @@
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { countTokens } from '$lib/utils/count-tokens'
 	import { onDestroy, onMount, tick } from 'svelte'
+	import { fly } from 'svelte/transition'
 
 	export let data
 
@@ -125,7 +126,7 @@
 		<SideBar />
 	{:else}
 		<button
-			class="button button-primary group fixed left-0 top-[4.75rem] z-30 h-14 w-[3.75rem] gap-0 rounded-r-full p-4 hover:w-[8rem] focus:w-[8rem] focus:shadow active:w-[8rem] lg:w-[4.5rem] lg:pl-6"
+			class="button button-primary group fixed left-0 top-[4.75rem] z-30 h-14 w-[3.75rem] gap-0 rounded-r-full p-4 hover:w-[7.5rem] focus:w-[7.5rem] focus:shadow active:w-[7.5rem] lg:w-[4.5rem] lg:pl-6"
 			type="button"
 			on:click={async () => {
 				if (!$chatStore) {
@@ -140,6 +141,7 @@
 					})
 				}
 			}}
+			transition:fly|local={{ duration: 150, x: -32 }}
 		>
 			<ClockSvg
 				class="block h-5 w-5 transition-all group-hover:w-0 group-hover:opacity-0 group-focus:w-0 group-focus:opacity-0"
