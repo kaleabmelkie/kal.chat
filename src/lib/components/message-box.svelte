@@ -107,7 +107,7 @@
 		if (repeat) {
 			setTimeout(() => {
 				adjustMessageBoxHeight(false)
-			}, 150)
+			}, 300)
 		}
 	}
 
@@ -402,7 +402,7 @@
 		<span class="flex-1" />
 		{#if $chatStore && $chatStore.activeTopic.tokensCountInContext > 0}
 			{#if $chatStore.activeTopic.tokensCountInContext > maxTokensForUser}
-				<span class="pointer-events-auto text-red-500/95" in:fade={{ duration: 150 }}>
+				<span class="pointer-events-auto text-red-500/95" in:fade>
 					<span class="font-black"
 						>{Intl.NumberFormat().format(
 							$chatStore.activeTopic.tokensCountInContext - maxTokensForUser,
@@ -410,10 +410,7 @@
 					> words over
 				</span>
 			{:else}
-				<span
-					class="pointer-events-auto text-primary-900/50 dark:text-primary-100/50"
-					in:fade={{ duration: 150 }}
-				>
+				<span class="pointer-events-auto text-primary-900/50 dark:text-primary-100/50" in:fade>
 					<span
 						class="font-semibold {$chatStore.activeTopic.tokensCountInContext >
 						maxTokensForUser - maxTokensForUser / 10

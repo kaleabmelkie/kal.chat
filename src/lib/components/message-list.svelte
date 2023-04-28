@@ -6,7 +6,7 @@
 	onMount(() => {
 		typingDotInterval = setInterval(() => {
 			typingDotCount = (typingDotCount + 1) % 4
-		}, 150) as unknown as number
+		}, 300) as unknown as number
 	})
 
 	onDestroy(() => {
