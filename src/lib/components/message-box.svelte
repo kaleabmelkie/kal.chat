@@ -393,7 +393,7 @@
 	>
 		<a
 			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline dark:text-primary-100/75 lg:left-6"
-			href="mailto:support@kal.chat"
+			href="mailto:support@kal.chat?subject=Feedback"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"
 		>
