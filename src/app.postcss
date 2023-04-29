@@ -11,7 +11,7 @@
 }
 
 * {
-	scrollbar-color: rgb(128 128 128 / 0.5) transparent;
+	scrollbar-color: rgb(0 0 0 / 0.1) transparent;
 	scrollbar-width: thin;
 }
 @media (prefers-color-scheme: dark) {
@@ -34,7 +34,7 @@
 }
 *::-webkit-scrollbar-thumb {
 	@apply rounded-full border-[3px] border-solid border-transparent transition-all hover:border-[2px] focus:border-[2px] active:border-[1px];
-	box-shadow: 12px 0 0 12px rgb(128 128 128 / 0.5) inset;
+	box-shadow: 12px 0 0 12px rgb(0 0 0 / 0.1) inset;
 }
 @media (prefers-color-scheme: dark) {
 	*::-webkit-scrollbar-thumb {
@@ -55,13 +55,49 @@
 }
 
 @layer utilities {
-	.overflow-overlay {
+	.overflow-overlay,
+	.overflow-overlay:hover,
+	.overflow-overlay:focus,
+	.overflow-overlay:active {
 		overflow: overlay;
 	}
-	.overflow-x-overlay {
+	@media (min-width: 640px) {
+		.overflow-overlay {
+			overflow: hidden;
+		}
+	}
+
+	.overflow-x-overlay,
+	.overflow-x-overlay:hover,
+	.overflow-x-overlay:focus,
+	.overflow-x-overlay:active {
 		overflow-x: overlay;
 	}
-	.overflow-y-overlay {
+	@media (min-width: 640px) {
+		.overflow-x-overlay {
+			overflow-x: hidden;
+		}
+	}
+
+	.overflow-y-overlay,
+	.overflow-y-overlay:hover,
+	.overflow-y-overlay:focus,
+	.overflow-y-overlay:active {
 		overflow-y: overlay;
+	}
+	@media (min-width: 640px) {
+		.overflow-y-overlay {
+			overflow-y: hidden;
+		}
+	}
+
+	.browser-safari .overflow-overlay {
+		overflow: auto;
+	}
+	.browser-safari .overflow-x-overlay {
+		overflow-x: auto;
+	}
+	.browser-safari .overflow-y-overlay {
+		overflow-y: auto;
 	}
 }

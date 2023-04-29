@@ -16,6 +16,12 @@ export type ChatStoreType = {
 		tokensCountInContext: number
 	}
 
+	browser: {
+		isAndroid: boolean
+		isMicrosoftEdgeOnMacOS: boolean
+		isSafari: boolean
+	}
+
 	newTopic: {
 		isCreating: boolean
 	}
@@ -32,8 +38,6 @@ export type ChatStoreType = {
 	window: {
 		innerWidth: number
 		innerHeight: number
-
-		userAgentFromHeader: string | null
 	}
 }
 

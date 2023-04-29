@@ -7,7 +7,7 @@ import { prisma } from '$lib/utils/prisma.server'
 import { error, redirect } from '@sveltejs/kit'
 
 export async function load(event) {
-	const { session } = await event.parent()
+	const { browser, session } = await event.parent()
 	if (typeof session?.user.id !== 'number') {
 		throw redirect(
 			302,
@@ -101,6 +101,8 @@ export async function load(event) {
 			tokensCountInContext: 0,
 		},
 
+		browser,
+
 		newTopic: {
 			isCreating: false,
 		},
@@ -120,7 +122,6 @@ export async function load(event) {
 		window: {
 			innerWidth: 0,
 			innerHeight: 0,
-			userAgentFromHeader: event.request.headers.get('user-agent'),
 		},
 	} satisfies ChatStoreType
 }

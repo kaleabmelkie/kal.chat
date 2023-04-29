@@ -144,11 +144,12 @@
 
 <style lang="postcss">
 	article :global(pre) {
-		@apply overflow-hidden !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
+		@apply overflow-y-hidden !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
+
+		overflow-x: overlay;
+		scrollbar-color: rgb(255 255 255 / 0.1) transparent;
 	}
-	article :global(pre:hover),
-	article :global(pre:focus),
-	article :global(pre:active) {
-		overflow: overlay;
+	article :global(pre::-webkit-scrollbar-thumb) {
+		box-shadow: 12px 0 0 12px rgb(255 255 255 / 0.1) inset;
 	}
 </style>

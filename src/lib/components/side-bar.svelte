@@ -164,7 +164,7 @@
 					transition:slide|local={{ duration: 150 }}
 				>
 					<a
-						class="button group items-start rounded-none !shadow-none focus:!ring-0 active:bg-primary-300/50 dark:active:bg-primary-700/50 lg:px-6 {$page
+						class="button group items-start rounded-none !shadow-none backdrop-blur-0 focus:!ring-0 active:bg-primary-300/50 dark:active:bg-primary-700/50 lg:px-6 {$page
 							.url.pathname === `/topic/${topicHistory.id}`
 							? 'button-primary'
 							: 'bg-transparent'}"

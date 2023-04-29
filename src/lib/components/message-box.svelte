@@ -8,8 +8,7 @@
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { chatStore } from '$lib/stores/chat-store'
 	import type { NewMessageOkResponseBody } from '$lib/types/new-message-types'
-	import { maxTokensForUser, smallScreenThresholdInPx } from '$lib/utils/constants'
-	import Bowser from 'bowser'
+	import { maxTokensForUser } from '$lib/utils/constants'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 
@@ -111,10 +110,6 @@
 		}
 	}
 
-	$: userAgentParser = Bowser.getParser(
-		browser ? window.navigator.userAgent : $chatStore?.window.userAgentFromHeader || ' ',
-	)
-
 	function focusOnInput() {
 		if (messageBoxEle) {
 			messageBoxEle.focus()
@@ -196,9 +191,7 @@
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let recognition: any
 	$: isBlacklistedBrowserForVoiceInput =
-		userAgentParser.getOS().name === 'Android' ||
-		(userAgentParser.getOS().name === 'macOS' &&
-			userAgentParser.getBrowserName() === 'Microsoft Edge')
+		!$chatStore || $chatStore.browser.isAndroid || $chatStore.browser.isMicrosoftEdgeOnMacOS
 	$: isVoiceTypingSupported =
 		browser && 'webkitSpeechRecognition' in window && !isBlacklistedBrowserForVoiceInput
 	async function setUpVoiceTyping() {
