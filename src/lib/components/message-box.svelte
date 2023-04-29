@@ -272,7 +272,10 @@
 </script>
 
 <div
-	class="pointer-events-none sticky bottom-0 z-10 mt-[-7.25rem] bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6"
+	class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mt-[-7.25rem] bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6 {$chatStore
+		?.sideBar.isOpen
+		? 'sm:left-[18rem]'
+		: 'left-0'}"
 >
 	<div
 		class="mx-auto flex w-full max-w-[calc(4rem+56rem+4rem-3rem)] items-end gap-[calc(0.5rem+1px)]"
