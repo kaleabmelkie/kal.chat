@@ -68,7 +68,7 @@
 							on:click={async () => {
 								const text = articleEle?.textContent
 								if (text) {
-									await navigator.clipboard.writeText(text)
+									await navigator.clipboard.writeText(text.trim())
 									alert('Copied to clipboard!')
 									isOptionsExpanded = false
 								} else {
@@ -84,7 +84,7 @@
 							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
 							type="button"
 							on:click={async () => {
-								await navigator.clipboard.writeText(message.content)
+								await navigator.clipboard.writeText(message.content.trim())
 								alert('Copied to clipboard!')
 								isOptionsExpanded = false
 							}}
