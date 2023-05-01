@@ -117,11 +117,11 @@
 	}
 
 	async function sendNewMessage() {
-		if (!$chatStore) {
-			return
-		}
-
-		if ($chatStore.activeTopic.newMessage.queue.length) {
+		if (
+			!$chatStore ||
+			!$chatStore.activeTopic.newMessage.content ||
+			$chatStore.activeTopic.newMessage.queue.length
+		) {
 			return
 		}
 
