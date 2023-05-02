@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Message from '$lib/components/message.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
+	import { messagesCountInContext } from '$lib/utils/constants'
 	import { onDestroy, onMount } from 'svelte'
 
 	onMount(() => {
@@ -46,7 +47,7 @@
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
-	{#each messagesToShow as message (message.id)}
+	{#each messagesToShow as message, index (message.id)}
 		<Message
 			message={{
 				...message,
@@ -58,6 +59,7 @@
 			articleClassName={message.id === -1
 				? '!animate-pulse !bg-transparent !bg-none !px-0 !text-primary-600/75 !shadow-none dark:!text-primary-300/75'
 				: ''}
+			isInContextWindow={messagesToShow.length - index - 1 < messagesCountInContext}
 		/>
 	{/each}
 </ul>

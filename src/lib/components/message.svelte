@@ -11,6 +11,7 @@
 	export { className as class }
 	export let articleClassName = ''
 	export let message: ChatStoreType['activeTopic']['messages'][number]
+	export let isInContextWindow: boolean
 
 	let articleEle: HTMLElement | null = null
 	let isOptionsExpanded = false
@@ -32,10 +33,12 @@
 		</div>
 
 		<article
-			class="match-braces overflow-x-overlay prose relative w-full max-w-full rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-md shadow-primary-600/10 dark:shadow-black/10 {message.role ===
-			'user'
+			class="match-braces overflow-x-overlay prose relative w-full max-w-full rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-primary-600/10 dark:shadow-black/10 {isInContextWindow
+				? 'shadow-md'
+				: 'opacity-50'} {message.role === 'user'
 				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-950/90 dark:to-primary-700/75'
 				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-950 dark:from-black/50 dark:to-black/10 dark:text-white'} {articleClassName}"
+			title={isInContextWindow ? undefined : 'This message is outside the context window'}
 			bind:this={articleEle}
 		>
 			{@html message.content}
