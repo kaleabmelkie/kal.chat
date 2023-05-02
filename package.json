@@ -35,11 +35,11 @@
 		"@sveltejs/kit": "1.15.9",
 		"@tailwindcss/forms": "0.5.3",
 		"@tailwindcss/typography": "0.5.9",
-		"@types/marked": "4.0.8",
+		"@types/marked": "4.3.0",
 		"@types/node": "18.16.3",
 		"@types/sanitize-html": "2.9.0",
-		"@typescript-eslint/eslint-plugin": "5.59.1",
-		"@typescript-eslint/parser": "5.59.1",
+		"@typescript-eslint/eslint-plugin": "5.59.2",
+		"@typescript-eslint/parser": "5.59.2",
 		"autoprefixer": "10.4.14",
 		"bowser": "2.11.0",
 		"dayjs": "1.11.7",
@@ -62,7 +62,7 @@
 		"tailwindcss": "3.3.2",
 		"tslib": "2.5.0",
 		"typescript": "5.0.4",
-		"vite": "4.3.3"
+		"vite": "4.3.4"
 	},
 	"type": "module"
 }

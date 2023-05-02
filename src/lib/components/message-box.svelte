@@ -146,6 +146,7 @@
 				}),
 			})
 
+			// eslint-disable-next-line no-undef
 			let result: App.Error | NewMessageOkResponseBody | null = null
 			try {
 				result = await response.json()
@@ -154,6 +155,7 @@
 			}
 
 			if (!response.ok) {
+				// eslint-disable-next-line no-undef
 				throw new Error((result as App.Error)?.message ?? 'Unknown error')
 			} else {
 				$chatStore.activeTopic.messages = [
