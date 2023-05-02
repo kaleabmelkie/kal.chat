@@ -107,8 +107,11 @@
 </script>
 
 <div
-	class="relative h-full min-h-screen w-0 flex-shrink-0 overflow-visible transition-all sm:w-[18rem]"
-	transition:slide|local={{ duration: 150, axis: 'x' }}
+	class="relative z-20 h-full min-h-screen w-0 flex-shrink-0 overflow-visible transition-all sm:w-[18rem]"
+	transition:slide|local={{
+		duration: $chatStore && $chatStore.window.innerWidth < smallScreenThresholdInPx ? 0 : 150,
+		axis: 'x',
+	}}
 >
 	<div
 		class="overflow-y-overlay absolute z-20 h-full w-screen overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/20"
