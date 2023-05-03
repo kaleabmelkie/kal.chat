@@ -32,7 +32,7 @@
 		"@sentry/svelte": "7.50.0",
 		"@sentry/tracing": "7.50.0",
 		"@sveltejs/adapter-vercel": "2.4.3",
-		"@sveltejs/kit": "1.15.9",
+		"@sveltejs/kit": "1.15.10",
 		"@tailwindcss/forms": "0.5.3",
 		"@tailwindcss/typography": "0.5.9",
 		"@types/marked": "4.3.0",
