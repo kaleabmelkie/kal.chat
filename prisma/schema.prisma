@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["clientExtensions", "deno", "extendedWhereUnique", "fieldReference", "filteredRelationCount", "fullTextIndex", "fullTextSearch", "jsonProtocol", "metrics", "multiSchema", "orderByNulls", "postgresqlExtensions", "tracing", "views"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "orderByNulls", "filteredRelationCount", "fieldReference", "extendedWhereUnique", "jsonProtocol"]
 }
 
 datasource db {
