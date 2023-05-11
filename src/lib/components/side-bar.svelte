@@ -46,11 +46,8 @@
 		}, 150)
 	}
 
-	async function handleGenerateTitle(
-		topicHistory: ChatStoreType['topicsHistory'][number],
-		force: boolean,
-	) {
-		await fetch(`/topic/${topicHistory.id}/generate-title?force=${force}`, {
+	async function handleGenerateTitle(topicHistory: ChatStoreType['topicsHistory'][number]) {
+		await fetch(`/topic/${topicHistory.id}/generate-title?force=true`, {
 			method: 'PUT',
 		})
 			.then(async (r) => {
@@ -77,32 +74,13 @@
 				scrollToTop()
 			})
 			.catch((e) => {
-				if (force) {
-					alert(
-						`The title of the topic (ID: ${topicHistory.id}) could not be auto-generated.\n\n${
-							e?.message ?? 'Unknown error.'
-						}`,
-					)
-				} else {
-					console.error(e)
-				}
+				console.error(e)
+				alert(
+					`The title of the topic (ID: ${topicHistory.id}) could not be auto-generated.\n\n${
+						e?.message ?? 'Unknown error.'
+					}`,
+				)
 			})
-	}
-
-	async function generateTitleForUnnamedAndEligibleTopics() {
-		if (!$chatStore) {
-			return
-		}
-		for (const topic of $chatStore.topicsHistory) {
-			if (!topic.title && topic.messagesCount > 2) {
-				await handleGenerateTitle(topic, false)
-			}
-		}
-	}
-	$: activeTopicMessagesCount = $chatStore?.activeTopic.messages.length ?? 0
-	$: {
-		;[activeTopicMessagesCount] // deps
-		generateTitleForUnnamedAndEligibleTopics().catch(console.error)
 	}
 </script>
 
@@ -237,7 +215,7 @@
 											return
 										}
 										optionsExpandedForTopicId = null
-										handleGenerateTitle(topicHistory, true)
+										handleGenerateTitle(topicHistory)
 									}}
 								>
 									<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />

@@ -5,7 +5,7 @@
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import 'highlight.js/styles/github-dark.css'
-	import { fly } from 'svelte/transition'
+	import { fly, slide } from 'svelte/transition'
 
 	let className = ''
 	export { className as class }
@@ -17,7 +17,7 @@
 	let isOptionsExpanded = false
 </script>
 
-<li class="group flex {className}">
+<li class="group flex {className}" transition:slide={{ duration: 150 }}>
 	<div
 		class="relative grid max-w-screen-md gap-2 {message.role === 'user'
 			? 'ml-auto pl-8'
@@ -33,7 +33,7 @@
 		</div>
 
 		<article
-			class="match-braces overflow-x-overlay prose relative w-full max-w-full rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-primary-600/10 dark:shadow-black/10 {isInContextWindow
+			class="match-braces overflow-x-overlay prose relative w-full max-w-full overflow-y-hidden rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-primary-600/10 dark:shadow-black/10 {isInContextWindow
 				? 'shadow-md'
 				: 'opacity-50'} {message.role === 'user'
 				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-950/90 dark:to-primary-700/75'

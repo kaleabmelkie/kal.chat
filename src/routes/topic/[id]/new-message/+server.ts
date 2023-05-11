@@ -35,6 +35,10 @@ export async function POST(event) {
 					userId: session.user.id,
 				},
 			},
+			select: {
+				role: true,
+				content: true,
+			},
 			take: messagesCountInContext,
 			orderBy: {
 				id: 'desc',
@@ -100,6 +104,11 @@ export async function POST(event) {
 			data: {
 				updatedAt: new Date(),
 			},
+			select: {
+				id: true,
+				title: true,
+				updatedAt: true,
+			},
 		}),
 	])
 
@@ -115,13 +124,32 @@ export async function POST(event) {
 		select: { id: true, role: true, content: true },
 	})
 
+	if (!topic.title && oldMessages.length + 1 >= 2) {
+		const generateTitleResponse = (await (
+			await event.fetch(`/topic/${topic.id}/generate-title?force=false`, {
+				method: 'PUT',
+			})
+		).json()) as { title: string; updatedAt: string }
+
+		const updatedTopic = await prisma.topic.update({
+			where: {
+				id: data.topicId,
+			},
+			data: {
+				title: generateTitleResponse.title,
+			},
+		})
+		topic.updatedAt = updatedTopic.updatedAt
+		topic.title = updatedTopic.title
+	}
+
 	return json({
 		newMessages: newMessages.reverse().map((m) => ({
 			id: m.id,
 			role: m.role,
 			content: markdownToHtml(m.content),
 		})),
-
+		topicTitle: topic.title,
 		topicHistoryUpdatedAtIso: topic.updatedAt.toISOString(),
 	} satisfies NewMessageOkResponseBody)
 }

@@ -169,6 +169,9 @@
 					(t) => t.id === $chatStore?.activeTopic.id,
 				)
 				if (topicHistoryIndex >= 0) {
+					$chatStore.topicsHistory[topicHistoryIndex].title = (
+						result as NewMessageOkResponseBody
+					).topicTitle
 					$chatStore.topicsHistory[topicHistoryIndex].updatedAt = new Date(
 						(result as NewMessageOkResponseBody).topicHistoryUpdatedAtIso,
 					)
