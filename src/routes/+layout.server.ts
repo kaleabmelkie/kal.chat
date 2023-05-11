@@ -12,6 +12,6 @@ export async function load(event) {
 			isSafari: userAgentParser.getBrowserName() === 'Safari',
 		},
 
-		session: event.locals.getSession(),
+		session: event.locals.getSession() as Promise<EnhancedSessionType | null>,
 	}
 }

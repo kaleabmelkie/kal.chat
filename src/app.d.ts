@@ -1,17 +1,17 @@
 import type { Session } from '@auth/core/types'
 import type { UserPlanType } from '@prisma/client'
 
-type EnhancedSessionType = Session & {
-	user: {
-		id: number
-		name: string
-		email: string
-		image?: string | null
-		plan: UserPlanType
-	}
-}
-
 declare global {
+	type EnhancedSessionType = Session & {
+		user: {
+			id: number
+			name: string
+			email: string
+			image?: string | null
+			plan: UserPlanType
+		}
+	}
+
 	namespace App {
 		interface Error {
 			message: string
