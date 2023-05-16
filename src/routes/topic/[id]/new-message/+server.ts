@@ -124,7 +124,7 @@ export async function POST(event) {
 		select: { id: true, role: true, content: true },
 	})
 
-	if (!topic.title && oldMessages.length + 1 >= 2) {
+	if (!topic.title) {
 		const generateTitleResponse = (await (
 			await event.fetch(`/topic/${topic.id}/generate-title?force=false`, {
 				method: 'PUT',
