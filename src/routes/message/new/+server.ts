@@ -1,4 +1,4 @@
-import type { NewMessageOkResponseBody } from '$lib/types/new-message-types.js'
+import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { maxTokensForUser, messagesCountInContext, modelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'

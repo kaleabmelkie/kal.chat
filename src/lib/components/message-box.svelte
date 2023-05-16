@@ -7,7 +7,7 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { chatStore } from '$lib/stores/chat-store'
-	import type { NewMessageOkResponseBody } from '$lib/types/new-message-types'
+	import type { NewMessageOkResponseBody } from '$lib/types/message'
 	import { maxTokensForUser } from '$lib/utils/constants'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
@@ -135,7 +135,7 @@
 		dispatch('scrollToBottom')
 
 		try {
-			const response = await fetch(`/topic/${$page.params.id}/new-message`, {
+			const response = await fetch(`/message/new`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
