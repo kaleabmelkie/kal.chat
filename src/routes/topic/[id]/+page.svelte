@@ -157,7 +157,7 @@
 		</button>
 	{/if}
 
-	<div class="overflow-overlay relative h-screen flex-1">
+	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList />
 
 		<MessageBox on:scrollToBottom={() => scrollToBottom()} />

@@ -9,7 +9,6 @@ export async function load(event) {
 			isMicrosoftEdgeOnMacOS:
 				userAgentParser.getOS().name === 'macOS' &&
 				userAgentParser.getBrowserName() === 'Microsoft Edge',
-			isSafari: userAgentParser.getBrowserName() === 'Safari',
 		},
 
 		session: event.locals.getSession() as Promise<EnhancedSessionType | null>,

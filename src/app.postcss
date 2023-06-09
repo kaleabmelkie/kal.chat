@@ -10,6 +10,7 @@
 	-webkit-tap-highlight-color: transparent;
 }
 
+/*
 * {
 	scrollbar-color: rgb(0 0 0 / 0.1) transparent;
 	scrollbar-width: thin;
@@ -19,7 +20,6 @@
 		scrollbar-color: rgb(255 255 255 / 0.1) transparent;
 	}
 }
-
 *::-webkit-scrollbar {
 	@apply z-50 h-[12px] w-[12px];
 }
@@ -41,6 +41,7 @@
 		box-shadow: 12px 0 0 12px rgb(255 255 255 / 0.1) inset;
 	}
 }
+*/
 
 @layer components {
 	.button {
@@ -55,49 +56,4 @@
 }
 
 @layer utilities {
-	.overflow-overlay,
-	.overflow-overlay:hover,
-	.overflow-overlay:focus,
-	.overflow-overlay:active {
-		overflow: overlay;
-	}
-	@media (min-width: 640px) {
-		.overflow-overlay {
-			overflow: hidden;
-		}
-	}
-
-	.overflow-x-overlay,
-	.overflow-x-overlay:hover,
-	.overflow-x-overlay:focus,
-	.overflow-x-overlay:active {
-		overflow-x: overlay;
-	}
-	@media (min-width: 640px) {
-		.overflow-x-overlay {
-			overflow-x: hidden;
-		}
-	}
-
-	.overflow-y-overlay,
-	.overflow-y-overlay:hover,
-	.overflow-y-overlay:focus,
-	.overflow-y-overlay:active {
-		overflow-y: overlay;
-	}
-	@media (min-width: 640px) {
-		.overflow-y-overlay {
-			overflow-y: hidden;
-		}
-	}
-
-	.browser-safari .overflow-overlay {
-		overflow: auto;
-	}
-	.browser-safari .overflow-x-overlay {
-		overflow-x: auto;
-	}
-	.browser-safari .overflow-y-overlay {
-		overflow-y: auto;
-	}
 }

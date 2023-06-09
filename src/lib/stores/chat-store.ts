@@ -19,7 +19,6 @@ export type ChatStoreType = {
 	browser: {
 		isAndroid: boolean
 		isMicrosoftEdgeOnMacOS: boolean
-		isSafari: boolean
 	}
 
 	newTopic: {

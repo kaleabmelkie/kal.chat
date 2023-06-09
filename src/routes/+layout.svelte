@@ -4,8 +4,6 @@
 	import { dev } from '$app/environment'
 	import { page, updated } from '$app/stores'
 	import Header from '$lib/components/header.svelte'
-
-	export let data
 </script>
 
 <svelte:head>
@@ -20,10 +18,7 @@
 </svelte:head>
 
 <main
-	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/5 dark:to-primary-950/40 {data
-		.browser.isSafari
-		? 'browser-safari'
-		: ''}"
+	class="bg-gradient-to-t from-primary-50 to-primary-100 bg-fixed dark:from-primary-950/5 dark:to-primary-950/40"
 	data-sveltekit-reload={$updated ? '' : 'off'}
 >
 	<div
