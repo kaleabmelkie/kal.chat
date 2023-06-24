@@ -3,6 +3,7 @@ import { countTokens } from '$lib/utils/count-tokens'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
+import type { CreateChatCompletionResponse } from 'openai-edge'
 
 export async function PUT({ locals, params, url }) {
 	const session = await locals.getSession()
@@ -50,17 +51,19 @@ export async function PUT({ locals, params, url }) {
 	}
 	messagesToAnalyze = messagesToAnalyze.reverse()
 
-	const chatCompletionResponse = await openai.createChatCompletion({
-		model: modelName,
-		messages: [
-			...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
-			{
-				role: 'system',
-				content: prompt,
-			},
-		],
-	})
-	const newTitle = chatCompletionResponse.data.choices
+	const chatCompletionResponse: CreateChatCompletionResponse = await (
+		await openai.createChatCompletion({
+			model: modelName,
+			messages: [
+				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
+				{
+					role: 'system',
+					content: prompt,
+				},
+			],
+		})
+	).json()
+	const newTitle = chatCompletionResponse.choices
 		?.map((c) => c.message?.content ?? '')
 		.join('')
 		.replace(/Chat Intro: /i, '')

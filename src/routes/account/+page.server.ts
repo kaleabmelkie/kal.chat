@@ -1,19 +1,8 @@
 import { authHookConfig } from '$lib/hooks/auth-hook.server'
 import { prisma } from '$lib/utils/prisma.server'
+import type { OAuth2Config, OIDCConfig } from '@auth/core/providers/oauth.js'
+import type { Profile } from '@auth/core/types.js'
 import { redirect } from '@sveltejs/kit'
-
-/**
- * A clone (copy/paste) from '@auth/core/src/providers/oauth'
- * It was cloned because 'svelte-check' was complaining
- */
-interface OAuthProviderButtonStyles {
-	logo: string
-	logoDark: string
-	bg: string
-	bgDark: string
-	text: string
-	textDark: string
-}
 
 export async function load(event) {
 	const { session } = await event.parent()
@@ -28,12 +17,16 @@ export async function load(event) {
 	return {
 		redirectTo,
 		providers: authHookConfig.providers
-			.filter((p) => p.type === 'oauth' || p.type === 'oidc')
+			.filter(
+				(p) =>
+					(p as OAuth2Config<Profile>).type === 'oauth' ||
+					(p as OIDCConfig<Profile>).type === 'oidc',
+			)
 			.map((p) => ({
-				id: p.id,
-				name: p.name,
-				type: p.type,
-				style: (p as typeof p & { style?: OAuthProviderButtonStyles }).style,
+				id: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).id,
+				name: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).name,
+				type: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).type,
+				style: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).style,
 			})),
 		topicsCount:
 			typeof session?.user.id !== 'number'

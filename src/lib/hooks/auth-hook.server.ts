@@ -28,24 +28,30 @@ export const authHookConfig: SvelteKitAuthConfig = {
 
 	callbacks: {
 		signIn: async (params) => {
-			if (!params.user.email) {
+			if (!params.profile?.email) {
 				throw new Error(
 					`Email not found in your ${params.account?.provider ?? `login provider's`} account`,
 				)
 			}
 			await prisma.user.upsert({
 				where: {
-					email: params.user.email,
+					email: params.profile.email,
 				},
 				create: {
-					name: params.user.name ?? 'User',
-					email: params.user.email,
-					image: params.user.image ?? null,
+					name: params.profile.name ?? 'User',
+					email: params.profile.email,
+					image:
+						params.profile.picture ?? // google
+						params.profile.avatar_url ?? // github
+						null,
 				},
 				update: {
-					name: params.user.name ?? 'User',
-					email: params.user.email,
-					image: params.user.image ?? null,
+					name: params.profile.name ?? 'User',
+					email: params.profile.email,
+					image:
+						params.profile.picture ?? // google
+						params.profile.avatar_url ?? // github
+						null,
 				},
 			})
 			return true

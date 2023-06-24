@@ -1,5 +1,5 @@
 import { OPENAI_API_KEY } from '$env/static/private'
-import { Configuration, OpenAIApi } from 'openai'
+import { Configuration, OpenAIApi } from 'openai-edge'
 
 export const openai = new OpenAIApi(
 	new Configuration({
