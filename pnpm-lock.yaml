@@ -59,9 +59,6 @@ devDependencies:
   bowser:
     specifier: 2.11.0
     version: 2.11.0
-  cal-sans:
-    specifier: 1.0.1
-    version: 1.0.1
   dayjs:
     specifier: 1.11.8
     version: 1.11.8
@@ -1104,10 +1101,6 @@ packages:
     engines: {node: '>=10.16.0'}
     dependencies:
       streamsearch: 1.1.0
-    dev: true
-
-  /cal-sans@1.0.1:
-    resolution: {integrity: sha512-XwN3/7jez8WmFVcNnNqO2K9lh133KiIcURCyGFnSM+ZmNZ8zIcOTNfr3SpenLAkRceYsq+fQNX/PL4C1rIkEPQ==}
     dev: true
 
   /callsites@3.1.0:
