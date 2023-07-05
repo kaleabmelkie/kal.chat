@@ -59,14 +59,11 @@
 
 				{#if isOptionsExpanded}
 					<div
-						class="absolute top-14 z-50 grid w-max transform-gpu rounded-[1rem] bg-white/95 p-2 shadow-lg shadow-primary-900/20 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30 {message.role ===
-						'user'
-							? 'left-0 -ml-2'
-							: 'right-0 -mr-2'}"
+						class="drop-down top-14 {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
 						transition:fly|local={{ duration: 150, y: -16 }}
 					>
 						<button
-							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+							class="drop-down-item"
 							type="button"
 							on:click={async () => {
 								const text = articleEle?.textContent
@@ -84,7 +81,7 @@
 						</button>
 
 						<button
-							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+							class="drop-down-item"
 							type="button"
 							on:click={async () => {
 								await navigator.clipboard.writeText(message.content.trim())
@@ -97,7 +94,7 @@
 						</button>
 
 						<button
-							class="flex items-center gap-3 rounded-[calc(1rem-0.5rem/2)] py-3 pl-3 pr-6 text-left text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+							class="drop-down-item drop-down-item-danger"
 							type="button"
 							on:click={async () => {
 								if (!$chatStore) {

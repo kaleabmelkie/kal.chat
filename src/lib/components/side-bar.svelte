@@ -197,13 +197,13 @@
 					</a>
 					{#if optionsExpandedForTopicId === topicHistory.id}
 						<div
-							class="absolute right-4 top-9 z-50 flex transform-gpu flex-col rounded-2xl bg-white/95 p-2 shadow-lg shadow-primary-600/10 backdrop-blur dark:bg-primary-950/95 dark:shadow-black/30"
+							class="drop-down right-2 top-9 lg:right-4"
 							transition:fly|local={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
 							{#if topicHistory.messagesCount > 2}
 								<button
-									class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+									class="drop-down-item"
 									type="button"
 									on:click={() => {
 										if (
@@ -224,7 +224,7 @@
 							{/if}
 
 							<button
-								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+								class="drop-down-item"
 								type="button"
 								on:click={async () => {
 									const newTitle = prompt('New topic title:')
@@ -263,7 +263,7 @@
 							</button>
 
 							<button
-								class="flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-red-500/95 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900"
+								class="drop-down-item drop-down-item-danger"
 								type="button"
 								on:click={async () => {
 									if (!confirm('Are you sure you want to delete this topic?')) {

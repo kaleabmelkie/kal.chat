@@ -45,13 +45,24 @@
 
 @layer components {
 	.button {
-		@apply flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/80 px-4 py-3 font-semibold text-primary-600 shadow-sm shadow-primary-600/5 ring-primary-300 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white active:shadow-none active:ring-4 disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/80 dark:text-primary-300 dark:shadow-primary-950/20 dark:ring-primary-600/50 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950 dark:active:ring-4 dark:disabled:bg-primary-950/50;
+		@apply flex flex-shrink-0 transform-gpu items-center justify-center gap-2 rounded-[1.75rem] bg-white/80 px-4 py-3 font-semibold text-primary-600 shadow-sm shadow-primary-600/5 ring-primary-300/50 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white active:shadow-none active:ring-4 disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/80 dark:text-primary-300 dark:shadow-primary-950/20 dark:ring-primary-600/50 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950 dark:disabled:bg-primary-950/50;
 	}
 	.button-primary {
 		@apply bg-primary-600/80 text-primary-50 hover:bg-primary-600/95 focus:bg-primary-600/95 active:bg-primary-600 disabled:bg-primary-600/50;
 	}
 	.button-danger {
 		@apply bg-red-50/80 text-red-600 shadow-red-600/5 ring-red-300 hover:bg-red-50/95 hover:shadow-red-600/10 focus:bg-red-50/95 active:bg-red-50 disabled:bg-red-50/50 dark:bg-red-950/80 dark:text-red-300 dark:shadow-red-950/20 dark:ring-red-600/50 dark:hover:bg-red-950/95 dark:focus:bg-red-950/95 dark:active:bg-red-950 dark:active:ring-4 dark:disabled:bg-red-950/50;
+	}
+
+	.drop-down {
+		@apply absolute z-50 flex w-max transform-gpu flex-col rounded-2xl bg-white/80 p-2 shadow-lg shadow-primary-600/10 ring-4 ring-primary-300/50 backdrop-blur-lg dark:bg-primary-950/80 dark:shadow-black/30 dark:ring-primary-600/50;
+	}
+
+	.drop-down-item {
+		@apply flex items-center gap-3 rounded-xl py-3 pl-3 pr-6 text-sm font-medium text-black/75 transition-all hover:bg-primary-100/50 focus:bg-primary-100/50 active:bg-primary-100 dark:text-white/75 dark:hover:bg-primary-900/50 dark:focus:bg-primary-900/50 dark:active:bg-primary-900;
+	}
+	.drop-down-item-danger {
+		@apply text-red-500/95 hover:bg-red-100/50 focus:bg-red-100/50 active:bg-red-100 dark:hover:bg-red-900/50 dark:focus:bg-red-900/50 dark:active:bg-red-900;
 	}
 }
 
