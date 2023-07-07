@@ -393,12 +393,12 @@
 			0} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
 	>
 		<a
-			class="pointer-events-auto text-primary-900/75 underline-offset-2 hover:underline dark:text-primary-100/75 lg:left-6"
+			class="pointer-events-auto font-semibold text-primary-700/75 underline-offset-2 hover:underline dark:text-primary-400/75 lg:left-6"
 			href="mailto:support@kal.chat?subject=Feedback"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"
 		>
-			Send Feedback
+			Send Feedback 💡
 		</a>
 		<span class="flex-1" />
 		{#if $chatStore && $chatStore.activeTopic.tokensCountInContext > 0}
