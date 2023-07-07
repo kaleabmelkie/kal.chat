@@ -8,11 +8,11 @@
 	class="pointer-events-none fixed left-0 right-0 top-0 z-30 flex justify-center gap-3 p-4 lg:px-6"
 >
 	<h1
-		class="relative grid h-11 bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent dark:from-primary-600/95 dark:to-primary-400/95"
+		class="relative grid h-11 items-center bg-gradient-to-tr from-primary-700/95 to-primary-500/95 bg-clip-text text-2xl font-black text-transparent dark:from-primary-600/95 dark:to-primary-400/95"
 	>
 		<a class="pointer-events-auto" href="/" title="Go home">kal.chat</a>
 		<a
-			class="pointer-events-auto absolute -bottom-2 right-0 text-[0.7rem] font-normal text-emerald-600"
+			class="pointer-events-auto right-0 text-[0.7rem] font-medium leading-[0.75rem] text-emerald-600"
 			href="/"
 			title="BEWARE: THERE WILL BE BUGS! 🤷‍♂️"
 		>

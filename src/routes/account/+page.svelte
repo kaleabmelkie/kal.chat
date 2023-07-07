@@ -209,8 +209,8 @@
 			{/each}
 			<div />
 			<div />
-			<p class="text-sm opacity-60">
-				Issues logging in? Contact <a
+			<p class="text-sm opacity-75 transition-all hover:opacity-100">
+				Need help? Contact <a
 					class="font-semibold text-primary-700 hover:underline dark:text-primary-400"
 					href="mailto:support@kal.chat"
 					target="_blank">support@kal.chat</a
