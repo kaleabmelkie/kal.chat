@@ -27,7 +27,7 @@
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore (because `.plan` is not using the `EnhancedSession` definition from `app.d.ts`)
 			$page.data.session.user.plan}
-		{#if !['paid', 'sponsored'].includes(plan)}
+		{#if !['paid'].includes(plan)}
 			<a
 				class="lemonsqueezy-button button button-primary pointer-events-auto py-2 text-sm"
 				href="https://checkout.kal.chat/checkout/buy/77494bec-e48e-4193-b08d-fb5816326a1f?embed=1&dark=1&button_color={encodeURIComponent(
@@ -37,8 +37,11 @@
 					: ''}{$page.data.session.user?.email
 					? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`
 					: ''}"
-				on:click={() =>
-					alert(`Upgrading to Pro gives you access to GPT-4 🎉\nYour current plan is: ${plan}`)}
+				on:click={() => {
+					alert(
+						`Upgrading to Pro gives you a paid premium access to GPT-4  🎉\nYour current plan is: ${plan}`,
+					)
+				}}
 			>
 				<span class="text-lg">✨</span>
 				<span class="pr-2">Upgrade to Pro</span>
