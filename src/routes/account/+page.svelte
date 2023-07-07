@@ -24,14 +24,29 @@
 					Name
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{data.session?.user?.name ?? 'Unknown name'}
+					{data.session?.user.name ?? 'Unknown name'}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
 					Email
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{data.session?.user?.email ?? 'Unknown email'}
+					{data.session?.user.email ?? 'Unknown email'}
+				</span>
+
+				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
+					Plan
+				</span>
+				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
+					{@html data.session?.user.plan === 'free'
+						? '<strong>Free</strong> user (GPT-3.5) &nbsp;👀'
+						: data.session?.user.plan === 'paid'
+						? '<strong>Pro</strong> user (GPT-4) &nbsp;🎉'
+						: data.session?.user.plan === 'grace'
+						? '<strong>Grace</strong> period (GPT-4)<br/>Downgrading to free user soon &nbsp;🫤'
+						: data.session?.user.plan === 'sponsored'
+						? '<strong>Sponsored pro</strong> user (GPT-4)<br/>Paid for by Kaleab &nbsp;🎁'
+						: data.session?.user.plan}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">

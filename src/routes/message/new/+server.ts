@@ -1,5 +1,10 @@
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
-import { maxTokensForUser, messagesCountInContext, modelName } from '$lib/utils/constants'
+import {
+	maxTokensForUser,
+	messagesCountInContext,
+	modelName,
+	nonFreeUserModelName,
+} from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
@@ -78,7 +83,7 @@ export async function POST(event) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openai.createChatCompletion({
-			model: modelName,
+			model: session.user.plan === 'free' ? modelName : nonFreeUserModelName,
 			messages: recentRequestMessages,
 			n: 1,
 			stream: false,
