@@ -15,7 +15,7 @@
 </svelte:head>
 
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
-	<div class="grid w-full max-w-xs gap-4">
+	<div class="grid w-full max-w-sm gap-4">
 		{#if $page.data.session}
 			<h2 class="text-2xl">Your Account</h2>
 
@@ -207,6 +207,15 @@
 					<div class="flex-1 pr-10 text-center">{provider.name}</div>
 				</button>
 			{/each}
+			<div />
+			<div />
+			<p class="text-sm opacity-60">
+				Issues logging in? Contact <a
+					class="font-semibold text-primary-700 hover:underline dark:text-primary-400"
+					href="mailto:support@kal.chat"
+					target="_blank">support@kal.chat</a
+				>
+			</p>
 		{/if}
 	</div>
 </div>
