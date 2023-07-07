@@ -64,7 +64,7 @@
 			{/if}
 
 			<div class="pointer-events-auto my-auto hidden sm:grid">
-				<div class="text-xs font-normal uppercase text-primary-900/75 dark:text-primary-100/75">
+				<div class="text-xs font-medium uppercase text-primary-900/75 dark:text-primary-100/75">
 					Logged in as
 				</div>
 				<div

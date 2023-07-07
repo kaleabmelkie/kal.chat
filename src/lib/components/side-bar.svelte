@@ -165,7 +165,7 @@
 									? 'italic'
 									: ''} {$page.url.pathname === `/topic/${topicHistory.id}`
 									? 'font-semibold'
-									: 'font-normal'}"
+									: 'font-medium'}"
 							>
 								{topicHistory.title ?? 'New topic'}
 							</div>
