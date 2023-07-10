@@ -132,6 +132,8 @@
 		await tick()
 
 		shouldScrollToBottom = true
+		await tick()
+		setTimeout(() => (shouldScrollToBottom = true), 150)
 
 		try {
 			const response = await fetch(`/message/new`, {
@@ -185,6 +187,8 @@
 			await tick()
 
 			shouldScrollToBottom = true
+			await tick()
+			setTimeout(() => (shouldScrollToBottom = true), 150)
 		} catch (error) {
 			console.error('New message error:', error)
 			alert(`Error: ${(error as Error).message}`)
