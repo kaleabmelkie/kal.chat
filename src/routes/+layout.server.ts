@@ -5,7 +5,7 @@ export async function load(event) {
 
 	return {
 		browser: {
-			isMobile: userAgentParser.getPlatformType(true) === 'mobile',
+			isDesktop: userAgentParser.getPlatformType(true) === 'desktop',
 			isAndroid: userAgentParser.getOS().name === 'Android',
 			isMicrosoftEdgeOnMacOS:
 				userAgentParser.getOS().name === 'macOS' &&

@@ -17,6 +17,7 @@ export type ChatStoreType = {
 	}
 
 	browser: {
+		isDesktop: boolean
 		isAndroid: boolean
 		isMicrosoftEdgeOnMacOS: boolean
 	}

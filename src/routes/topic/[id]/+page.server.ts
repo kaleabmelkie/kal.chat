@@ -108,7 +108,7 @@ export async function load(event) {
 		},
 
 		sideBar: {
-			isOpen: browser.isMobile ? false : loggedInUser.prefersSideBarOpen,
+			isOpen: browser.isDesktop ? loggedInUser.prefersSideBarOpen : false,
 			prefersOpen: loggedInUser.prefersSideBarOpen,
 		},
 

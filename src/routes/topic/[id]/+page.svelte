@@ -12,13 +12,7 @@
 
 	export let data
 
-	$: $chatStore = {
-		...data,
-		sideBar: {
-			...data.sideBar,
-			isOpen: $chatStore?.sideBar.isOpen ?? data.sideBar.isOpen,
-		},
-	}
+	$: $chatStore = data
 
 	onMount(async () => {
 		await handleDataChange()

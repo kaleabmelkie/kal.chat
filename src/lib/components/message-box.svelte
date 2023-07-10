@@ -315,7 +315,9 @@
 					placeholder={$chatStore.activeTopic.newMessage.isVoiceTyping
 						? 'Listening...'
 						: 'Ask me anything...'}
-					title="For a new line, use any one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter"
+					title={$chatStore?.browser.isDesktop
+						? 'For a new line, use any one of Shift+Enter, Ctrl/Cmd+Enter, or Alt/Option+Enter'
+						: undefined}
 					maxlength={15000}
 					autocapitalize="sentences"
 					autocorrect="on"
@@ -332,7 +334,10 @@
 							return
 						}
 						if (e.key === 'Enter') {
-							if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) {
+							const isDesktop = $chatStore.browser.isDesktop
+							const isAnExtraKeyHeld = e.shiftKey || e.metaKey || e.ctrlKey || e.altKey
+							if ((isDesktop && isAnExtraKeyHeld) || (!isDesktop && !isAnExtraKeyHeld)) {
+								// prevent submission and do new line
 								e.preventDefault()
 								const cursorPosition = e.currentTarget.selectionStart
 								$chatStore.activeTopic.newMessage.content = `${$chatStore.activeTopic.newMessage.content.slice(
