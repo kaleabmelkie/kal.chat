@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
+	import { goto, invalidateAll } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
 	import ArrowRightSvg from '$lib/icons/arrow-right.svg.svelte'
@@ -206,7 +206,7 @@
 								<button
 									class="drop-down-item"
 									type="button"
-									on:click={() => {
+									on:click={async () => {
 										if (
 											topic.title &&
 											!confirm(
@@ -216,7 +216,7 @@
 											return
 										}
 										optionsExpandedForTopicId = null
-										handleGenerateTitle(topic)
+										await handleGenerateTitle(topic)
 									}}
 								>
 									<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
@@ -285,11 +285,14 @@
 													}`,
 												)
 											}
-											$chatStore.topicsHistory = $chatStore.topicsHistory.filter(
-												(t) => t.id !== topic.id,
-											)
+											$chatStore.topicsHistory = [
+												...$chatStore.topicsHistory.filter((t) => t.id !== topic.id),
+											]
+											$chatStore = $chatStore
 											if ($chatStore.activeTopic.id === topic.id) {
 												await goto('/topic/latest')
+											} else {
+												await invalidateAll()
 											}
 										})
 										.catch((e) =>
