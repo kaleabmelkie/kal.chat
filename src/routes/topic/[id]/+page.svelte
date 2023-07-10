@@ -158,7 +158,7 @@
 	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList />
 
-		<MessageBox on:scrollToBottom={() => (shouldScrollToBottom = true)} />
+		<MessageBox bind:shouldScrollToBottom />
 
 		<div bind:this={bottomEle} />
 	</div>

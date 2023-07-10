@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /build
+/.husky
 /.svelte-kit
 /package
 .env
@@ -10,6 +11,7 @@ node_modules
 /static/~partytown
 .vscode
 .vercel
+.*
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
