@@ -16,7 +16,7 @@
 		"prepare": "husky install",
 		"sync": "svelte-kit sync",
 		"dev": "prisma generate && svelte-kit sync && vite dev --port 5173 --open",
-		"build": "prisma generate && svelte-kit sync && vite build",
+		"build": "prisma generate && svelte-kit sync && vite build && node scripts/update-vercel-config",
 		"preview": "vite preview --port 5173",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

@@ -11,6 +11,8 @@ node_modules
 /static/~partytown
 .vscode
 .vercel
+*.postcss
+*.css
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
