@@ -9,7 +9,7 @@
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
-	import { onDestroy, onMount, tick } from 'svelte'
+	import { afterUpdate, onDestroy, onMount } from 'svelte'
 	import { fade, fly, slide } from 'svelte/transition'
 
 	onMount(() => {
@@ -18,11 +18,22 @@
 		}, 1000) as unknown as number
 	})
 
+	afterUpdate(() => {
+		if (shouldScrollToTop) {
+			shouldScrollToTop = false
+			topEle?.scrollIntoView({ behavior: 'smooth' })
+		}
+	})
+
 	onDestroy(() => {
 		if (minuteInterval !== null) {
 			clearInterval(minuteInterval)
 		}
 	})
+
+	$: topics = $chatStore?.topicsHistory?.sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1)) ?? []
+
+	let shouldScrollToTop = false
 
 	let minuteInterval: number | null = null
 	let minuteKey = Date.now()
@@ -32,20 +43,6 @@
 	let topEle: HTMLDivElement | null = null
 	let isAtTheTop = true
 
-	async function scrollToTop() {
-		if (!topEle) {
-			return
-		}
-		topEle.scrollIntoView({ behavior: 'smooth' })
-		await tick()
-		setTimeout(() => {
-			if (!topEle) {
-				return
-			}
-			topEle.scrollIntoView({ behavior: 'smooth' })
-		}, 150)
-	}
-
 	async function handleGenerateTitle(topicHistory: ChatStoreType['topicsHistory'][number]) {
 		await fetch(`/topic/${topicHistory.id}/generate-title?force=true`, {
 			method: 'PUT',
@@ -54,6 +51,7 @@
 				if (!$chatStore) {
 					return
 				}
+
 				if (!r.ok) {
 					throw new Error(
 						`${r.statusText} (${r.status}): ${(await r.json())?.message ?? 'Unknown'}`,
@@ -63,15 +61,19 @@
 				if (typeof response?.title !== 'string') {
 					throw new Error(`Expected a title but did not get one.`)
 				}
-				topicHistory.updatedAt = response.updatedAt
+
 				const topicHistoryIndex = $chatStore.topicsHistory.findIndex(
 					(t) => t.id === topicHistory.id,
 				)
-				if (topicHistoryIndex !== -1) {
-					$chatStore.topicsHistory[topicHistoryIndex].title = response.title
-					$chatStore.topicsHistory[topicHistoryIndex].updatedAt = response.updatedAt
+				if (topicHistoryIndex === -1) {
+					throw new Error(`Could not find topic history with ID ${topicHistory.id}.`)
 				}
-				scrollToTop()
+
+				$chatStore.topicsHistory[topicHistoryIndex].title = response.title
+				$chatStore.topicsHistory[topicHistoryIndex].updatedAt = response.updatedAt
+				$chatStore = $chatStore
+
+				shouldScrollToTop = true
 			})
 			.catch((e) => {
 				console.error(e)
@@ -96,9 +98,10 @@
 		on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
 		transition:fly|local={{ duration: 150, x: -32 }}
 	>
+		<div class="mt-[-4.75rem]" bind:this={topEle} />
+
 		<div
 			class="sticky top-[-4.75rem] z-10 -mt-[4.75rem] h-[4.75rem] bg-gradient-to-b from-primary-100 dark:from-black"
-			bind:this={topEle}
 		/>
 
 		<div class="pointer-events-none sticky top-0 z-10 flex items-center p-4 lg:px-6">
@@ -138,18 +141,18 @@
 		</div>
 
 		<ul>
-			{#each $chatStore?.topicsHistory ?? [] as topicHistory (topicHistory.id)}
+			{#each topics ?? [] as topic (topic)}
 				<li
 					class="relative"
-					title={topicHistory.title ?? undefined}
+					title={topic.title ?? undefined}
 					transition:slide|local={{ duration: 150 }}
 				>
 					<a
 						class="button group items-start rounded-none !shadow-none backdrop-blur-none lg:px-6 {$page
-							.url.pathname === `/topic/${topicHistory.id}`
+							.url.pathname === `/topic/${topic.id}`
 							? 'button-primary'
 							: 'bg-transparent'}"
-						href="/topic/{topicHistory.id}"
+						href="/topic/{topic.id}"
 						on:click={() => {
 							if (!$chatStore) {
 								return
@@ -161,53 +164,51 @@
 					>
 						<div class="flex-1">
 							<div
-								class="line-clamp-2 text-sm saturate-[75%] {!topicHistory.title
-									? 'italic'
-									: ''} {$page.url.pathname === `/topic/${topicHistory.id}`
+								class="line-clamp-2 text-sm saturate-[75%] {!topic.title ? 'italic' : ''} {$page.url
+									.pathname === `/topic/${topic.id}`
 									? 'font-semibold'
 									: 'font-medium'}"
 							>
-								{topicHistory.title ?? 'New topic'}
+								{topic.title ?? 'New topic'}
 							</div>
 							{#key minuteKey}
 								<div
 									class="text-xs font-normal opacity-60"
-									title="Last message in this topic was sent on {dayjs(
-										topicHistory.updatedAt,
-									).format('MMMM DD, YYYY hh:mm A')}"
+									title="Last message in this topic was sent on {dayjs(topic.updatedAt).format(
+										'MMMM DD, YYYY hh:mm A',
+									)}"
 								>
-									<span>{dayjs(topicHistory.updatedAt).fromNow()}</span>,
+									<span>{dayjs(topic.updatedAt).fromNow()}</span>,
 									<span title="Messages in this topic plus the system prompt.">
-										{topicHistory.messagesCount}
-										{topicHistory.messagesCount === 1 ? 'message' : 'messages'}
+										{topic.messagesCount}
+										{topic.messagesCount === 1 ? 'message' : 'messages'}
 									</span>
 								</div>
 							{/key}
 						</div>
 						<button
 							class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
-							topicHistory.id
+							topic.id
 								? '-mt-2 animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
 								: ''}"
-							on:click|preventDefault|stopPropagation={() =>
-								(optionsExpandedForTopicId = topicHistory.id)}
+							on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
 						>
 							<MoreVerticalSvg class="h-4 w-4" />
 						</button>
 					</a>
-					{#if optionsExpandedForTopicId === topicHistory.id}
+					{#if optionsExpandedForTopicId === topic.id}
 						<div
 							class="drop-down right-2 top-9 lg:right-4"
 							transition:fly|local={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
-							{#if topicHistory.messagesCount > 2}
+							{#if topic.messagesCount > 2}
 								<button
 									class="drop-down-item"
 									type="button"
 									on:click={() => {
 										if (
-											topicHistory.title &&
+											topic.title &&
 											!confirm(
 												'This topic already has a title. Are you sure you want to auto-regenerate it?',
 											)
@@ -215,11 +216,11 @@
 											return
 										}
 										optionsExpandedForTopicId = null
-										handleGenerateTitle(topicHistory)
+										handleGenerateTitle(topic)
 									}}
 								>
 									<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
-									<span>{topicHistory.title ? 'Regenerate' : 'Generate'} title with AI</span>
+									<span>{topic.title ? 'Regenerate' : 'Generate'} title with AI</span>
 								</button>
 							{/if}
 
@@ -233,7 +234,7 @@
 										return
 									}
 									optionsExpandedForTopicId = null
-									await fetch(`/topic/${topicHistory.id}/change-title`, {
+									await fetch(`/topic/${topic.id}/change-title`, {
 										method: 'PUT',
 										body: JSON.stringify({
 											title: newTitle,
@@ -247,11 +248,11 @@
 													}`,
 												)
 											}
-											topicHistory.title = newTitle
+											topic.title = newTitle
 										})
 										.catch((e) =>
 											alert(
-												`The title of the topic (ID: ${topicHistory.id}) could not be changed.\n\n${
+												`The title of the topic (ID: ${topic.id}) could not be changed.\n\n${
 													e?.message ?? 'Unknown error.'
 												}`,
 											),
@@ -259,7 +260,7 @@
 								}}
 							>
 								<EditSvg class="h-5 w-5 text-primary-600/90 dark:text-primary-400/90" />
-								<span>{topicHistory.title ? 'Change' : 'Set'} title</span>
+								<span>{topic.title ? 'Change' : 'Set'} title</span>
 							</button>
 
 							<button
@@ -270,7 +271,7 @@
 										return
 									}
 									optionsExpandedForTopicId = null
-									await fetch(`/topic/${topicHistory.id}/delete`, {
+									await fetch(`/topic/${topic.id}/delete`, {
 										method: 'DELETE',
 									})
 										.then(async (r) => {
@@ -285,15 +286,15 @@
 												)
 											}
 											$chatStore.topicsHistory = $chatStore.topicsHistory.filter(
-												(t) => t.id !== topicHistory.id,
+												(t) => t.id !== topic.id,
 											)
-											if ($chatStore.activeTopic.id === topicHistory.id) {
+											if ($chatStore.activeTopic.id === topic.id) {
 												await goto('/topic/latest')
 											}
 										})
 										.catch((e) =>
 											alert(
-												`Topic (ID: ${topicHistory.id}) could not be deleted.\n\n${
+												`Topic (ID: ${topic.id}) could not be deleted.\n\n${
 													e?.message ?? 'Unknown error.'
 												}`,
 											),

@@ -47,7 +47,7 @@
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
-	{#each messagesToShow as message, index (message.id)}
+	{#each messagesToShow as message, index (message)}
 		<Message
 			message={{
 				...message,

@@ -130,9 +130,9 @@
 		$chatStore.activeTopic.newMessage.queue = [$chatStore.activeTopic.newMessage.content]
 		$chatStore.activeTopic.newMessage.content = ''
 
-		await tick()
-
 		dispatch('scrollToBottom')
+
+		await tick()
 
 		try {
 			const response = await fetch(`/message/new`, {
