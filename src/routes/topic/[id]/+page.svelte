@@ -7,7 +7,7 @@
 	import { chatStore } from '$lib/stores/chat-store'
 	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { countTokens } from '$lib/utils/count-tokens'
-	import { afterUpdate, onDestroy, onMount, tick } from 'svelte'
+	import { onDestroy, onMount, tick } from 'svelte'
 	import { fly } from 'svelte/transition'
 
 	export let data
@@ -24,18 +24,9 @@
 		await handleDataChange()
 	})
 
-	afterUpdate(() => {
-		if (shouldScrollToBottom) {
-			shouldScrollToBottom = false
-			bottomEle?.scrollIntoView({ behavior: 'smooth' })
-		}
-	})
-
 	onDestroy(() => {
 		$chatStore = null
 	})
-
-	let shouldScrollToBottom = false
 
 	async function handleDataChange() {
 		await tick()
@@ -44,7 +35,7 @@
 			return
 		}
 
-		shouldScrollToBottom = true
+		scrollToBottom()
 
 		if (
 			!$chatStore.sideBar.isOpen &&
@@ -105,6 +96,17 @@
 		triggerTokenCount()
 	}
 
+	async function scrollToBottom(repeat = true) {
+		if (!bottomEle) {
+			return
+		}
+		bottomEle.scrollIntoView({ behavior: 'smooth' })
+		await tick()
+		if (repeat) {
+			setTimeout(() => scrollToBottom(false), 150)
+		}
+	}
+
 	$: topicTitle =
 		$chatStore?.topicsHistory.find((t) => t.id === $chatStore?.activeTopic.id)?.title ?? null
 </script>
@@ -120,7 +122,7 @@
 </svelte:head>
 
 <div class="flex h-screen">
-	{#if $chatStore?.sideBar.isOpen}
+	{#if !$chatStore ? data.sideBar.isOpen : $chatStore.sideBar.isOpen}
 		<SideBar />
 	{:else}
 		<button
@@ -139,7 +141,7 @@
 					})
 				}
 			}}
-			transition:fly|local={{ duration: 150, x: -32 }}
+			transition:fly={{ duration: 150, x: -32 }}
 		>
 			<ClockSvg
 				class="block h-5 w-5 transition-all group-hover:w-0 group-hover:opacity-0 group-focus:w-0 group-focus:opacity-0"
@@ -158,7 +160,7 @@
 	<div class="relative h-screen flex-1 overflow-auto">
 		<MessageList />
 
-		<MessageBox bind:shouldScrollToBottom />
+		<MessageBox on:scrollToBottom={() => scrollToBottom()} />
 
 		<div bind:this={bottomEle} />
 	</div>

@@ -87,8 +87,8 @@
 </script>
 
 <div
-	class="relative z-20 h-full min-h-screen w-0 flex-shrink-0 overflow-visible transition-all sm:w-[18rem]"
-	transition:slide|local={{
+	class="relative z-20 h-full min-h-screen w-0 flex-shrink-0 transform-gpu overflow-visible transition-all sm:w-[18rem]"
+	transition:slide={{
 		duration: $chatStore && $chatStore.window.innerWidth < smallScreenThresholdInPx ? 0 : 150,
 		axis: 'x',
 	}}
@@ -96,7 +96,7 @@
 	<div
 		class="absolute z-20 h-full w-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/20"
 		on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
-		transition:fly|local={{ duration: 150, x: -32 }}
+		transition:fly={{ duration: 150, x: -288 }}
 	>
 		<div class="mt-[-4.75rem]" bind:this={topEle} />
 
@@ -129,7 +129,7 @@
 						})
 					}
 				}}
-				transition:fade|local={{ duration: 150 }}
+				transition:fade={{ duration: 150 }}
 			>
 				<ArrowRightSvg
 					class="mr-2 !h-5 !w-5 rotate-180 transition-all group-hover:mr-0 group-focus:mr-0 group-active:mr-0"
@@ -141,12 +141,8 @@
 		</div>
 
 		<ul>
-			{#each topics ?? [] as topic (topic)}
-				<li
-					class="relative"
-					title={topic.title ?? undefined}
-					transition:slide|local={{ duration: 150 }}
-				>
+			{#each topics ?? [] as topic (topic.id)}
+				<li class="relative" title={topic.title ?? undefined} transition:slide={{ duration: 150 }}>
 					<a
 						class="button group items-start rounded-none !shadow-none backdrop-blur-none lg:px-6 {$page
 							.url.pathname === `/topic/${topic.id}`
@@ -199,7 +195,7 @@
 					{#if optionsExpandedForTopicId === topic.id}
 						<div
 							class="drop-down right-2 top-9 lg:right-4"
-							transition:fly|local={{ duration: 150, y: -16 }}
+							transition:fly={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
 							{#if topic.messagesCount > 2}

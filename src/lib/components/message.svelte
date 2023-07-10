@@ -60,7 +60,7 @@
 				{#if isOptionsExpanded}
 					<div
 						class="drop-down top-14 {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
-						transition:fly|local={{ duration: 150, y: -16 }}
+						transition:fly={{ duration: 150, y: -16 }}
 					>
 						<button
 							class="drop-down-item"

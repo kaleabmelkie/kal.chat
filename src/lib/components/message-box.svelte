@@ -9,10 +9,12 @@
 	import { chatStore } from '$lib/stores/chat-store'
 	import type { NewMessageOkResponseBody } from '$lib/types/message'
 	import { maxTokensForUser } from '$lib/utils/constants'
-	import { onDestroy, onMount, tick } from 'svelte'
+	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 
-	export let shouldScrollToBottom: boolean
+	const dispatch = createEventDispatcher<{
+		scrollToBottom: undefined
+	}>()
 
 	onMount(async () => {
 		if (!$chatStore) {
@@ -127,13 +129,10 @@
 
 		$chatStore.activeTopic.newMessage.queue = [$chatStore.activeTopic.newMessage.content]
 		$chatStore.activeTopic.newMessage.content = ''
-		$chatStore = $chatStore
 
 		await tick()
 
-		shouldScrollToBottom = true
-		await tick()
-		setTimeout(() => (shouldScrollToBottom = true), 150)
+		dispatch('scrollToBottom')
 
 		try {
 			const response = await fetch(`/message/new`, {
@@ -180,15 +179,9 @@
 						result as NewMessageOkResponseBody
 					).newMessages.length
 				}
-
-				$chatStore = $chatStore
 			}
 
-			await tick()
-
-			shouldScrollToBottom = true
-			await tick()
-			setTimeout(() => (shouldScrollToBottom = true), 150)
+			dispatch('scrollToBottom')
 		} catch (error) {
 			console.error('New message error:', error)
 			alert(`Error: ${(error as Error).message}`)
