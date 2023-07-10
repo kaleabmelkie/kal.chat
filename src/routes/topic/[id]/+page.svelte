@@ -5,7 +5,6 @@
 	import ArrowRight from '$lib/icons/arrow-right.svg.svelte'
 	import ClockSvg from '$lib/icons/clock.svg.svelte'
 	import { chatStore } from '$lib/stores/chat-store'
-	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { countTokens } from '$lib/utils/count-tokens'
 	import { onDestroy, onMount, tick } from 'svelte'
 	import { fly } from 'svelte/transition'
@@ -34,7 +33,7 @@
 		if (
 			!$chatStore.sideBar.isOpen &&
 			$chatStore.sideBar.prefersOpen &&
-			$chatStore.window.innerWidth >= smallScreenThresholdInPx
+			$chatStore.browser.isDesktop
 		) {
 			$chatStore.sideBar.isOpen = true
 		}
@@ -127,7 +126,7 @@
 					return
 				}
 				$chatStore.sideBar.isOpen = true
-				if ($chatStore.window.innerWidth >= smallScreenThresholdInPx) {
+				if ($chatStore.browser.isDesktop) {
 					$chatStore.sideBar.prefersOpen = true
 					await fetch('/account/set-prefers-side-bar-open', {
 						method: 'PUT',

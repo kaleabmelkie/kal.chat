@@ -1,8 +1,11 @@
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import {
-	maxTokensForUser,
+	freeUserMaxRequestTokens,
+	nonFreeUserMaxRequestTokens,
+	freeUserMaxResponseTokens,
+	nonFreeUserMaxResponseTokens,
 	messagesCountInContext,
-	modelName,
+	freeUserModelName,
 	nonFreeUserModelName,
 } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
@@ -36,6 +39,11 @@ export async function POST(event) {
 		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
 	}
 
+	const maxRequestTokens =
+		session.user.plan === 'free' ? freeUserMaxRequestTokens : nonFreeUserMaxRequestTokens
+	const maxResponseTokens =
+		session.user.plan === 'free' ? freeUserMaxResponseTokens : nonFreeUserMaxResponseTokens
+
 	const oldMessages = (
 		await prisma.message.findMany({
 			where: {
@@ -68,7 +76,7 @@ export async function POST(event) {
 	for (const requestMessage of recentRequestMessages) {
 		tokenCount += await countTokens(requestMessage.content ?? '')
 	}
-	if (tokenCount > maxTokensForUser) {
+	if (tokenCount > maxRequestTokens) {
 		throw error(413, 'Too many tokens')
 	}
 
@@ -83,8 +91,9 @@ export async function POST(event) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openai.createChatCompletion({
-			model: session.user.plan === 'free' ? modelName : nonFreeUserModelName,
+			model: session.user.plan === 'free' ? freeUserModelName : nonFreeUserModelName,
 			messages: recentRequestMessages,
+			max_tokens: maxResponseTokens,
 			n: 1,
 			stream: false,
 		})

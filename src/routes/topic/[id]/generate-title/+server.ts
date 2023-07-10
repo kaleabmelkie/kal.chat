@@ -1,9 +1,11 @@
-import { maxTokensForUser, modelName } from '$lib/utils/constants'
+import { freeUserMaxModelTokens, freeUserModelName } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
 import type { CreateChatCompletionResponse } from 'openai-edge'
+
+const maxTitleResponseTokens = 10
 
 export async function PUT({ locals, params, url }) {
 	const session = await locals.getSession()
@@ -43,7 +45,10 @@ export async function PUT({ locals, params, url }) {
 	let tokensCount = 0
 	for (const message of reversedMessages) {
 		const currentCount = await countTokens(message.content)
-		if (tokensCount + currentCount > maxTokensForUser - promptTokens) {
+		if (
+			tokensCount + currentCount >
+			freeUserMaxModelTokens - promptTokens - maxTitleResponseTokens
+		) {
 			break
 		}
 		messagesToAnalyze.push(message)
@@ -53,7 +58,7 @@ export async function PUT({ locals, params, url }) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openai.createChatCompletion({
-			model: modelName,
+			model: freeUserModelName,
 			messages: [
 				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
 				{
@@ -61,6 +66,9 @@ export async function PUT({ locals, params, url }) {
 					content: prompt,
 				},
 			],
+			max_tokens: maxTitleResponseTokens,
+			n: 1,
+			stream: false,
 		})
 	).json()
 	const newTitle = chatCompletionResponse.choices

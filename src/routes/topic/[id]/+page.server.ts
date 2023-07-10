@@ -123,5 +123,5 @@ export async function load(event) {
 			innerWidth: 0,
 			innerHeight: 0,
 		},
-	} satisfies ChatStoreType
+	} satisfies Omit<ChatStoreType, 'session'>
 }

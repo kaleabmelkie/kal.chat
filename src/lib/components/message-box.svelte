@@ -8,7 +8,7 @@
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { chatStore } from '$lib/stores/chat-store'
 	import type { NewMessageOkResponseBody } from '$lib/types/message'
-	import { maxTokensForUser } from '$lib/utils/constants'
+	import { freeUserMaxRequestTokens, nonFreeUserMaxRequestTokens } from '$lib/utils/constants'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 
@@ -61,6 +61,11 @@
 			window.removeEventListener('focus', focusOnInput)
 		}
 	})
+
+	$: maxRequestTokens =
+		$chatStore?.session?.user.plan !== 'free'
+			? nonFreeUserMaxRequestTokens
+			: freeUserMaxRequestTokens
 
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
@@ -308,7 +313,7 @@
 					class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/50 dark:text-white dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/50 dark:focus:bg-primary-950/50 {isVoiceTypingSupported
 						? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.tokensCountInContext >
-					maxTokensForUser
+					freeUserMaxRequestTokens
 						? '!ring-red-600/75'
 						: ''}"
 					name="message"
@@ -395,7 +400,7 @@
 		class="flex gap-4 py-5 text-sm"
 		title="Counts total 'tokens' used by the system prompt, the latest {$chatStore?.activeTopic
 			.messagesCountInContext ??
-			0} messages, and the current value in the new message box. Maximum allowed is {maxTokensForUser}."
+			0} messages, and the current value in the new message box. Maximum allowed is {maxRequestTokens}."
 	>
 		<a
 			class="pointer-events-auto font-semibold text-primary-700/75 underline-offset-2 hover:underline dark:text-primary-400/75 lg:left-6"
@@ -407,11 +412,11 @@
 		</a>
 		<span class="flex-1" />
 		{#if $chatStore && $chatStore.activeTopic.tokensCountInContext > 0}
-			{#if $chatStore.activeTopic.tokensCountInContext > maxTokensForUser}
+			{#if $chatStore.activeTopic.tokensCountInContext > maxRequestTokens}
 				<span class="pointer-events-auto text-red-500/95" in:fade={{ duration: 150 }}>
 					<span class="font-black"
 						>{Intl.NumberFormat().format(
-							$chatStore.activeTopic.tokensCountInContext - maxTokensForUser,
+							$chatStore.activeTopic.tokensCountInContext - maxRequestTokens,
 						)}</span
 					> words over
 				</span>
@@ -422,11 +427,11 @@
 				>
 					<span
 						class="font-semibold {$chatStore.activeTopic.tokensCountInContext >
-						maxTokensForUser - maxTokensForUser / 10
+						maxRequestTokens - maxRequestTokens / 10
 							? 'text-amber-500/95'
 							: 'text-emerald-500/95'}"
 						>{Intl.NumberFormat().format(
-							maxTokensForUser - $chatStore.activeTopic.tokensCountInContext,
+							maxRequestTokens - $chatStore.activeTopic.tokensCountInContext,
 						)}</span
 					> words left
 				</span>

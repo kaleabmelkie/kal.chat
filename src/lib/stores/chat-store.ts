@@ -26,6 +26,8 @@ export type ChatStoreType = {
 		isCreating: boolean
 	}
 
+	session: EnhancedSessionType | null
+
 	sideBar: {
 		isOpen: boolean
 		prefersOpen: boolean

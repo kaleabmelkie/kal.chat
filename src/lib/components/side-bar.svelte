@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
 	import { goto, invalidateAll } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'
@@ -7,7 +8,6 @@
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
-	import { smallScreenThresholdInPx } from '$lib/utils/constants'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { afterUpdate, onDestroy, onMount } from 'svelte'
 	import { fade, fly, slide } from 'svelte/transition'
@@ -89,7 +89,7 @@
 <div
 	class="relative z-20 h-full min-h-screen w-0 flex-shrink-0 transform-gpu overflow-visible transition-all sm:w-[18rem]"
 	transition:slide={{
-		duration: $chatStore && $chatStore.window.innerWidth < smallScreenThresholdInPx ? 0 : 150,
+		duration: !$chatStore?.browser.isDesktop ? 0 : 150,
 		axis: 'x',
 	}}
 >
@@ -121,7 +121,7 @@
 						return
 					}
 					$chatStore.sideBar.isOpen = false
-					if ($chatStore.window.innerWidth >= smallScreenThresholdInPx) {
+					if ($chatStore.browser.isDesktop) {
 						$chatStore.sideBar.prefersOpen = false
 						await fetch('/account/set-prefers-side-bar-open', {
 							method: 'PUT',
@@ -153,7 +153,7 @@
 							if (!$chatStore) {
 								return
 							}
-							if ($chatStore.window.innerWidth < smallScreenThresholdInPx) {
+							if (!$chatStore.browser.isDesktop) {
 								$chatStore.sideBar.isOpen = false
 							}
 						}}
