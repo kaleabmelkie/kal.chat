@@ -150,7 +150,11 @@
 		</button>
 	{/if}
 
-	<div class="relative h-screen flex-1 overflow-auto">
+	<div
+		class="relative h-screen flex-1 overflow-auto"
+		style:-webkit-mask-image="linear-gradient(to top, hsla(0,0%,0%,100%) 84%, hsla(0,0%,0%,0%))"
+		style:mask-image="linear-gradient(to top, hsla(0,0%,0%,100%) 84%, hsla(0,0%,0%,0%))"
+	>
 		<MessageList />
 
 		<MessageBox on:scrollToBottom={() => scrollToBottom()} />
