@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import { goto, invalidateAll } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/actions/click-outside'

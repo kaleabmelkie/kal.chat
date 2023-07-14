@@ -1,3 +1,0 @@
-{
-	"*": ["eslint --fix", "prettier --write", "svelte-check  --tsconfig ./tsconfig.json"]
-}

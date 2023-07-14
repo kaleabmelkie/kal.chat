@@ -1,3 +1,4 @@
+import type { Session } from '@auth/core/types'
 import type { Message, Topic } from '@prisma/client'
 import { writable } from 'svelte/store'
 
@@ -26,7 +27,7 @@ export type ChatStoreType = {
 		isCreating: boolean
 	}
 
-	session: EnhancedSessionType | null
+	session: Session | null
 
 	sideBar: {
 		isOpen: boolean

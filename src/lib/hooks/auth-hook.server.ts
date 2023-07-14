@@ -12,17 +12,10 @@ import Google from '@auth/core/providers/google'
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
 
 export const authHookConfig: SvelteKitAuthConfig = {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	providers: [
-		!AUTH_GOOGLE_ID || !AUTH_GOOGLE_SECRET
-			? null
-			: Google({ clientId: AUTH_GOOGLE_ID, clientSecret: AUTH_GOOGLE_SECRET }),
-
-		!AUTH_GITHUB_ID || !AUTH_GITHUB_SECRET
-			? null
-			: GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
-	].filter((p) => p !== null),
+		Google({ clientId: AUTH_GOOGLE_ID, clientSecret: AUTH_GOOGLE_SECRET }),
+		GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
+	],
 
 	useSecureCookies: AUTH_USE_SECURE_COOKIES === 'true',
 

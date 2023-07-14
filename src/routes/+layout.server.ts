@@ -12,6 +12,6 @@ export async function load(event) {
 				userAgentParser.getBrowserName() === 'Microsoft Edge',
 		},
 
-		session: event.locals.getSession() as Promise<EnhancedSessionType | null>,
+		session: event.locals.getSession(),
 	}
 }

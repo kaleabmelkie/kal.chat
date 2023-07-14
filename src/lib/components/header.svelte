@@ -23,10 +23,7 @@
 	<div class="flex-1" />
 
 	{#if $page.data.session}
-		{@const plan =
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore (because `.plan` is not using the `EnhancedSession` definition from `app.d.ts`)
-			$page.data.session.user.plan}
+		{@const plan = $page.data.session.user.plan}
 		{#if !['paid'].includes(plan)}
 			<a
 				class="lemonsqueezy-button button button-primary pointer-events-auto py-2 text-sm"
