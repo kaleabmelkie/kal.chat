@@ -5,7 +5,7 @@
 	"description": "A better chat interface for OpenAI's GPT model (ChatGPT alternative)",
 	"icons": [
 		{
-			"src": "https://kal.chat/assets/brand-images/logo-512x512.png",
+			"src": "https://kal.chat/assets/brand-images/app-icon-512x512.png",
 			"sizes": "512x512",
 			"type": "image/png",
 			"purpose": "any maskable"
