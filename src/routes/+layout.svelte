@@ -4,6 +4,7 @@
 	import { dev } from '$app/environment'
 	import { page, updated } from '$app/stores'
 	import Header from '$lib/components/header.svelte'
+	import Nprogress from '$lib/components/nprogress.svelte'
 </script>
 
 <svelte:head>
@@ -36,3 +37,5 @@
 		<slot />
 	</div>
 </main>
+
+<Nprogress />
