@@ -19,9 +19,9 @@
 			transition:fly={{ y: -16 }}
 			class="relative flex transform-gpu overflow-hidden rounded shadow-xl ring-4 backdrop-blur {toast.type ===
 			'info'
-				? 'bg-primary-200/75 text-primary-900 shadow-primary-600/10 ring-primary-400/50'
+				? 'bg-primary-200/80 text-primary-900 shadow-primary-600/10 ring-primary-400/50'
 				: toast.type === 'error'
-				? 'bg-red-200/75 text-red-900 shadow-red-600/10 ring-red-400/50'
+				? 'bg-red-200/80 text-red-900 shadow-red-600/10 ring-red-400/50'
 				: ''}"
 		>
 			<pre
