@@ -5,6 +5,7 @@
 	import { page, updated } from '$app/stores'
 	import Header from '$lib/components/header.svelte'
 	import Nprogress from '$lib/components/nprogress.svelte'
+	import Toasts from '$lib/components/toasts.svelte'
 </script>
 
 <svelte:head>
@@ -39,3 +40,4 @@
 </main>
 
 <Nprogress />
+<Toasts />

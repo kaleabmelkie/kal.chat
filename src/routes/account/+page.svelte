@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import ChevronRightSvg from '$lib/icons/chevron-right.svg.svelte'
+	import { err, toast } from '$lib/stores/toasts-store.js'
 	import { signIn, signOut } from '@auth/sveltekit/client'
 	import { slide } from 'svelte/transition'
 
@@ -84,7 +85,7 @@
 					} catch (e) {
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
-						alert(`Sign out error: ${e?.message}`)
+						err(`Sign out error: ${e?.message}`)
 					} finally {
 						isActive = false
 					}
@@ -125,7 +126,7 @@
 									'Please type "DELETE ACCOUNT" to confirm account deletion.',
 								)?.toUpperCase() !== 'DELETE ACCOUNT'
 							) {
-								alert('Wrong confirmation input. Account deletion cancelled.')
+								err('Wrong confirmation input. Account deletion cancelled.')
 								return
 							}
 							isActive = true
@@ -147,11 +148,11 @@
 									throw new Error(message)
 								}
 
-								alert('Account deleted successfully.')
+								toast('Account deleted successfully.')
 							} catch (e) {
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								alert(`Account deletion error: ${e?.message}`)
+								err(`Account deletion error: ${e?.message}`)
 								isActive = false
 								return
 							}
@@ -162,7 +163,7 @@
 							} catch (e) {
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								alert(`Sign out error: ${e?.message}`)
+								err(`Sign out error: ${e?.message}`)
 							} finally {
 								isActive = false
 							}
@@ -192,7 +193,7 @@
 						} catch (e) {
 							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 							// @ts-ignore
-							alert(`Sign in error: ${e?.message}`)
+							err(`Sign in error: ${e?.message}`)
 							isActive = false
 						}
 					}}

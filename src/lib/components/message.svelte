@@ -4,6 +4,7 @@
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
+	import { err, toast } from '$lib/stores/toasts-store'
 	import 'highlight.js/styles/github-dark.css'
 	import { fly, slide } from 'svelte/transition'
 
@@ -69,10 +70,10 @@
 								const text = articleEle?.textContent
 								if (text) {
 									await navigator.clipboard.writeText(text.trim())
-									alert('Copied to clipboard!')
+									toast('Copied to clipboard!')
 									isOptionsExpanded = false
 								} else {
-									alert('Failed to copy to clipboard!')
+									err('Failed to copy to clipboard!')
 								}
 							}}
 						>
@@ -85,7 +86,7 @@
 							type="button"
 							on:click={async () => {
 								await navigator.clipboard.writeText(message.content.trim())
-								alert('Copied to clipboard!')
+								toast('Copied to clipboard!')
 								isOptionsExpanded = false
 							}}
 						>
@@ -123,9 +124,9 @@
 								} else {
 									try {
 										const json = await response.json()
-										alert(json.message)
-									} catch (err) {
-										alert('Failed to delete message!')
+										err(json.message)
+									} catch {
+										err('Failed to delete message!')
 									}
 								}
 

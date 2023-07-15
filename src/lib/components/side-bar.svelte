@@ -7,6 +7,7 @@
 	import MoreVerticalSvg from '$lib/icons/more-vertical.svelte'
 	import TrashSvg from '$lib/icons/trash.svg.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
+	import { err } from '$lib/stores/toasts-store'
 	import { dayjs } from '$lib/utils/dayjs'
 	import { afterUpdate, onDestroy, onMount } from 'svelte'
 	import { fade, fly, slide } from 'svelte/transition'
@@ -74,14 +75,13 @@
 
 				shouldScrollToTop = true
 			})
-			.catch((e) => {
-				console.error(e)
-				alert(
+			.catch((e) =>
+				err(
 					`The title of the topic (ID: ${topicHistory.id}) could not be auto-generated.\n\n${
 						e?.message ?? 'Unknown error.'
 					}`,
-				)
-			})
+				),
+			)
 	}
 </script>
 
@@ -147,7 +147,7 @@
 			{#each topics ?? [] as topic (topic.id)}
 				<li class="relative" title={topic.title ?? undefined} transition:slide={{ duration: 150 }}>
 					<a
-						class="button group items-start rounded-none !shadow-none backdrop-blur-none lg:px-6 {$page
+						class="button group items-start rounded-none shadow-none backdrop-blur-none lg:px-6 {$page
 							.url.pathname === `/topic/${topic.id}`
 							? 'button-primary'
 							: 'bg-transparent'}"
@@ -229,7 +229,7 @@
 								on:click={async () => {
 									const newTitle = prompt('New topic title:')
 									if (!newTitle) {
-										alert('Cancelled because no title was provided.')
+										err('Cancelled because no title was provided.')
 										return
 									}
 									optionsExpandedForTopicId = null
@@ -250,7 +250,7 @@
 											topic.title = newTitle
 										})
 										.catch((e) =>
-											alert(
+											err(
 												`The title of the topic (ID: ${topic.id}) could not be changed.\n\n${
 													e?.message ?? 'Unknown error.'
 												}`,
@@ -295,7 +295,7 @@
 											}
 										})
 										.catch((e) =>
-											alert(
+											err(
 												`Topic (ID: ${topic.id}) could not be deleted.\n\n${
 													e?.message ?? 'Unknown error.'
 												}`,

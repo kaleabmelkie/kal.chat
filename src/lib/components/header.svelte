@@ -29,11 +29,7 @@
 					: ''}{$page.data.session.user?.email
 					? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`
 					: ''}"
-				on:click={() => {
-					alert(
-						`Upgrading to Pro gives you a paid premium access to GPT-4  🎉\nYour current plan is: ${plan}`,
-					)
-				}}
+				title="Upgrading to Pro gives you a paid premium access to GPT-4  🎉"
 			>
 				<span class="text-lg">✨</span>
 				<span class="pr-2">Upgrade to Pro</span>

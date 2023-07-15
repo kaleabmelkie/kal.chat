@@ -7,6 +7,7 @@
 	import MicSvg from '$lib/icons/mic.svg.svelte'
 	import PlusSvg from '$lib/icons/plus.svg.svelte'
 	import { chatStore } from '$lib/stores/chat-store'
+	import { err } from '$lib/stores/toasts-store'
 	import type { NewMessageOkResponseBody } from '$lib/types/message'
 	import { freeUserMaxRequestTokens, nonFreeUserMaxRequestTokens } from '$lib/utils/constants'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
@@ -189,7 +190,7 @@
 			dispatch('scrollToBottom')
 		} catch (error) {
 			console.error('New message error:', error)
-			alert(`Error: ${(error as Error).message}`)
+			err(`Error: ${(error as Error).message}`)
 
 			$chatStore.activeTopic.newMessage.content = $chatStore.activeTopic.newMessage.queue[0] ?? ''
 		} finally {
@@ -255,7 +256,7 @@
 			}
 			if (!['aborted', 'no-speech'].includes(event.error)) {
 				console.error('Speech recognition error:', event)
-				alert(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
+				err(`Speech recognition error: ${event?.error ?? 'Unknown error'}`)
 			}
 			$chatStore.activeTopic.newMessage.isVoiceTyping = false
 			newMessageContentBeforeVoice = ''
