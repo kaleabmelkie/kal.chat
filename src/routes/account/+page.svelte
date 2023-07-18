@@ -40,13 +40,13 @@
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{@html data.session?.user.plan === 'free'
-						? '<strong>Free</strong> user (GPT-3.5) &nbsp;👀'
+						? '<strong>Free</strong> user (GPT 3.5 Turbo only) &nbsp;👀'
 						: data.session?.user.plan === 'paid'
-						? '<strong>Pro</strong> user (GPT-4) &nbsp;🎉'
+						? '<strong>Pro</strong> user (GPT 3.5 Turbo & GPT 4) &nbsp;🎉'
 						: data.session?.user.plan === 'grace'
-						? '<strong>Grace</strong> period (GPT-4)<br/>Downgrading to free user soon &nbsp;🫤'
+						? '<strong>Grace</strong> period (GPT 3.5 Turbo & GPT 4)<br/>Downgrading to free user soon &nbsp;🫤'
 						: data.session?.user.plan === 'sponsored'
-						? '<strong>Sponsored pro</strong> user (GPT-4)<br/>Paid for by Kaleab &nbsp;🎁'
+						? '<strong>Sponsored</strong> user (GPT 3.5 Turbo & GPT 4)<br/>Paid for by Kaleab &nbsp;🎁'
 						: data.session?.user.plan}
 				</span>
 
@@ -70,7 +70,7 @@
 				Go chat
 			</a>
 			<button
-				class="button pointer-events-auto"
+				class="button pointer-events-auto {isActive ? 'button-loading' : ''}"
 				type="button"
 				disabled={isActive}
 				on:click={async () => {
@@ -110,7 +110,7 @@
 			{#if isAdvancedSettingsOpen}
 				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
 					<button
-						class="button button-danger pointer-events-auto"
+						class="button button-danger pointer-events-auto {isActive ? 'button-loading' : ''}"
 						type="button"
 						disabled={isActive}
 						on:click={async () => {

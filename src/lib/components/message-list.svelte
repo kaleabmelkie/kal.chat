@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Message from '$lib/components/message.svelte'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
+	import { err, toast } from '$lib/stores/toasts-store'
 	import { messagesCountInContext } from '$lib/utils/constants'
+	import type { ResponseModeType } from '@prisma/client'
 	import { onDestroy, onMount } from 'svelte'
 
 	onMount(() => {
@@ -15,6 +17,49 @@
 			clearInterval(typingDotInterval)
 		}
 	})
+
+	let isChangingResponseMode = false
+
+	async function changeResponseModeTo(newResponseMode: ResponseModeType) {
+		if (!$chatStore?.session) {
+			await err(`You must be logged in to change a topic's response mode`)
+			return
+		}
+		if (newResponseMode === 'better' && $chatStore.session.user.plan === 'free') {
+			await err('You must upgrade to a paid plan to use the better response mode')
+			return
+		}
+
+		if ($chatStore.activeTopic.responseMode === newResponseMode) {
+			await toast(`Responses are already ${newResponseMode} in this topic`)
+			return
+		}
+
+		isChangingResponseMode = true
+		try {
+			const response = await fetch(`/topic/${$chatStore.activeTopic.id}/change-response-mode`, {
+				method: 'PUT',
+				body: JSON.stringify({
+					responseMode: newResponseMode,
+				}),
+			})
+			if (!response.ok) {
+				throw new Error(
+					`${response.statusText} (${response.status}): ${
+						(await response.json())?.message ?? 'Unknown'
+					}`,
+				)
+			}
+			const { message } = await response.json()
+			await toast(message)
+
+			$chatStore.activeTopic.responseMode = newResponseMode
+		} catch (e) {
+			err(e as Error)
+		} finally {
+			isChangingResponseMode = false
+		}
+	}
 
 	let typingDotInterval: number | null = null
 	let typingDotCount = 0
@@ -46,6 +91,38 @@
 	class="mx-auto flex min-h-full max-w-[56rem] flex-col gap-6 px-4 pb-[calc(4rem+7.25rem)] lg:px-6"
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
+
+	<div class="grid gap-4 pb-12">
+		<div class="text-sm text-primary-700 opacity-80 dark:text-primary-300">Choose mode:</div>
+
+		<div class="mr-auto grid grid-cols-2 gap-2">
+			<button
+				class="button flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+					?.activeTopic.responseMode === 'faster'
+					? 'button-disabled !bg-primary-600/90 !text-white'
+					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
+				type="button"
+				disabled={isChangingResponseMode || $chatStore?.activeTopic.responseMode === 'faster'}
+				on:click={() => changeResponseModeTo('faster')}
+			>
+				<span class="">Faster responses</span>
+				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">GPT 3.5 Turbo</span></span>
+			</button>
+
+			<button
+				class="button flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+					?.activeTopic.responseMode === 'better'
+					? 'button-disabled !bg-primary-600/90 !text-white'
+					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
+				type="button"
+				disabled={isChangingResponseMode || $chatStore?.activeTopic.responseMode === 'better'}
+				on:click={() => changeResponseModeTo('better')}
+			>
+				<span class="">Better responses</span>
+				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">GPT 4</span></span>
+			</button>
+		</div>
+	</div>
 
 	{#each messagesToShow as message, index (message.id)}
 		<Message
