@@ -67,9 +67,6 @@
 		(!$chatStore?.session || $chatStore.session.user.plan === 'free'
 			? models.find((m) => m.responseMode === 'faster')
 			: models.find((m) => m.responseMode === $chatStore?.activeTopic.responseMode)) ?? null
-	$: if (model === null) {
-		err(`Unable to find the AI model for response mode: ${$chatStore?.activeTopic.responseMode}`)
-	}
 
 	$: maxRequestTokens = model?.maxRequestTokens ?? 0
 
@@ -312,14 +309,14 @@
 		</a>
 
 		<div class="group relative flex flex-1">
-			{#if $chatStore && model}
+			{#if $chatStore}
 				<!-- svelte-ignore a11y-autofocus -->
 				<textarea
 					data-testid="message-box"
 					class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/50 dark:text-white dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/50 dark:focus:bg-primary-950/50 {isVoiceTypingSupported
 						? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.tokensCountInContext >
-					model.maxRequestTokens
+					(model?.maxRequestTokens ?? Infinity)
 						? '!ring-red-600/75'
 						: ''}"
 					name="message"
