@@ -9,7 +9,7 @@
 	import { chatStore } from '$lib/stores/chat-store'
 	import { err } from '$lib/stores/toasts-store'
 	import type { NewMessageOkResponseBody } from '$lib/types/message'
-	import { freeUserMaxRequestTokens, nonFreeUserMaxRequestTokens } from '$lib/utils/constants'
+	import { models } from '$lib/utils/constants'
 	import { createEventDispatcher, onDestroy, onMount, tick } from 'svelte'
 	import { fade } from 'svelte/transition'
 
@@ -63,10 +63,12 @@
 		}
 	})
 
-	$: maxRequestTokens =
-		$chatStore?.session?.user.plan !== 'free'
-			? nonFreeUserMaxRequestTokens
-			: freeUserMaxRequestTokens
+	$: model =
+		(!$chatStore?.session || $chatStore.session.user.plan === 'free'
+			? models.find((m) => m.responseMode === 'faster')
+			: models.find((m) => m.responseMode === $chatStore?.activeTopic.responseMode)) ?? null
+
+	$: maxRequestTokens = model?.maxRequestTokens ?? 0
 
 	let messageBoxEle: HTMLTextAreaElement | null = null
 	let submitButtonEle: HTMLButtonElement | null = null
@@ -314,7 +316,7 @@
 					class="form-textarea pointer-events-auto flex h-[3.5rem] w-full min-w-0 flex-1 transform-gpu resize-none appearance-none rounded-[1.75rem] border-none bg-white/90 px-6 py-4 text-lg leading-[1.5rem] text-black shadow-lg shadow-primary-900/20 outline-none ring-2 ring-primary-600/75 backdrop-blur transition-all placeholder:text-primary-700/50 read-only:ring-0 hover:bg-white hover:shadow-primary-900/30 focus:bg-white focus:shadow-xl focus:shadow-primary-900/20 focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 focus:ring-offset-primary-100 disabled:animate-pulse disabled:bg-primary-600/25 disabled:text-primary-900/50 disabled:shadow-none disabled:ring-0 dark:bg-primary-950/50 dark:text-white dark:!ring-primary-500 dark:ring-primary-500/75 dark:!ring-offset-primary-950/75 dark:placeholder:text-primary-300/75 dark:hover:bg-primary-950/50 dark:focus:bg-primary-950/50 {isVoiceTypingSupported
 						? 'pr-[calc(1.5rem+3.5rem+4rem)]'
 						: 'pr-[calc(1.5rem+4rem)]'} {$chatStore.activeTopic.tokensCountInContext >
-					freeUserMaxRequestTokens
+					(model?.maxRequestTokens ?? Infinity)
 						? '!ring-red-600/75'
 						: ''}"
 					name="message"
@@ -386,7 +388,10 @@
 
 			<button
 				data-testid="send-button"
-				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:!bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50"
+				class="pointer-events-auto absolute bottom-0 right-0 top-0 flex w-[4rem] cursor-pointer items-center justify-center rounded-r-[1.75rem] text-xs font-semibold uppercase text-primary-900 outline-primary-600 transition-all hover:bg-primary-300/25 active:bg-primary-300/50 disabled:cursor-default disabled:!bg-transparent disabled:text-primary-900/50 dark:text-primary-100 dark:hover:bg-primary-700/25 dark:active:bg-primary-700/50 {$chatStore &&
+				$chatStore.activeTopic.newMessage.queue.length > 0
+					? 'button-loading'
+					: ''}"
 				type="button"
 				disabled={!$chatStore || $chatStore.activeTopic.newMessage.queue.length > 0}
 				bind:this={submitButtonEle}

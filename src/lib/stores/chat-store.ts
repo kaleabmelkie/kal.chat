@@ -3,7 +3,7 @@ import type { Message, Topic } from '@prisma/client'
 import { writable } from 'svelte/store'
 
 export type ChatStoreType = {
-	activeTopic: Pick<Topic, 'id'> & {
+	activeTopic: Pick<Topic, 'id' | 'responseMode'> & {
 		messages: Pick<Message, 'id' | 'role' | 'content'>[]
 
 		newMessage: {

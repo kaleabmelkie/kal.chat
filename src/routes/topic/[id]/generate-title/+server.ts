@@ -1,4 +1,4 @@
-import { freeUserMaxModelTokens, freeUserModelName } from '$lib/utils/constants'
+import { models } from '$lib/utils/constants.js'
 import { countTokens } from '$lib/utils/count-tokens'
 import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
@@ -29,6 +29,11 @@ export async function PUT({ locals, params, url }) {
 	} Do not include any other text. If there are multiple topics, choose the most talked about.`
 	const promptTokens = await countTokens(prompt)
 
+	const model = models.find((m) => m.responseMode === 'faster')
+	if (!model) {
+		throw error(400, `Unsupported responseMode: faster`)
+	}
+
 	const reversedMessages = await prisma.message.findMany({
 		where: {
 			role: { in: ['assistant', 'user'] },
@@ -45,10 +50,7 @@ export async function PUT({ locals, params, url }) {
 	let tokensCount = 0
 	for (const message of reversedMessages) {
 		const currentCount = await countTokens(message.content)
-		if (
-			tokensCount + currentCount >
-			freeUserMaxModelTokens - promptTokens - maxTitleResponseTokens
-		) {
+		if (tokensCount + currentCount > model.maxModelTokens - promptTokens - maxTitleResponseTokens) {
 			break
 		}
 		messagesToAnalyze.push(message)
@@ -58,7 +60,7 @@ export async function PUT({ locals, params, url }) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openai.createChatCompletion({
-			model: freeUserModelName,
+			model: model.name,
 			messages: [
 				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
 				{

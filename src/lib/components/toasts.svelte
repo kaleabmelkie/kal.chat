@@ -25,7 +25,7 @@
 				: ''}"
 		>
 			<pre
-				class="sm:text-h3 my-auto flex-1 whitespace-pre-wrap break-all px-4 py-3 font-sans">{toast.message}</pre>
+				class="sm:text-h3 my-auto flex-1 whitespace-pre-wrap break-words px-4 py-3 font-sans">{toast.message}</pre>
 
 			<button
 				class="w-max flex-shrink-0 select-none rounded px-4 py-3 text-xl text-slate-900/50 transition-all hover:text-red-600"

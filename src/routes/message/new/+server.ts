@@ -1,13 +1,5 @@
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
-import {
-	freeUserMaxRequestTokens,
-	nonFreeUserMaxRequestTokens,
-	freeUserMaxResponseTokens,
-	nonFreeUserMaxResponseTokens,
-	messagesCountInContext,
-	freeUserModelName,
-	nonFreeUserModelName,
-} from '$lib/utils/constants'
+import { messagesCountInContext, models } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
@@ -39,10 +31,30 @@ export async function POST(event) {
 		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
 	}
 
-	const maxRequestTokens =
-		session.user.plan === 'free' ? freeUserMaxRequestTokens : nonFreeUserMaxRequestTokens
-	const maxResponseTokens =
-		session.user.plan === 'free' ? freeUserMaxResponseTokens : nonFreeUserMaxResponseTokens
+	let { responseMode: responseMode } = await prisma.topic.findFirstOrThrow({
+		where: {
+			id: topicId,
+		},
+		select: {
+			responseMode: true,
+		},
+	})
+	if (responseMode === 'better' && session.user.plan === 'free') {
+		const { responseMode: _responseMode } = await prisma.topic.update({
+			where: {
+				id: topicId,
+			},
+			data: {
+				responseMode: 'faster',
+			},
+		})
+		responseMode = _responseMode
+	}
+
+	const model = models.find((m) => m.responseMode === responseMode)
+	if (!model) {
+		throw error(400, `Unsupported responseMode: ${responseMode}`)
+	}
 
 	const oldMessages = (
 		await prisma.message.findMany({
@@ -76,7 +88,7 @@ export async function POST(event) {
 	for (const requestMessage of recentRequestMessages) {
 		tokenCount += await countTokens(requestMessage.content ?? '')
 	}
-	if (tokenCount > maxRequestTokens) {
+	if (tokenCount > model.maxRequestTokens) {
 		throw error(413, 'Too many tokens')
 	}
 
@@ -91,9 +103,9 @@ export async function POST(event) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openai.createChatCompletion({
-			model: session.user.plan === 'free' ? freeUserModelName : nonFreeUserModelName,
+			model: model.name,
 			messages: recentRequestMessages,
-			max_tokens: maxResponseTokens,
+			max_tokens: model.maxResponseTokens,
 			n: 1,
 			stream: false,
 		})

@@ -63,6 +63,7 @@ export async function load(event) {
 			},
 			select: {
 				id: true,
+				responseMode: true,
 				Message: {
 					orderBy: {
 						createdAt: 'asc',
@@ -84,9 +85,22 @@ export async function load(event) {
 		)
 	}
 
+	if (activeTopic.responseMode === 'better' && session.user.plan === 'free') {
+		const { responseMode } = await prisma.topic.update({
+			where: {
+				id: activeTopic.id,
+			},
+			data: {
+				responseMode: 'faster',
+			},
+		})
+		activeTopic.responseMode = responseMode
+	}
+
 	return {
 		activeTopic: {
 			id: activeTopic.id,
+			responseMode: activeTopic.responseMode,
 			messages: activeTopic.Message.map((m) => ({
 				...m,
 				content: markdownToHtml(m.content),

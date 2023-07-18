@@ -37,7 +37,8 @@ model Topic {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String? @db.VarChar(64)
+  title        String?          @db.VarChar(64)
+  responseMode ResponseModeType @default(faster)
 
   user   User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId Int
@@ -45,6 +46,11 @@ model Topic {
   Message Message[]
 
   @@index([userId])
+}
+
+enum ResponseModeType {
+  faster
+  better
 }
 
 model Message {
