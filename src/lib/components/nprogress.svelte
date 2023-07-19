@@ -74,7 +74,7 @@
 
 <style lang="postcss">
 	:global(#nprogress .bar) {
-		@apply h-2 bg-gradient-to-r from-primary-700 to-primary-500;
+		@apply h-1 bg-gradient-to-r from-primary-700 to-primary-500;
 	}
 	:global(#nprogress .bar .peg) {
 		@apply hidden;
