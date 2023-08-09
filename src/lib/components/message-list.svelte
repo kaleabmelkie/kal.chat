@@ -25,8 +25,14 @@
 			await err(`You must be logged in to change a topic's response mode`)
 			return
 		}
-		if (newResponseMode === 'better' && $chatStore.session.user.plan === 'free') {
-			await err('You must upgrade to a paid plan to use the better response mode')
+		if (
+			newResponseMode === 'better' &&
+			$chatStore.session.user.plan === 'free' &&
+			!$chatStore.session.user.ownOpenAiApiKey
+		) {
+			await err(
+				'You must either upgrade to a paid plan or provide your own OpenAI API key (in Advanced Settings) to use the better response mode',
+			)
 			return
 		}
 

@@ -1,6 +1,6 @@
 import { models } from '$lib/utils/constants.js'
 import { countTokens } from '$lib/utils/count-tokens'
-import { openai } from '$lib/utils/openai.server'
+import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
 import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
 import type { CreateChatCompletionResponse } from 'openai-edge'
@@ -58,8 +58,10 @@ export async function PUT({ locals, params, url }) {
 	}
 	messagesToAnalyze = messagesToAnalyze.reverse()
 
+	const openAiApi = getOpenAiApi(session.user.ownOpenAiApiKey ?? null)
+
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
-		await openai.createChatCompletion({
+		await openAiApi.createChatCompletion({
 			model: model.name,
 			messages: [
 				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),

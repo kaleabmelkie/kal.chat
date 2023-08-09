@@ -22,6 +22,7 @@ declare module '@auth/core/types' {
 			email: string
 			image?: string | null
 			plan: UserPlanType
+			ownOpenAiApiKey?: string | null
 		}
 	}
 }

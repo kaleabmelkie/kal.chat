@@ -4,7 +4,9 @@ import {
 	AUTH_GOOGLE_ID,
 	AUTH_GOOGLE_SECRET,
 	AUTH_USE_SECURE_COOKIES,
+	OWN_OPENAI_API_KEY_ENCRYPTION_KEY,
 } from '$env/static/private'
+import { decrypt } from '$lib/utils/encryption'
 import { prisma } from '$lib/utils/prisma.server'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
@@ -61,6 +63,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				select: {
 					id: true,
 					plan: true,
+					encryptedOwnOpenAiApiKey: true,
 				},
 			})
 			if (!user) {
@@ -70,6 +73,9 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				...params.token,
 				userId: user.id,
 				userPlan: user.plan,
+				ownOpenAiApiKey: !user.encryptedOwnOpenAiApiKey
+					? null
+					: decrypt(user.encryptedOwnOpenAiApiKey, OWN_OPENAI_API_KEY_ENCRYPTION_KEY),
 			}
 		},
 
@@ -80,6 +86,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 					...params.session.user,
 					id: params.token.userId,
 					plan: params.token.userPlan,
+					ownOpenAiApiKey: params.token.ownOpenAiApiKey,
 				},
 			}
 		},

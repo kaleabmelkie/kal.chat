@@ -19,7 +19,7 @@
 		{#if data.session?.user}
 			<h2 class="text-2xl">Your Account</h2>
 
-			<p class="grid gap-2">
+			<div class="grid gap-2">
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
 					Name
 				</span>
@@ -57,7 +57,7 @@
 					{data.messagesCount === 1 ? 'message' : 'messages'} in {data.topicsCount ?? 0}
 					{data.topicsCount === 1 ? 'topic' : 'topics'}
 				</span>
-			</p>
+			</div>
 
 			<div />
 
@@ -84,7 +84,7 @@
 					} catch (e) {
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
-						err(`Sign out error: ${e?.message}`)
+						await err(`Sign out error: ${e?.message}`)
 					} finally {
 						isActive = false
 					}
@@ -108,6 +108,119 @@
 
 			{#if isAdvancedSettingsOpen}
 				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
+					<button
+						class="button pointer-events-auto {isActive ? 'button-loading' : ''}"
+						type="button"
+						disabled={isActive}
+						on:click={async () => {
+							if (!data?.session) {
+								err('No session found. Own OpenAI API key update cancelled.')
+								return
+							}
+							const ownOpenAiApiKey = prompt('Please enter your OpenAI API key:')
+							if (!ownOpenAiApiKey) {
+								err('No API key entered. Own OpenAI API key update cancelled.')
+								return
+							}
+							isActive = true
+							try {
+								const response = await fetch('/account/set-own-openai-api-key', {
+									method: 'PUT',
+									headers: {
+										'Content-Type': 'application/json',
+									},
+									body: JSON.stringify({
+										ownOpenAiApiKey,
+									}),
+								})
+								if (!response.ok) {
+									let message = 'Unknown error.'
+									try {
+										message = (await response.json())?.message ?? message
+										console.error(message)
+									} catch {
+										console.error(response)
+									}
+									throw new Error(message)
+								}
+
+								data.session.user.ownOpenAiApiKey = ownOpenAiApiKey
+
+								await toast('Now, using your own OpenAI API key.')
+							} catch (e) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								await err(`Set own OpenAI API key error: ${e?.message}`)
+							} finally {
+								isActive = false
+							}
+						}}
+					>
+						{!data.session.user.ownOpenAiApiKey
+							? 'Use your own OpenAI API key'
+							: 'Update your own OpenAI API key'}
+					</button>
+
+					{#if data.session.user.ownOpenAiApiKey}
+						<button
+							class="button button-danger pointer-events-auto {isActive ? 'button-loading' : ''}"
+							type="button"
+							disabled={isActive}
+							on:click={async () => {
+								if (!data?.session) {
+									err('No session found. Own OpenAI API key deletion cancelled.')
+									return
+								}
+								if (
+									!confirm(
+										`Are you sure you want to delete your own OpenAI API key?\n\nYou won't be able to access GPT-4 if you're on the free plan without your own OpenAI API key.`,
+									)
+								) {
+									return
+								}
+								isActive = true
+								try {
+									const response = await fetch('/account/set-own-openai-api-key', {
+										method: 'PUT',
+										headers: {
+											'Content-Type': 'application/json',
+										},
+										body: JSON.stringify({
+											ownOpenAiApiKey: null,
+										}),
+									})
+									if (!response.ok) {
+										let message = 'Unknown error.'
+										try {
+											message = (await response.json())?.message ?? message
+											console.error(message)
+										} catch {
+											console.error(response)
+										}
+										throw new Error(message)
+									}
+
+									data.session.user.ownOpenAiApiKey = null
+
+									await toast(
+										`Deleted your own OpenAI API key. Now, using kal.chat's built-in key.`,
+									)
+								} catch (e) {
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									// @ts-ignore
+									await err(`Delete own OpenAI API key error: ${e?.message}`)
+								} finally {
+									isActive = false
+								}
+							}}
+							transition:slide={{ duration: 150 }}
+						>
+							Delete your own OpenAI API key
+						</button>
+					{/if}
+
+					<div />
+
 					<button
 						class="button button-danger pointer-events-auto {isActive ? 'button-loading' : ''}"
 						type="button"
@@ -147,7 +260,7 @@
 									throw new Error(message)
 								}
 
-								toast('Account deleted successfully.')
+								await toast('Account deleted successfully.')
 							} catch (e) {
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
@@ -162,7 +275,7 @@
 							} catch (e) {
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								err(`Sign out error: ${e?.message}`)
+								await err(`Sign out error: ${e?.message}`)
 							} finally {
 								isActive = false
 							}

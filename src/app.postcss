@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+#nprogress .bar {
+	@apply h-1 bg-gradient-to-r from-primary-700 to-primary-500;
+}
+#nprogress .bar .peg {
+	@apply hidden;
+}
+
 ::selection {
 	@apply bg-primary-200;
 }

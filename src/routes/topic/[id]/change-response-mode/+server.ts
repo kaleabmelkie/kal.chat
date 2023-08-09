@@ -22,8 +22,15 @@ export async function PUT({ locals, params, request }) {
 		throw error(400, `Response mode must be one of ${responseModes.join(', ')}`)
 	}
 
-	if (data.responseMode === 'better' && session.user.plan === 'free') {
-		throw error(403, 'You must upgrade to a paid plan to use the better response mode')
+	if (
+		data.responseMode === 'better' &&
+		session.user.plan === 'free' &&
+		!session.user.ownOpenAiApiKey
+	) {
+		throw error(
+			402,
+			'You must either upgrade to a paid plan or provide your own OpenAI API key (in Advanced Settings) to use the better response mode',
+		)
 	}
 
 	const { responseMode } = await prisma.topic.update({

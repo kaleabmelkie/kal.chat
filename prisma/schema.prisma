@@ -18,7 +18,8 @@ model User {
   email String  @unique @db.VarChar(320)
   image String? @db.VarChar(1024)
 
-  plan UserPlanType @default(free)
+  plan                     UserPlanType @default(free)
+  encryptedOwnOpenAiApiKey String?      @map("ownOpenAiApiKey") @db.VarChar(256)
 
   prefersSideBarOpen Boolean @default(false)
 

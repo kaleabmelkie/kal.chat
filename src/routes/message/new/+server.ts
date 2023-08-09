@@ -2,8 +2,8 @@ import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { messagesCountInContext, models } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
+import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
-import { openai } from '$lib/utils/openai.server'
 import { prisma } from '$lib/utils/prisma.server'
 import type { RoleType } from '@prisma/client'
 import { error, json, redirect } from '@sveltejs/kit'
@@ -92,8 +92,10 @@ export async function POST(event) {
 		throw error(413, 'Too many tokens')
 	}
 
+	const openAiApi = getOpenAiApi(session.user.ownOpenAiApiKey ?? null)
+
 	const moderationResponse: CreateModerationResponse = await (
-		await openai.createModeration({
+		await openAiApi.createModeration({
 			input: message,
 		})
 	).json()
@@ -102,7 +104,7 @@ export async function POST(event) {
 	}
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
-		await openai.createChatCompletion({
+		await openAiApi.createChatCompletion({
 			model: model.name,
 			messages: recentRequestMessages,
 			max_tokens: model.maxResponseTokens,
