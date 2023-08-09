@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores'
 	import ChevronRightSvg from '$lib/icons/chevron-right.svg.svelte'
 	import { err, toast } from '$lib/stores/toasts-store.js'
 	import { signIn, signOut } from '@auth/sveltekit/client'
@@ -17,7 +16,7 @@
 
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
 	<div class="grid w-full max-w-sm gap-4">
-		{#if $page.data.session}
+		{#if data.session?.user}
 			<h2 class="text-2xl">Your Account</h2>
 
 			<p class="grid gap-2">
@@ -25,36 +24,36 @@
 					Name
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{data.session?.user.name ?? 'Unknown name'}
+					{data.session.user.name ?? 'Unknown name'}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
 					Email
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{data.session?.user.email ?? 'Unknown email'}
+					{data.session.user.email ?? 'Unknown email'}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
 					Plan
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{@html data.session?.user.plan === 'free'
+					{@html data.session.user.plan === 'free'
 						? '<strong>Free</strong> user (GPT 3.5 Turbo only) &nbsp;👀'
-						: data.session?.user.plan === 'paid'
+						: data.session.user.plan === 'paid'
 						? '<strong>Pro</strong> user (GPT 3.5 Turbo & GPT 4) &nbsp;🎉'
-						: data.session?.user.plan === 'grace'
+						: data.session.user.plan === 'grace'
 						? '<strong>Grace</strong> period (GPT 3.5 Turbo & GPT 4)<br/>Downgrading to free user soon &nbsp;🫤'
-						: data.session?.user.plan === 'sponsored'
+						: data.session.user.plan === 'sponsored'
 						? '<strong>Sponsored</strong> user (GPT 3.5 Turbo & GPT 4)<br/>Paid for by Kaleab &nbsp;🎁'
-						: data.session?.user.plan}
+						: data.session.user.plan}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">
 					Stats
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
-					{data.messagesCount ?? 0}
+					{data.messagesCount ?? 0} active
 					{data.messagesCount === 1 ? 'message' : 'messages'} in {data.topicsCount ?? 0}
 					{data.topicsCount === 1 ? 'topic' : 'topics'}
 				</span>
