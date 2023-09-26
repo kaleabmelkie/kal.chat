@@ -16,7 +16,7 @@ config.github = {
 }
 
 config.functions = {
-	'*': {
+	'**/*': {
 		maxDuration: 300,
 	},
 }
