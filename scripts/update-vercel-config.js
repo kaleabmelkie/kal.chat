@@ -15,4 +15,10 @@ config.github = {
 	silent: true,
 }
 
+config.functions = {
+	'*': {
+		maxDuration: 300,
+	},
+}
+
 fs.writeFileSync(config_file, JSON.stringify(config, null, '\t'))
