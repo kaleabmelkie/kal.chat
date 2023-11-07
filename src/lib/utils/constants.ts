@@ -18,7 +18,7 @@ export const models: {
 	},
 	{
 		responseMode: 'better',
-		name: 'gpt-4',
+		name: 'gpt-4-1106-preview',
 		maxModelTokens: 8_192,
 		maxResponseTokens: 1_000,
 		get maxRequestTokens() {
