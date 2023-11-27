@@ -66,6 +66,7 @@ model Message {
   topicId Int
 
   @@index([topicId])
+  @@index([role, topicId])
 }
 
 enum RoleType {
