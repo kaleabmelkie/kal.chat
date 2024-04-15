@@ -1,5 +1,5 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { messagesTable, type SelectMessage } from '$lib/drizzle/schema/messages.server.js'
+import { messagesTable, type InsertMessage } from '$lib/drizzle/schema/messages.server.js'
 import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { messagesCountInContext, models } from '$lib/utils/constants'
@@ -115,9 +115,13 @@ export async function POST(event) {
 		})
 	).json()
 
+	const now = new Date()
+
 	const [{ rowsAffected: newMessagesCount }, [updatedTopic]] = await Promise.all([
 		db.insert(messagesTable).values([
 			{
+				createdAt: now,
+				updatedAt: now,
 				role: 'user',
 				content: message,
 				topicId: topicId,
@@ -128,7 +132,9 @@ export async function POST(event) {
 				.map((c) => c.message!)
 				.filter((m) => !!m?.content)
 				.map((m) => ({
-					role: m.role as SelectMessage['role'],
+					createdAt: now,
+					updatedAt: now,
+					role: m.role as InsertMessage['role'],
 					content: m.content as string,
 					topicId: topicId,
 				})),
@@ -164,12 +170,12 @@ export async function POST(event) {
 			await event.fetch(`/topic/${updatedTopic.id}/generate-title?force=false`, {
 				method: 'PUT',
 			})
-		).json()) as { title: string; updatedAt: string }
+		).json()) as { title: string; updatedAtStr: string }
 
 		const [updatedTopic2] = await db
 			.update(topicsTable)
 			.set({
-				updatedAt: new Date(),
+				updatedAt: new Date(generateTitleResponse.updatedAtStr),
 				title: generateTitleResponse.title,
 			})
 			.where(eq(topicsTable.id, topicId))

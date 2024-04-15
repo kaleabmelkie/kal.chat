@@ -7,6 +7,7 @@ if (!dbUrl) {
 
 export default {
 	schema: './src/lib/drizzle/schema/*.ts',
+	out: './src/lib/drizzle/out/',
 	driver: 'turso',
 	dbCredentials: {
 		url: dbUrl,

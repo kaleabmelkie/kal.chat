@@ -1,5 +1,5 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { messagesTable, type SelectMessage } from '$lib/drizzle/schema/messages.server.js'
+import { messagesTable, type InsertMessage } from '$lib/drizzle/schema/messages.server.js'
 import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
@@ -19,9 +19,13 @@ export async function GET(event) {
 	let topicId: number | null = null
 
 	await db.transaction(async (tx) => {
+		const now = new Date()
+
 		const topics = await tx
 			.insert(topicsTable)
 			.values({
+				createdAt: now,
+				updatedAt: now,
 				userId: session.user.id,
 			})
 			.returning({
@@ -35,13 +39,17 @@ export async function GET(event) {
 		await tx.insert(messagesTable).values(
 			[
 				{
+					createdAt: now,
+					updatedAt: now,
 					topicId,
 					role: 'system' as const,
 					content: generateSystemPrompt(session.user.name ?? undefined),
 				},
 				q
-					? (null as unknown as { topicId: number; role: SelectMessage['role']; content: string })
+					? (null as unknown as InsertMessage)
 					: {
+							createdAt: now,
+							updatedAt: now,
 							topicId,
 							role: 'assistant' as const,
 							content: generateGreeting(session.user.name ?? 'pal'),

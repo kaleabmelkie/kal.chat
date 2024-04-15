@@ -106,7 +106,7 @@ export async function PUT({ locals, params, url }) {
 		.where(and(eq(topicsTable.id, topic.id), eq(topicsTable.userId, session.user.id)))
 
 	return json({
-		updatedAt: (updatedTopic as unknown as typeof topic).updatedAt,
+		updatedAtStr: (updatedTopic as unknown as typeof topic).updatedAt.toISOString(),
 		title: newTitle,
 	})
 }

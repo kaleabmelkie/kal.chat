@@ -11,4 +11,3 @@ vite.config.ts.timestamp-*
 /static/~partytown
 .vscode
 .vercel
-_generated

@@ -32,8 +32,11 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			const existingUser = await db.query.usersTable.findFirst({
 				where: eq(usersTable.email, params.profile.email),
 			})
+			const now = new Date()
 			if (!existingUser) {
 				await db.insert(usersTable).values({
+					createdAt: now,
+					updatedAt: now,
 					name: params.profile.name ?? 'User',
 					email: params.profile.email,
 					image:
@@ -45,7 +48,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				await db
 					.update(usersTable)
 					.set({
-						updatedAt: new Date(),
+						updatedAt: now,
 						name: params.profile.name ?? existingUser.name,
 						email: params.profile.email ?? existingUser.email,
 						image:

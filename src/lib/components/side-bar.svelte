@@ -31,7 +31,10 @@
 		}
 	})
 
-	$: topics = $chatStore?.topicsHistory?.sort((a, b) => (a.updatedAt > b.updatedAt ? -1 : 1)) ?? []
+	$: topics =
+		$chatStore?.topicsHistory?.sort((a, b) =>
+			a.updatedAt.toISOString() > b.updatedAt.toISOString() ? -1 : 1,
+		) ?? []
 
 	let shouldScrollToTop = false
 

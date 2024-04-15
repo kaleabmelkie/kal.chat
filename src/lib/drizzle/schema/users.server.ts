@@ -1,16 +1,12 @@
-import { relations, sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { createInsertSchema } from 'drizzle-zod'
 import { topicsTable } from './topics.server'
 
 export const usersTable = sqliteTable('users', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	createdAt: integer('created_at', { mode: 'timestamp' })
-		.notNull()
-		.default(sql`CURRENT_TIMESTAMP`),
-	updatedAt: integer('updated_at', { mode: 'timestamp' })
-		.notNull()
-		.default(sql`CURRENT_TIMESTAMP`),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
 
 	name: text('name', { length: 64 }).notNull(),
 	email: text('email', { length: 320 }).notNull().unique(),
