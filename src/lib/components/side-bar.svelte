@@ -73,7 +73,7 @@
 				}
 
 				$chatStore.topicsHistory[topicHistoryIndex].title = response.title
-				$chatStore.topicsHistory[topicHistoryIndex].updatedAt = response.updatedAt
+				$chatStore.topicsHistory[topicHistoryIndex].updatedAt = new Date(response.updatedAtStr)
 				$chatStore = $chatStore
 
 				shouldScrollToTop = true
@@ -247,6 +247,11 @@
 												)
 											}
 											topic.title = newTitle
+											return r
+										})
+										.then(async (r) => {
+											const response = await r.json()
+											topic.updatedAt = new Date(response.updatedAtStr)
 										})
 										.catch((e) =>
 											err(

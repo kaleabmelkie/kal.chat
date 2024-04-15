@@ -14,13 +14,19 @@ export async function PUT({ locals, params, request }) {
 		throw error(400, 'You must provide a valid title')
 	}
 
-	await db
+	const [updatedTopic] = await db
 		.update(topicsTable)
 		.set({
 			updatedAt: new Date(),
 			title: data.title,
 		})
 		.where(and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)))
+		.returning({
+			updatedAt: topicsTable.updatedAt,
+		})
 
-	return json({ message: 'Topic title changed' })
+	return json({
+		updatedAtStr: updatedTopic.updatedAt.toISOString(),
+		title: data.title,
+	})
 }

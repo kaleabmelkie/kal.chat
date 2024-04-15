@@ -95,18 +95,19 @@ export async function PUT({ locals, params, url }) {
 		throw error(500, 'Could not generate a title')
 	}
 
-	const {
-		rows: [updatedTopic],
-	} = await db
+	const [updatedTopic] = await db
 		.update(topicsTable)
 		.set({
 			updatedAt: new Date(),
 			title: newTitle,
 		})
 		.where(and(eq(topicsTable.id, topic.id), eq(topicsTable.userId, session.user.id)))
+		.returning({
+			updatedAt: topicsTable.updatedAt,
+		})
 
 	return json({
-		updatedAtStr: (updatedTopic as unknown as typeof topic).updatedAt.toISOString(),
+		updatedAtStr: updatedTopic.updatedAt.toISOString(),
 		title: newTitle,
 	})
 }
