@@ -1,5 +1,7 @@
-import { prisma } from '$lib/utils/prisma.server'
+import { db } from '$lib/drizzle/db.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { error, json } from '@sveltejs/kit'
+import { and, eq } from 'drizzle-orm'
 
 export async function PUT({ locals, params, request }) {
 	const session = await locals.getSession()
@@ -12,15 +14,13 @@ export async function PUT({ locals, params, request }) {
 		throw error(400, 'You must provide a valid title')
 	}
 
-	await prisma.topic.update({
-		where: {
-			id: Number(params.id),
-			userId: session.user.id,
-		},
-		data: {
+	await db
+		.update(topicsTable)
+		.set({
+			updatedAt: new Date(),
 			title: data.title,
-		},
-	})
+		})
+		.where(and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)))
 
 	return json({ message: 'Topic title changed' })
 }

@@ -1,10 +1,11 @@
+import type { SelectMessage } from '$lib/drizzle/schema/messages.server'
+import type { SelectTopic } from '$lib/drizzle/schema/topics.server'
 import type { Session } from '@auth/core/types'
-import type { Message, Topic } from '@prisma/client'
 import { writable } from 'svelte/store'
 
 export type ChatStoreType = {
-	activeTopic: Pick<Topic, 'id' | 'responseMode'> & {
-		messages: Pick<Message, 'id' | 'role' | 'content'>[]
+	activeTopic: Pick<SelectTopic, 'id' | 'responseMode'> & {
+		messages: Pick<SelectMessage, 'id' | 'role' | 'content'>[]
 
 		newMessage: {
 			queue: string[]
@@ -34,7 +35,7 @@ export type ChatStoreType = {
 		prefersOpen: boolean
 	}
 
-	topicsHistory: (Pick<Topic, 'id' | 'updatedAt' | 'title'> & {
+	topicsHistory: (Pick<SelectTopic, 'id' | 'updatedAt' | 'title'> & {
 		messagesCount: number
 	})[]
 

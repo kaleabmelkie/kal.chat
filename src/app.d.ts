@@ -1,4 +1,4 @@
-import type { UserPlanType } from '@prisma/client'
+import type { SelectUser } from '$lib/drizzle/schema/users.server'
 
 declare global {
 	namespace App {
@@ -21,8 +21,8 @@ declare module '@auth/core/types' {
 			name: string
 			email: string
 			image?: string | null
-			plan: UserPlanType
-			ownOpenAiApiKey?: string | null
+			plan: SelectUser['plan']
+			ownOpenaiApiKey?: string | null
 		}
 	}
 }

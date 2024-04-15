@@ -1,12 +1,14 @@
+import { db } from '$lib/drizzle/db.server.js'
+import { messagesTable, type SelectMessage } from '$lib/drizzle/schema/messages.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { messagesCountInContext, models } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
-import { prisma } from '$lib/utils/prisma.server'
-import type { RoleType } from '@prisma/client'
 import { error, json, redirect } from '@sveltejs/kit'
+import { and, desc, eq, inArray } from 'drizzle-orm'
 import type {
 	ChatCompletionRequestMessage,
 	CreateChatCompletionResponse,
@@ -31,24 +33,25 @@ export async function POST(event) {
 		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
 	}
 
-	let { responseMode: responseMode } = await prisma.topic.findFirstOrThrow({
-		where: {
-			id: topicId,
-		},
-		select: {
+	const topic = await db.query.topicsTable.findFirst({
+		where: eq(topicsTable.id, topicId),
+		columns: {
 			responseMode: true,
 		},
 	})
+	if (!topic) {
+		throw error(404, 'Topic not found')
+	}
+	let responseMode = topic.responseMode
 	if (responseMode === 'better' && session.user.plan === 'free') {
-		const { responseMode: _responseMode } = await prisma.topic.update({
-			where: {
-				id: topicId,
-			},
-			data: {
+		await db
+			.update(topicsTable)
+			.set({
+				updatedAt: new Date(),
 				responseMode: 'faster',
-			},
-		})
-		responseMode = _responseMode
+			})
+			.where(eq(topicsTable.id, topicId))
+		responseMode = 'faster'
 	}
 
 	const model = models.find((m) => m.responseMode === responseMode)
@@ -57,23 +60,22 @@ export async function POST(event) {
 	}
 
 	const oldMessages = (
-		await prisma.message.findMany({
-			where: {
-				role: { in: ['assistant', 'user'] },
-				topic: {
-					id: topicId,
-					userId: session.user.id,
-				},
-			},
-			select: {
-				role: true,
-				content: true,
-			},
-			take: messagesCountInContext,
-			orderBy: {
-				id: 'desc',
-			},
-		})
+		await db
+			.select({
+				role: messagesTable.role,
+				content: messagesTable.content,
+			})
+			.from(messagesTable)
+			.leftJoin(topicsTable, eq(messagesTable.topicId, topicsTable.id))
+			.where(
+				and(
+					inArray(messagesTable.role, ['assistant', 'user']),
+					eq(messagesTable.topicId, topicId),
+					eq(topicsTable.userId, session.user.id),
+				),
+			)
+			.orderBy(desc(messagesTable.id))
+			.limit(messagesCountInContext)
 	).reverse()
 
 	const systemPrompt = generateSystemPrompt(session.user.name ?? undefined)
@@ -92,7 +94,7 @@ export async function POST(event) {
 		throw error(413, 'Too many tokens')
 	}
 
-	const openAiApi = getOpenAiApi(session.user.ownOpenAiApiKey ?? null)
+	const openAiApi = getOpenAiApi(session.user.ownOpenaiApiKey ?? null)
 
 	const moderationResponse: CreateModerationResponse = await (
 		await openAiApi.createModeration({
@@ -113,71 +115,70 @@ export async function POST(event) {
 		})
 	).json()
 
-	const [{ count: newMessagesCount }, topic] = await Promise.all([
-		prisma.message.createMany({
-			data: [
-				{
-					role: 'user',
-					content: message,
+	const [{ rowsAffected: newMessagesCount }, [updatedTopic]] = await Promise.all([
+		db.insert(messagesTable).values([
+			{
+				role: 'user',
+				content: message,
+				topicId: topicId,
+			},
+			// new messages:
+			...chatCompletionResponse.choices
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				.map((c) => c.message!)
+				.filter((m) => !!m?.content)
+				.map((m) => ({
+					role: m.role as SelectMessage['role'],
+					content: m.content as string,
 					topicId: topicId,
-				},
-				// new messages:
-				...chatCompletionResponse.choices
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					.map((c) => c.message!)
-					.filter((m) => !!m?.content)
-					.map((m) => ({
-						role: m.role as RoleType,
-						content: m.content as string,
-						topicId: topicId,
-					})),
-			],
-		}),
+				})),
+		]),
 
-		prisma.topic.update({
-			where: {
-				id: topicId,
-			},
-			data: {
+		db
+			.update(topicsTable)
+			.set({
 				updatedAt: new Date(),
-			},
-			select: {
-				id: true,
-				title: true,
-				updatedAt: true,
-			},
-		}),
+			})
+			.where(eq(topicsTable.id, topicId))
+			.returning({
+				id: topicsTable.id,
+				title: topicsTable.title,
+				updatedAt: topicsTable.updatedAt,
+			}),
 	])
 
-	const newMessages = await prisma.message.findMany({
-		where: {
-			topic: {
-				id: topicId,
-				userId: session.user.id,
-			},
-		},
-		orderBy: { id: 'desc' },
-		take: newMessagesCount,
-		select: { id: true, role: true, content: true },
-	})
+	const newMessages = await db
+		.select({
+			id: messagesTable.id,
+			role: messagesTable.role,
+			content: messagesTable.content,
+		})
+		.from(messagesTable)
+		.leftJoin(topicsTable, eq(messagesTable.topicId, topicsTable.id))
+		.where(and(eq(messagesTable.topicId, topicId), eq(topicsTable.userId, session.user.id)))
+		.orderBy(desc(messagesTable.id))
+		.limit(newMessagesCount)
 
-	if (!topic.title) {
+	if (!updatedTopic.title) {
 		const generateTitleResponse = (await (
-			await event.fetch(`/topic/${topic.id}/generate-title?force=false`, {
+			await event.fetch(`/topic/${updatedTopic.id}/generate-title?force=false`, {
 				method: 'PUT',
 			})
 		).json()) as { title: string; updatedAt: string }
 
-		const updatedTopic = await prisma.topic.update({
-			where: {
-				id: topicId,
-			},
-			data: {
+		const [updatedTopic2] = await db
+			.update(topicsTable)
+			.set({
+				updatedAt: new Date(),
 				title: generateTitleResponse.title,
-			},
-		})
-		topic.updatedAt = updatedTopic.updatedAt
-		topic.title = updatedTopic.title
+			})
+			.where(eq(topicsTable.id, topicId))
+			.returning({
+				updatedAt: topicsTable.updatedAt,
+				title: topicsTable.title,
+			})
+		updatedTopic.updatedAt = updatedTopic2.updatedAt
+		updatedTopic.title = updatedTopic2.title
 	}
 
 	return json({
@@ -186,7 +187,7 @@ export async function POST(event) {
 			role: m.role,
 			content: markdownToHtml(m.content),
 		})),
-		topicTitle: topic.title,
-		topicHistoryUpdatedAtIso: topic.updatedAt.toISOString(),
+		topicTitle: updatedTopic.title,
+		topicHistoryUpdatedAtIso: updatedTopic.updatedAt.toISOString(),
 	} satisfies NewMessageOkResponseBody)
 }

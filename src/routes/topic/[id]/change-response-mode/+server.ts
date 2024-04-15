@@ -1,8 +1,9 @@
-import { prisma } from '$lib/utils/prisma.server'
-import type { ResponseModeType } from '@prisma/client'
+import { db } from '$lib/drizzle/db.server.js'
+import { topicsTable, type SelectTopic } from '$lib/drizzle/schema/topics.server.js'
 import { error, json } from '@sveltejs/kit'
+import { and, eq } from 'drizzle-orm'
 
-const responseModes: ResponseModeType[] = ['faster', 'better']
+const responseModes: SelectTopic['responseMode'][] = ['faster', 'better']
 
 export async function PUT({ locals, params, request }) {
 	const session = await locals.getSession()
@@ -25,7 +26,7 @@ export async function PUT({ locals, params, request }) {
 	if (
 		data.responseMode === 'better' &&
 		session.user.plan === 'free' &&
-		!session.user.ownOpenAiApiKey
+		!session.user.ownOpenaiApiKey
 	) {
 		throw error(
 			402,
@@ -33,15 +34,13 @@ export async function PUT({ locals, params, request }) {
 		)
 	}
 
-	const { responseMode } = await prisma.topic.update({
-		where: {
-			id: Number(params.id),
-			userId: session.user.id,
-		},
-		data: {
+	await db
+		.update(topicsTable)
+		.set({
+			updatedAt: new Date(),
 			responseMode: data.responseMode,
-		},
-	})
+		})
+		.where(and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)))
 
-	return json({ message: `You'll now be getting ${responseMode} responses in this topic` })
+	return json({ message: `You'll now be getting ${data.responseMode} responses in this topic` })
 }

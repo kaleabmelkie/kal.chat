@@ -1,5 +1,7 @@
-import { prisma } from '$lib/utils/prisma.server'
+import { db } from '$lib/drizzle/db.server.js'
+import { usersTable } from '$lib/drizzle/schema/users.server.js'
 import { error, json } from '@sveltejs/kit'
+import { eq } from 'drizzle-orm'
 
 export async function PUT(event) {
 	const session = await event.locals.getSession()
@@ -12,14 +14,13 @@ export async function PUT(event) {
 		throw error(400, 'Bad request')
 	}
 
-	await prisma.user.update({
-		where: {
-			id: session.user.id,
-		},
-		data: {
+	await db
+		.update(usersTable)
+		.set({
+			updatedAt: new Date(),
 			prefersSideBarOpen: requestJson.prefersSideBarOpen,
-		},
-	})
+		})
+		.where(eq(usersTable.id, session.user.id))
 
 	return json({ message: 'Preferences updated' })
 }

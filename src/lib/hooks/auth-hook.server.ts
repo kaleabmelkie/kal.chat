@@ -6,12 +6,13 @@ import {
 	AUTH_USE_SECURE_COOKIES,
 	OWN_OPENAI_API_KEY_ENCRYPTION_KEY,
 } from '$env/static/private'
+import { db } from '$lib/drizzle/db.server'
+import { usersTable } from '$lib/drizzle/schema/users.server'
 import { decrypt } from '$lib/utils/encryption'
-import { prisma } from '$lib/utils/prisma.server'
 import GitHub from '@auth/core/providers/github'
 import Google from '@auth/core/providers/google'
-
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
+import { eq } from 'drizzle-orm'
 
 export const authHookConfig: SvelteKitAuthConfig = {
 	providers: [
@@ -28,27 +29,32 @@ export const authHookConfig: SvelteKitAuthConfig = {
 					`Email not found in your ${params.account?.provider ?? `login provider's`} account`,
 				)
 			}
-			await prisma.user.upsert({
-				where: {
-					email: params.profile.email,
-				},
-				create: {
-					name: params.profile.name ?? 'User',
-					email: params.profile.email,
-					image:
-						params.profile.picture ?? // google
-						params.profile.avatar_url ?? // github
-						null,
-				},
-				update: {
-					name: params.profile.name ?? 'User',
-					email: params.profile.email,
-					image:
-						params.profile.picture ?? // google
-						params.profile.avatar_url ?? // github
-						null,
-				},
+			const existingUser = await db.query.usersTable.findFirst({
+				where: eq(usersTable.email, params.profile.email),
 			})
+			if (!existingUser) {
+				await db.insert(usersTable).values({
+					name: params.profile.name ?? 'User',
+					email: params.profile.email,
+					image:
+						params.profile.picture ?? // google
+						params.profile.avatar_url ?? // github
+						null,
+				})
+			} else {
+				await db
+					.update(usersTable)
+					.set({
+						updatedAt: new Date(),
+						name: params.profile.name ?? existingUser.name,
+						email: params.profile.email ?? existingUser.email,
+						image:
+							params.profile.picture ?? // google
+							params.profile.avatar_url ?? // github
+							existingUser.image,
+					})
+					.where(eq(usersTable.email, params.profile.email))
+			}
 			return true
 		},
 
@@ -56,14 +62,12 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			if (!params.token.email) {
 				throw new Error(`Email not found in your JWT token.`)
 			}
-			const user = await prisma.user.findUnique({
-				where: {
-					email: params.token.email,
-				},
-				select: {
+			const user = await db.query.usersTable.findFirst({
+				where: eq(usersTable.email, params.token.email),
+				columns: {
 					id: true,
 					plan: true,
-					encryptedOwnOpenAiApiKey: true,
+					encryptedOwnOpenaiApiKey: true,
 				},
 			})
 			if (!user) {
@@ -73,9 +77,9 @@ export const authHookConfig: SvelteKitAuthConfig = {
 				...params.token,
 				userId: user.id,
 				userPlan: user.plan,
-				ownOpenAiApiKey: !user.encryptedOwnOpenAiApiKey
+				ownOpenaiApiKey: !user.encryptedOwnOpenaiApiKey
 					? null
-					: decrypt(user.encryptedOwnOpenAiApiKey, OWN_OPENAI_API_KEY_ENCRYPTION_KEY),
+					: decrypt(user.encryptedOwnOpenaiApiKey, OWN_OPENAI_API_KEY_ENCRYPTION_KEY),
 			}
 		},
 
@@ -86,7 +90,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 					...params.session.user,
 					id: params.token.userId,
 					plan: params.token.userPlan,
-					ownOpenAiApiKey: params.token.ownOpenAiApiKey,
+					ownOpenaiApiKey: params.token.ownOpenaiApiKey,
 				},
 			}
 		},
