@@ -15,24 +15,22 @@
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky install",
 		"sync": "svelte-kit sync",
-		"dev": "prisma generate && svelte-kit sync && vite dev --port 5173 --open",
-		"build": "prisma generate && svelte-kit sync && vite build && node scripts/update-vercel-config",
+		"dev": "svelte-kit sync && vite dev --port 5173",
+		"build": "svelte-kit sync && vite build && node scripts/update-vercel-config",
 		"preview": "vite preview --port 5173",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --check --write . && eslint --fix .",
-		"prisma": "prisma",
-		"prisma:gen": "prisma generate",
-		"prisma:pull": "prisma db pull",
-		"prisma:push": "prisma db push",
-		"prisma:studio": "prisma studio"
+		"db:check": "drizzle-kit check:sqlite",
+		"db:push": "drizzle-kit push:sqlite",
+		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@auth/core": "0.13.0",
 		"@auth/sveltekit": "0.3.7",
 		"@builder.io/partytown": "0.8.1",
-		"@prisma/client": "5.2.0",
+		"@libsql/client": "0.6.0",
 		"@sentry/node": "7.68.0",
 		"@sentry/svelte": "7.68.0",
 		"@sentry/tracing": "7.68.0",
@@ -49,6 +47,10 @@
 		"autoprefixer": "10.4.15",
 		"bowser": "2.11.0",
 		"dayjs": "1.11.9",
+		"dotenv": "16.4.5",
+		"drizzle-kit": "0.20.14",
+		"drizzle-orm": "0.30.8",
+		"drizzle-zod": "0.5.1",
 		"eslint": "8.48.0",
 		"eslint-config-prettier": "8.8.0",
 		"eslint-plugin-svelte": "2.33.0",
@@ -62,7 +64,6 @@
 		"prettier": "2.8.8",
 		"prettier-plugin-svelte": "2.10.1",
 		"prettier-plugin-tailwindcss": "0.4.1",
-		"prisma": "5.2.0",
 		"rollup-plugin-visualizer": "5.9.2",
 		"sanitize-html": "2.11.0",
 		"svelte": "4.2.0",
@@ -70,7 +71,9 @@
 		"tailwindcss": "3.3.3",
 		"tslib": "2.6.2",
 		"typescript": "5.2.2",
-		"vite": "4.4.9"
+		"vite": "4.4.9",
+		"zod": "3.22.4"
 	},
-	"type": "module"
+	"type": "module",
+	"packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }

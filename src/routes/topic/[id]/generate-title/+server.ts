@@ -1,8 +1,11 @@
+import { db } from '$lib/drizzle/db.server.js'
+import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { models } from '$lib/utils/constants.js'
 import { countTokens } from '$lib/utils/count-tokens'
 import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
-import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
+import { and, desc, eq, inArray } from 'drizzle-orm'
 import type { CreateChatCompletionResponse } from 'openai-edge'
 
 const maxTitleResponseTokens = 10
@@ -13,12 +16,12 @@ export async function PUT({ locals, params, url }) {
 		throw error(401, `You must be logged in to change a topic's title`)
 	}
 
-	let topic = await prisma.topic.findFirstOrThrow({
-		where: {
-			id: Number(params.id),
-			userId: session.user.id,
-		},
+	const topic = await db.query.topicsTable.findFirst({
+		where: and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)),
 	})
+	if (!topic) {
+		throw error(404, 'Topic not found')
+	}
 
 	if (topic.title && url.searchParams.get('force') !== 'true') {
 		throw error(400, 'Topic already has a title')
@@ -34,14 +37,12 @@ export async function PUT({ locals, params, url }) {
 		throw error(400, `Unsupported responseMode: faster`)
 	}
 
-	const reversedMessages = await prisma.message.findMany({
-		where: {
-			role: { in: ['assistant', 'user'] },
-			topicId: topic.id,
-		},
-		orderBy: {
-			createdAt: 'desc',
-		},
+	const reversedMessages = await db.query.messagesTable.findMany({
+		where: and(
+			inArray(messagesTable.role, ['assistant', 'user']),
+			eq(messagesTable.topicId, topic.id),
+		),
+		orderBy: desc(messagesTable.createdAt),
 	})
 	if (reversedMessages.length < 2) {
 		throw error(400, 'Not enough messages to generate a title')
@@ -58,7 +59,7 @@ export async function PUT({ locals, params, url }) {
 	}
 	messagesToAnalyze = messagesToAnalyze.reverse()
 
-	const openAiApi = getOpenAiApi(session.user.ownOpenAiApiKey ?? null)
+	const openAiApi = getOpenAiApi(session.user.ownOpenaiApiKey ?? null)
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openAiApi.createChatCompletion({
@@ -94,18 +95,18 @@ export async function PUT({ locals, params, url }) {
 		throw error(500, 'Could not generate a title')
 	}
 
-	topic = await prisma.topic.update({
-		where: {
-			id: topic.id,
-			userId: session.user.id,
-		},
-		data: {
+	const {
+		rows: [updatedTopic],
+	} = await db
+		.update(topicsTable)
+		.set({
+			updatedAt: new Date(),
 			title: newTitle,
-		},
-	})
+		})
+		.where(and(eq(topicsTable.id, topic.id), eq(topicsTable.userId, session.user.id)))
 
 	return json({
-		updatedAt: topic.updatedAt,
+		updatedAt: (updatedTopic as unknown as typeof topic).updatedAt,
 		title: newTitle,
 	})
 }

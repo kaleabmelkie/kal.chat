@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Message from '$lib/components/message.svelte'
+	import type { SelectTopic } from '$lib/drizzle/schema/topics.server'
 	import { chatStore, type ChatStoreType } from '$lib/stores/chat-store'
 	import { err, toast } from '$lib/stores/toasts-store'
 	import { messagesCountInContext } from '$lib/utils/constants'
-	import type { ResponseModeType } from '@prisma/client'
 	import { onDestroy, onMount } from 'svelte'
 
 	onMount(() => {
@@ -20,7 +20,7 @@
 
 	let isChangingResponseMode = false
 
-	async function changeResponseModeTo(newResponseMode: ResponseModeType) {
+	async function changeResponseModeTo(newResponseMode: SelectTopic['responseMode']) {
 		if (!$chatStore?.session) {
 			await err(`You must be logged in to change a topic's response mode`)
 			return
@@ -28,7 +28,7 @@
 		if (
 			newResponseMode === 'better' &&
 			$chatStore.session.user.plan === 'free' &&
-			!$chatStore.session.user.ownOpenAiApiKey
+			!$chatStore.session.user.ownOpenaiApiKey
 		) {
 			await err(
 				'You must either upgrade to a paid plan or provide your own OpenAI API key (in Advanced Settings) to use the better response mode',

@@ -1,7 +1,9 @@
 import { OWN_OPENAI_API_KEY_ENCRYPTION_KEY } from '$env/static/private'
+import { db } from '$lib/drizzle/db.server.js'
+import { usersTable } from '$lib/drizzle/schema/users.server.js'
 import { encrypt } from '$lib/utils/encryption.js'
-import { prisma } from '$lib/utils/prisma.server'
 import { error, json } from '@sveltejs/kit'
+import { eq } from 'drizzle-orm'
 
 export async function PUT(event) {
 	const session = await event.locals.getSession()
@@ -10,24 +12,23 @@ export async function PUT(event) {
 	}
 
 	const requestJson = await event.request.json()
-	if (typeof requestJson?.ownOpenAiApiKey !== 'string' && requestJson?.ownOpenAiApiKey !== null) {
+	if (typeof requestJson?.ownOpenaiApiKey !== 'string' && requestJson?.ownOpenaiApiKey !== null) {
 		throw error(400, 'Bad request')
 	}
 
-	const encryptedOwnOpenAiApiKey = !requestJson.ownOpenAiApiKey
+	const encryptedOwnOpenaiApiKey = !requestJson.ownOpenaiApiKey
 		? null
-		: encrypt(requestJson.ownOpenAiApiKey, OWN_OPENAI_API_KEY_ENCRYPTION_KEY)
+		: encrypt(requestJson.ownOpenaiApiKey, OWN_OPENAI_API_KEY_ENCRYPTION_KEY)
 
-	await prisma.user.update({
-		where: {
-			id: session.user.id,
-		},
-		data: {
-			encryptedOwnOpenAiApiKey,
-		},
-	})
+	await db
+		.update(usersTable)
+		.set({
+			updatedAt: new Date(),
+			encryptedOwnOpenaiApiKey,
+		})
+		.where(eq(usersTable.id, session.user.id))
 
 	return json({
-		message: `Own OpenAI API key ${encryptedOwnOpenAiApiKey !== null ? 'updated' : 'deleted'}`,
+		message: `Own OpenAI API key ${encryptedOwnOpenaiApiKey !== null ? 'updated' : 'deleted'}`,
 	})
 }

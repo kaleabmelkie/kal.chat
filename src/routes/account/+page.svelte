@@ -117,8 +117,8 @@
 								err('No session found. Own OpenAI API key update cancelled.')
 								return
 							}
-							const ownOpenAiApiKey = prompt('Please enter your OpenAI API key:')
-							if (!ownOpenAiApiKey) {
+							const ownOpenaiApiKey = prompt('Please enter your OpenAI API key:')
+							if (!ownOpenaiApiKey) {
 								err('No API key entered. Own OpenAI API key update cancelled.')
 								return
 							}
@@ -130,7 +130,7 @@
 										'Content-Type': 'application/json',
 									},
 									body: JSON.stringify({
-										ownOpenAiApiKey,
+										ownOpenaiApiKey,
 									}),
 								})
 								if (!response.ok) {
@@ -144,7 +144,7 @@
 									throw new Error(message)
 								}
 
-								data.session.user.ownOpenAiApiKey = ownOpenAiApiKey
+								data.session.user.ownOpenaiApiKey = ownOpenaiApiKey
 
 								await toast('Now, using your own OpenAI API key.')
 							} catch (e) {
@@ -156,12 +156,12 @@
 							}
 						}}
 					>
-						{!data.session.user.ownOpenAiApiKey
+						{!data.session.user.ownOpenaiApiKey
 							? 'Use your own OpenAI API key'
 							: 'Update your own OpenAI API key'}
 					</button>
 
-					{#if data.session.user.ownOpenAiApiKey}
+					{#if data.session.user.ownOpenaiApiKey}
 						<button
 							class="button button-danger pointer-events-auto {isActive ? 'button-loading' : ''}"
 							type="button"
@@ -186,7 +186,7 @@
 											'Content-Type': 'application/json',
 										},
 										body: JSON.stringify({
-											ownOpenAiApiKey: null,
+											ownOpenaiApiKey: null,
 										}),
 									})
 									if (!response.ok) {
@@ -200,7 +200,7 @@
 										throw new Error(message)
 									}
 
-									data.session.user.ownOpenAiApiKey = null
+									data.session.user.ownOpenaiApiKey = null
 
 									await toast(
 										`Deleted your own OpenAI API key. Now, using kal.chat's built-in key.`,

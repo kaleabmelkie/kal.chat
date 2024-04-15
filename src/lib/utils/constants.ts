@@ -1,7 +1,7 @@
-import type { ResponseModeType } from '@prisma/client'
+import type { SelectTopic } from '$lib/drizzle/schema/topics.server'
 
 export const models: {
-	responseMode: ResponseModeType
+	responseMode: SelectTopic['responseMode']
 	name: string
 	maxModelTokens: number
 	maxResponseTokens: number

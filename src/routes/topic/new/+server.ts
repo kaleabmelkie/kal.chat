@@ -1,8 +1,9 @@
+import { db } from '$lib/drizzle/db.server.js'
+import { messagesTable, type SelectMessage } from '$lib/drizzle/schema/messages.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
-import { prisma } from '$lib/utils/prisma.server'
-import type { RoleType } from '@prisma/client'
-import { redirect } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 
 export async function GET(event) {
 	const session = await event.locals.getSession()
@@ -15,31 +16,39 @@ export async function GET(event) {
 
 	const q = event.url.searchParams.get('q') || null
 
-	const topic = await prisma.topic.create({
-		data: {
-			user: {
-				connect: {
-					id: session.user.id,
+	let topicId: number | null = null
+
+	await db.transaction(async (tx) => {
+		const topics = await tx
+			.insert(topicsTable)
+			.values({
+				userId: session.user.id,
+			})
+			.returning({
+				id: topicsTable.id,
+			})
+		topicId = topics[0]?.id ?? null
+		if (topicId === null) {
+			throw error(500, 'Failed to create topic')
+		}
+
+		await tx.insert(messagesTable).values(
+			[
+				{
+					topicId,
+					role: 'system' as const,
+					content: generateSystemPrompt(session.user.name ?? undefined),
 				},
-			},
-			Message: {
-				createMany: {
-					data: [
-						{
-							role: 'system' as const,
-							content: generateSystemPrompt(session.user.name ?? undefined),
-						},
-						q
-							? (null as unknown as { role: RoleType; content: string })
-							: {
-									role: 'assistant' as const,
-									content: generateGreeting(session.user.name ?? 'pal'),
-							  },
-					].filter((d) => d !== null),
-				},
-			},
-		},
+				q
+					? (null as unknown as { topicId: number; role: SelectMessage['role']; content: string })
+					: {
+							topicId,
+							role: 'assistant' as const,
+							content: generateGreeting(session.user.name ?? 'pal'),
+					  },
+			].filter((d) => d !== null),
+		)
 	})
 
-	throw redirect(302, `/topic/${topic.id}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
+	throw redirect(302, `/topic/${topicId}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
 }

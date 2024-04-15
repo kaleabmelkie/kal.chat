@@ -1,8 +1,11 @@
+import { db } from '$lib/drizzle/db.server.js'
+import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { authHookConfig } from '$lib/hooks/auth-hook.server'
-import { prisma } from '$lib/utils/prisma.server'
 import type { OAuth2Config, OIDCConfig } from '@auth/core/providers/oauth.js'
 import type { Profile } from '@auth/core/types.js'
 import { redirect } from '@sveltejs/kit'
+import { and, count, eq, not } from 'drizzle-orm'
 
 export async function load(event) {
 	const { session } = await event.parent()
@@ -31,21 +34,23 @@ export async function load(event) {
 		topicsCount:
 			typeof session?.user.id !== 'number'
 				? 0
-				: prisma.topic.count({
-						where: {
-							userId: session.user.id,
-						},
-				  }),
+				: (
+						await db
+							.select({ count: count() })
+							.from(topicsTable)
+							.where(eq(topicsTable.userId, session.user.id))
+				  )[0].count,
 		messagesCount:
 			typeof session?.user.id !== 'number'
 				? 0
-				: prisma.message.count({
-						where: {
-							role: { not: 'system' },
-							topic: {
-								userId: session.user.id,
-							},
-						},
-				  }),
+				: (
+						await db
+							.select({ count: count() })
+							.from(messagesTable)
+							.leftJoin(topicsTable, eq(messagesTable.topicId, topicsTable.id))
+							.where(
+								and(not(eq(messagesTable.role, 'system')), eq(topicsTable.userId, session.user.id)),
+							)
+				  )[0].count,
 	}
 }

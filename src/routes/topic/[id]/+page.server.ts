@@ -1,10 +1,14 @@
+import { db } from '$lib/drizzle/db.server.js'
+import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import { usersTable } from '$lib/drizzle/schema/users.server.js'
 import type { ChatStoreType } from '$lib/stores/chat-store.js'
 import { messagesCountInContext } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
-import { prisma } from '$lib/utils/prisma.server'
 import { error, redirect } from '@sveltejs/kit'
+import { and, asc, desc, eq, not } from 'drizzle-orm'
 
 export async function load(event) {
 	const { browser, session } = await event.parent()
@@ -20,55 +24,46 @@ export async function load(event) {
 		countTokens(generateSystemPrompt(session.user.name ?? undefined)),
 
 		// loggedInUserPromise
-		prisma.user.findFirstOrThrow({
-			where: {
-				id: session.user.id,
-			},
-			select: {
+		db.query.usersTable.findFirst({
+			where: eq(usersTable.id, session.user.id),
+			columns: {
 				prefersSideBarOpen: true,
 			},
 		}),
 
 		// topicsHistoryPromise
-		prisma.topic.findMany({
-			where: {
-				userId: session.user.id,
-			},
-			select: {
+		db.query.topicsTable.findMany({
+			where: eq(topicsTable.userId, session.user.id),
+			columns: {
 				id: true,
 				title: true,
 				updatedAt: true,
-				Message: {
-					where: {
-						role: { not: 'system' },
-					},
-					select: {
+			},
+			with: {
+				messages: {
+					where: not(eq(messagesTable.role, 'system')),
+					columns: {
 						id: true,
 					},
 				},
 			},
-			orderBy: {
-				updatedAt: 'desc',
-			},
 		}),
 
 		// activeTopic
-		await prisma.topic.findFirst({
-			where: {
-				id: Number(event.params.id),
-				userId: session.user.id,
-			},
-			orderBy: {
-				updatedAt: 'desc',
-			},
-			select: {
+		await db.query.topicsTable.findFirst({
+			where: and(
+				eq(topicsTable.id, Number(event.params.id)),
+				eq(topicsTable.userId, session.user.id),
+			),
+			orderBy: [desc(topicsTable.updatedAt)],
+			columns: {
 				id: true,
 				responseMode: true,
-				Message: {
-					orderBy: {
-						createdAt: 'asc',
-					},
-					select: {
+			},
+			with: {
+				messages: {
+					orderBy: [asc(messagesTable.createdAt)],
+					columns: {
 						id: true,
 						role: true,
 						content: true,
@@ -78,6 +73,13 @@ export async function load(event) {
 		}),
 	])
 
+	if (!loggedInUser) {
+		throw redirect(
+			302,
+			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
+		)
+	}
+
 	if (!activeTopic) {
 		throw error(
 			404,
@@ -86,22 +88,21 @@ export async function load(event) {
 	}
 
 	if (activeTopic.responseMode === 'better' && session.user.plan === 'free') {
-		const { responseMode } = await prisma.topic.update({
-			where: {
-				id: activeTopic.id,
-			},
-			data: {
+		await db
+			.update(topicsTable)
+			.set({
+				updatedAt: new Date(),
 				responseMode: 'faster',
-			},
-		})
-		activeTopic.responseMode = responseMode
+			})
+			.where(eq(topicsTable.id, activeTopic.id))
+		activeTopic.responseMode = 'faster'
 	}
 
 	return {
 		activeTopic: {
 			id: activeTopic.id,
 			responseMode: activeTopic.responseMode,
-			messages: activeTopic.Message.map((m) => ({
+			messages: activeTopic.messages.map((m) => ({
 				...m,
 				content: markdownToHtml(m.content),
 			})),
@@ -122,15 +123,15 @@ export async function load(event) {
 		},
 
 		sideBar: {
-			isOpen: browser.isDesktop ? loggedInUser.prefersSideBarOpen : false,
-			prefersOpen: loggedInUser.prefersSideBarOpen,
+			isOpen: browser.isDesktop ? loggedInUser.prefersSideBarOpen ?? false : false,
+			prefersOpen: loggedInUser.prefersSideBarOpen ?? false,
 		},
 
 		topicsHistory: topicsHistory.map((t) => ({
 			id: t.id,
 			updatedAt: t.updatedAt,
 			title: t.title,
-			messagesCount: t.Message.length,
+			messagesCount: t.messages.length,
 		})),
 
 		window: {

@@ -1,5 +1,7 @@
-import { prisma } from '$lib/utils/prisma.server'
+import { db } from '$lib/drizzle/db.server.js'
+import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { redirect } from '@sveltejs/kit'
+import { and, desc, eq, isNull } from 'drizzle-orm'
 
 export async function GET(event) {
 	const session = await event.locals.getSession()
@@ -10,18 +12,13 @@ export async function GET(event) {
 		)
 	}
 
-	const latestTopic = await prisma.topic.findFirst({
-		where: {
-			userId: session.user.id,
-		},
-		select: {
+	const latestTopic = await db.query.topicsTable.findFirst({
+		where: eq(topicsTable.userId, session.user.id),
+		orderBy: desc(topicsTable.id),
+		columns: {
 			id: true,
 			title: true,
 		},
-		orderBy: {
-			id: 'desc',
-		},
-		take: 1,
 	})
 
 	if (!latestTopic) {
@@ -29,18 +26,12 @@ export async function GET(event) {
 	} else if (!latestTopic.title) {
 		throw redirect(302, `/topic/${latestTopic.id}`)
 	} else {
-		const latestUntitledTopic = await prisma.topic.findFirst({
-			where: {
-				userId: session.user.id,
-				title: null,
-			},
-			select: {
+		const latestUntitledTopic = await db.query.topicsTable.findFirst({
+			where: and(eq(topicsTable.userId, session.user.id), isNull(topicsTable.title)),
+			orderBy: desc(topicsTable.id),
+			columns: {
 				id: true,
 			},
-			orderBy: {
-				id: 'desc',
-			},
-			take: 1,
 		})
 		if (latestUntitledTopic) {
 			throw redirect(302, `/topic/${latestUntitledTopic.id}`)

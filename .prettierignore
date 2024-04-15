@@ -11,6 +11,7 @@ node_modules
 /static/~partytown
 .vscode
 .vercel
+_generated
 .*
 
 # Ignore files for PNPM, NPM and YARN
