@@ -7,11 +7,11 @@ import {
 	OWN_OPENAI_API_KEY_ENCRYPTION_KEY,
 } from '$env/static/private'
 import { db } from '$lib/drizzle/db.server'
-import { usersTable } from '$lib/drizzle/schema/users.server'
+import { usersTable, type SelectUser } from '$lib/drizzle/schema/users.server'
 import { decrypt } from '$lib/utils/encryption'
-import GitHub from '@auth/core/providers/github'
-import Google from '@auth/core/providers/google'
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
+import GitHub from '@auth/sveltekit/providers/github'
+import Google from '@auth/sveltekit/providers/google'
 import { eq } from 'drizzle-orm'
 
 export const authHookConfig: SvelteKitAuthConfig = {
@@ -23,7 +23,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 	useSecureCookies: AUTH_USE_SECURE_COOKIES === 'true',
 
 	callbacks: {
-		signIn: async (params) => {
+		async signIn(params) {
 			if (!params.profile?.email) {
 				throw new Error(
 					`Email not found in your ${params.account?.provider ?? `login provider's`} account`,
@@ -61,7 +61,7 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			return true
 		},
 
-		jwt: async (params) => {
+		async jwt(params) {
 			if (!params.token.email) {
 				throw new Error(`Email not found in your JWT token.`)
 			}
@@ -86,14 +86,14 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			}
 		},
 
-		session: async (params) => {
+		async session(params) {
 			return {
 				...params.session,
 				user: {
 					...params.session.user,
-					id: params.token.userId,
-					plan: params.token.userPlan,
-					ownOpenaiApiKey: params.token.ownOpenaiApiKey,
+					id: params.token.userId as number,
+					plan: params.token.userPlan as SelectUser['plan'],
+					ownOpenaiApiKey: params.token.ownOpenaiApiKey as string | null,
 				},
 			}
 		},
@@ -106,4 +106,4 @@ export const authHookConfig: SvelteKitAuthConfig = {
 	},
 }
 
-export const authHook = SvelteKitAuth(authHookConfig)
+export const { handle: authHook } = SvelteKitAuth(authHookConfig)

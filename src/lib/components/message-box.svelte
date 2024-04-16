@@ -278,7 +278,7 @@
 </script>
 
 <div
-	class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mt-[-7.25rem] bg-gradient-to-t from-primary-50 px-4 transition-all dark:from-black lg:px-6 {$chatStore
+	class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 mt-[-7.25rem] bg-gradient-to-t from-primary-50 px-4 transition-all lg:px-6 dark:from-black {$chatStore
 		?.sideBar.isOpen
 		? 'sm:left-[18rem]'
 		: 'left-0'}"
@@ -409,7 +409,7 @@
 			0} messages, and the current value in the new message box. Maximum allowed is {maxRequestTokens}."
 	>
 		<a
-			class="pointer-events-auto font-semibold text-primary-700/75 underline-offset-2 hover:underline dark:text-primary-400/75 lg:left-6"
+			class="pointer-events-auto font-semibold text-primary-700/75 underline-offset-2 hover:underline lg:left-6 dark:text-primary-400/75"
 			href="mailto:support@kal.chat?subject=Feedback"
 			target="_blank"
 			title="Send feedback to feedback@kal.chat"

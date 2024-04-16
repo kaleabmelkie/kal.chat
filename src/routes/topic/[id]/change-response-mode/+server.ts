@@ -6,8 +6,8 @@ import { and, eq } from 'drizzle-orm'
 const responseModes: SelectTopic['responseMode'][] = ['faster', 'better']
 
 export async function PUT({ locals, params, request }) {
-	const session = await locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw error(401, `You must be logged in to change a topic's response mode`)
 	}
 

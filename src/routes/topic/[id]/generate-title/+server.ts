@@ -11,8 +11,8 @@ import type { CreateChatCompletionResponse } from 'openai-edge'
 const maxTitleResponseTokens = 10
 
 export async function PUT({ locals, params, url }) {
-	const session = await locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw error(401, `You must be logged in to change a topic's title`)
 	}
 

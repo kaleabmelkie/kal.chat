@@ -4,8 +4,8 @@ import { error, json } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
 
 export async function DELETE({ locals, params }) {
-	const session = await locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw error(401, 'You must be logged in to delete a topic')
 	}
 

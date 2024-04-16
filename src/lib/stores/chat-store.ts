@@ -1,6 +1,6 @@
 import type { SelectMessage } from '$lib/drizzle/schema/messages.server'
 import type { SelectTopic } from '$lib/drizzle/schema/topics.server'
-import type { Session } from '@auth/core/types'
+import type { Session } from '@auth/sveltekit'
 import { writable } from 'svelte/store'
 
 export type ChatStoreType = {

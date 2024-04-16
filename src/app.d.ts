@@ -14,7 +14,7 @@ declare global {
 	}
 }
 
-declare module '@auth/core/types' {
+declare module '@auth/sveltekit' {
 	interface Session {
 		user: {
 			id: number

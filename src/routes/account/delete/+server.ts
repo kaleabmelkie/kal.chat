@@ -4,8 +4,8 @@ import { error, json } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
 export async function DELETE(event) {
-	const session = await event.locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await event.locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw error(401, 'Unauthorized')
 	}
 

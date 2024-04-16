@@ -28,8 +28,8 @@ export async function POST(event) {
 		throw error(400, `Empty message`)
 	}
 
-	const session = await event.locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await event.locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
 	}
 

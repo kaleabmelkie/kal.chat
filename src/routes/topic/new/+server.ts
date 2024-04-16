@@ -6,8 +6,8 @@ import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { error, redirect } from '@sveltejs/kit'
 
 export async function GET(event) {
-	const session = await event.locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await event.locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,

@@ -291,8 +291,8 @@
 			{#each data.providers as provider (provider.id)}
 				<button
 					class="pointer-events-auto flex w-full transform-gpu items-center justify-center gap-4 rounded-[1.75rem] bg-white/90 px-4 py-3 text-lg font-semibold text-primary-600 backdrop-blur transition-all hover:bg-white/95 hover:shadow hover:shadow-primary-600/10 focus:bg-white/95 active:bg-white/75 active:shadow-none disabled:animate-pulse disabled:bg-white/50 dark:bg-primary-950/90 dark:text-primary-400 dark:hover:bg-primary-950/95 dark:focus:bg-primary-950/95 dark:active:bg-primary-950/75 dark:disabled:bg-primary-950/50"
-					style={provider.style?.bgDark && provider.style.textDark
-						? `background-color: ${provider.style.bgDark}; color: ${provider.style.textDark};`
+					style={provider.style?.bg && provider.style.text
+						? `background-color: ${provider.style.bg}; color: ${provider.style.text};`
 						: ''}
 					type="button"
 					disabled={isActive}
@@ -312,12 +312,14 @@
 				>
 					{#if provider.style?.logo}
 						<img
-							class="block h-6 w-6 {provider.style.bgDark !== '#fff' ? 'invert' : ''}"
+							class="block h-6 w-6 {provider.style.bg !== '#fff' ? 'invert' : ''}"
 							src="/assets/social-login-provider-icons{provider.style.logo}"
 							alt={provider.name}
 						/>
 					{/if}
-					<div class="flex-1 pr-10 text-center">{provider.name}</div>
+					<div class="flex-1 text-center {provider.style?.logo ? 'pr-10' : ''}">
+						{provider.name}
+					</div>
 				</button>
 			{/each}
 			<div />

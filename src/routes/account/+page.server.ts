@@ -2,8 +2,8 @@ import { db } from '$lib/drizzle/db.server.js'
 import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
 import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
 import { authHookConfig } from '$lib/hooks/auth-hook.server'
-import type { OAuth2Config, OIDCConfig } from '@auth/core/providers/oauth.js'
-import type { Profile } from '@auth/core/types.js'
+import type { Profile } from '@auth/sveltekit'
+import type { OAuth2Config, OIDCConfig } from '@auth/sveltekit/providers'
 import { redirect } from '@sveltejs/kit'
 import { and, count, eq, not } from 'drizzle-orm'
 
@@ -13,7 +13,7 @@ export async function load(event) {
 	const requestedRedirectTo = event.url.searchParams.get('redirectTo') ?? null
 	const redirectTo = `/${requestedRedirectTo?.slice(1) ?? ''}`
 
-	if (typeof session?.user.id === 'number' && requestedRedirectTo !== null) {
+	if (typeof session?.user?.id === 'number' && requestedRedirectTo !== null) {
 		throw redirect(302, redirectTo)
 	}
 
@@ -32,7 +32,7 @@ export async function load(event) {
 				style: (p as OAuth2Config<Profile> | OIDCConfig<Profile>).style,
 			})),
 		topicsCount:
-			typeof session?.user.id !== 'number'
+			typeof session?.user?.id !== 'number'
 				? 0
 				: (
 						await db
@@ -41,7 +41,7 @@ export async function load(event) {
 							.where(eq(topicsTable.userId, session.user.id))
 				  )[0].count,
 		messagesCount:
-			typeof session?.user.id !== 'number'
+			typeof session?.user?.id !== 'number'
 				? 0
 				: (
 						await db

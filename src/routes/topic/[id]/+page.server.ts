@@ -12,7 +12,7 @@ import { and, asc, desc, eq, not } from 'drizzle-orm'
 
 export async function load(event) {
 	const { browser, session } = await event.parent()
-	if (typeof session?.user.id !== 'number') {
+	if (typeof session?.user?.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,

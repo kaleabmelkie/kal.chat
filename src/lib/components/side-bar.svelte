@@ -96,7 +96,7 @@
 	}}
 >
 	<div
-		class="absolute z-20 h-full w-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white sm:static sm:w-[18rem] sm:bg-white/25 dark:sm:bg-primary-950/20"
+		class="absolute z-20 h-full w-screen overflow-y-auto overflow-x-hidden scroll-smooth bg-white pt-[4.75rem] sm:static sm:w-[18rem] sm:bg-white/25 dark:bg-primary-950 dark:bg-gradient-to-t dark:from-black/5 dark:to-black/60 dark:text-white dark:sm:bg-primary-950/20"
 		on:scroll={(e) => (isAtTheTop = e.currentTarget.scrollTop === 0)}
 		transition:fly={{ duration: 150, x: -288 }}
 	>

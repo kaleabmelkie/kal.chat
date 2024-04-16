@@ -4,8 +4,8 @@ import { redirect } from '@sveltejs/kit'
 import { and, desc, eq, isNull } from 'drizzle-orm'
 
 export async function GET(event) {
-	const session = await event.locals.getSession()
-	if (typeof session?.user.id !== 'number') {
+	const session = await event.locals.auth()
+	if (typeof session?.user?.id !== 'number') {
 		throw redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
