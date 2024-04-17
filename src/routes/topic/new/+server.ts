@@ -1,6 +1,14 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { messagesTable, type InsertMessage } from '$lib/drizzle/schema/messages.server.js'
-import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import {
+	insertMessageSchema,
+	messagesTable,
+	type InsertMessage,
+} from '$lib/drizzle/schema/messages.server.js'
+import {
+	insertTopicSchema,
+	topicsTable,
+	type InsertTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import { generateGreeting } from '$lib/utils/generate-greeting.server'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
 import { error, redirect } from '@sveltejs/kit'
@@ -23,11 +31,13 @@ export async function GET(event) {
 
 		const topics = await tx
 			.insert(topicsTable)
-			.values({
-				createdAt: now,
-				updatedAt: now,
-				userId: session.user.id,
-			})
+			.values(
+				insertTopicSchema.parse({
+					createdAt: now,
+					updatedAt: now,
+					userId: session.user.id,
+				} satisfies InsertTopic) satisfies InsertTopic,
+			)
 			.returning({
 				id: topicsTable.id,
 			})
@@ -44,17 +54,19 @@ export async function GET(event) {
 					topicId,
 					role: 'system' as const,
 					content: generateSystemPrompt(session.user.name ?? undefined),
-				},
+				} satisfies InsertMessage,
 				q
 					? (null as unknown as InsertMessage)
-					: {
+					: ({
 							createdAt: now,
 							updatedAt: now,
 							topicId,
 							role: 'assistant' as const,
 							content: generateGreeting(session.user.name ?? 'pal'),
-						},
-			].filter((d) => d !== null),
+						} satisfies InsertMessage),
+			]
+				.filter((v) => v !== null)
+				.map((v) => insertMessageSchema.parse(v)) satisfies InsertMessage[],
 		)
 	})
 

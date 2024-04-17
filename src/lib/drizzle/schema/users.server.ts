@@ -32,8 +32,10 @@ export const usersRelations = relations(usersTable, ({ many }) => ({
 }))
 
 export type InsertUser = typeof usersTable.$inferInsert
+export type UpdateUser = Partial<InsertUser>
 export type SelectUser = typeof usersTable.$inferSelect
 
 export const insertUserSchema = createInsertSchema(usersTable, {
 	email: (schema) => schema.email.email(),
 })
+export const updateUserSchema = insertUserSchema.partial()

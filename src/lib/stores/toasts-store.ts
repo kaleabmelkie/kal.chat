@@ -52,5 +52,11 @@ export async function err(e?: Error | string, timeout?: number | null) {
 
 	console.error(e)
 
-	return toast(e?.message ?? 'Unknown error', 'error', timeout)
+	return toast(
+		Array.isArray(e)
+			? e.map((i) => i?.message ?? 'Unknown error').join('\n')
+			: e?.message ?? 'Unknown error',
+		'error',
+		timeout,
+	)
 }

@@ -1,6 +1,14 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { messagesTable, type InsertMessage } from '$lib/drizzle/schema/messages.server.js'
-import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import {
+	insertMessageSchema,
+	messagesTable,
+	type InsertMessage,
+} from '$lib/drizzle/schema/messages.server.js'
+import {
+	topicsTable,
+	updateTopicSchema,
+	type UpdateTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { messagesCountInContext, models } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
@@ -46,10 +54,12 @@ export async function POST(event) {
 	if (responseMode === 'better' && session.user.plan === 'free') {
 		await db
 			.update(topicsTable)
-			.set({
-				updatedAt: new Date(),
-				responseMode: 'faster',
-			})
+			.set(
+				updateTopicSchema.parse({
+					updatedAt: new Date(),
+					responseMode: 'faster',
+				} satisfies UpdateTopic) satisfies UpdateTopic,
+			)
 			.where(eq(topicsTable.id, topicId))
 		responseMode = 'faster'
 	}
@@ -118,33 +128,40 @@ export async function POST(event) {
 	const now = new Date()
 
 	const [{ rowsAffected: newMessagesCount }, [updatedTopic]] = await Promise.all([
-		db.insert(messagesTable).values([
-			{
-				createdAt: now,
-				updatedAt: now,
-				role: 'user',
-				content: message,
-				topicId: topicId,
-			},
-			// new messages:
-			...chatCompletionResponse.choices
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				.map((c) => c.message!)
-				.filter((m) => !!m?.content)
-				.map((m) => ({
+		db.insert(messagesTable).values(
+			[
+				{
 					createdAt: now,
 					updatedAt: now,
-					role: m.role as InsertMessage['role'],
-					content: m.content as string,
+					role: 'user',
+					content: message,
 					topicId: topicId,
-				})),
-		]),
+				} satisfies InsertMessage,
+				// new messages:
+				...chatCompletionResponse.choices
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					.map((c) => c.message!)
+					.filter((m) => !!m?.content)
+					.map(
+						(m) =>
+							({
+								createdAt: now,
+								updatedAt: now,
+								role: m.role as InsertMessage['role'],
+								content: m.content as string,
+								topicId: topicId,
+							}) satisfies InsertMessage,
+					),
+			].map((v) => insertMessageSchema.parse(v)) satisfies InsertMessage[],
+		),
 
 		db
 			.update(topicsTable)
-			.set({
-				updatedAt: new Date(),
-			})
+			.set(
+				updateTopicSchema.parse({
+					updatedAt: new Date(),
+				} satisfies UpdateTopic) satisfies UpdateTopic,
+			)
 			.where(eq(topicsTable.id, topicId))
 			.returning({
 				id: topicsTable.id,
@@ -174,10 +191,12 @@ export async function POST(event) {
 
 		const [updatedTopic2] = await db
 			.update(topicsTable)
-			.set({
-				updatedAt: new Date(generateTitleResponse.updatedAtStr),
-				title: generateTitleResponse.title,
-			})
+			.set(
+				updateTopicSchema.parse({
+					updatedAt: new Date(generateTitleResponse.updatedAtStr),
+					title: generateTitleResponse.title,
+				} satisfies UpdateTopic) satisfies UpdateTopic,
+			)
 			.where(eq(topicsTable.id, topicId))
 			.returning({
 				updatedAt: topicsTable.updatedAt,

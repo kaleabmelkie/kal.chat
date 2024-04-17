@@ -35,6 +35,8 @@ export const topicsRelations = relations(topicsTable, ({ one, many }) => ({
 }))
 
 export type InsertTopic = typeof topicsTable.$inferInsert
+export type UpdateTopic = Partial<InsertTopic>
 export type SelectTopic = typeof topicsTable.$inferSelect
 
 export const insertTopicSchema = createInsertSchema(topicsTable)
+export const updateTopicSchema = insertTopicSchema.partial()

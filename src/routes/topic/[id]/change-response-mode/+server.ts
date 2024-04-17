@@ -1,5 +1,10 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { topicsTable, type SelectTopic } from '$lib/drizzle/schema/topics.server.js'
+import {
+	topicsTable,
+	updateTopicSchema,
+	type SelectTopic,
+	type UpdateTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import { error, json } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
 
@@ -36,10 +41,12 @@ export async function PUT({ locals, params, request }) {
 
 	await db
 		.update(topicsTable)
-		.set({
-			updatedAt: new Date(),
-			responseMode: data.responseMode,
-		})
+		.set(
+			updateTopicSchema.parse({
+				updatedAt: new Date(),
+				responseMode: data.responseMode,
+			} satisfies UpdateTopic) satisfies UpdateTopic,
+		)
 		.where(and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)))
 
 	return json({ message: `You'll now be getting ${data.responseMode} responses in this topic` })

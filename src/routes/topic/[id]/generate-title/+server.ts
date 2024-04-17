@@ -1,6 +1,10 @@
 import { db } from '$lib/drizzle/db.server.js'
 import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
-import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import {
+	topicsTable,
+	updateTopicSchema,
+	type UpdateTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import { models } from '$lib/utils/constants.js'
 import { countTokens } from '$lib/utils/count-tokens'
 import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
@@ -97,10 +101,12 @@ export async function PUT({ locals, params, url }) {
 
 	const [updatedTopic] = await db
 		.update(topicsTable)
-		.set({
-			updatedAt: new Date(),
-			title: newTitle,
-		})
+		.set(
+			updateTopicSchema.parse({
+				updatedAt: new Date(),
+				title: newTitle,
+			} satisfies UpdateTopic) satisfies UpdateTopic,
+		)
 		.where(and(eq(topicsTable.id, topic.id), eq(topicsTable.userId, session.user.id)))
 		.returning({
 			updatedAt: topicsTable.updatedAt,

@@ -1,5 +1,9 @@
 import { db } from '$lib/drizzle/db.server.js'
-import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import {
+	topicsTable,
+	updateTopicSchema,
+	type UpdateTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import { error, json } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
 
@@ -16,10 +20,12 @@ export async function PUT({ locals, params, request }) {
 
 	const [updatedTopic] = await db
 		.update(topicsTable)
-		.set({
-			updatedAt: new Date(),
-			title: data.title,
-		})
+		.set(
+			updateTopicSchema.parse({
+				updatedAt: new Date(),
+				title: data.title,
+			} satisfies UpdateTopic) satisfies UpdateTopic,
+		)
 		.where(and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)))
 		.returning({
 			updatedAt: topicsTable.updatedAt,

@@ -7,7 +7,14 @@ import {
 	OWN_OPENAI_API_KEY_ENCRYPTION_KEY,
 } from '$env/static/private'
 import { db } from '$lib/drizzle/db.server'
-import { usersTable, type SelectUser } from '$lib/drizzle/schema/users.server'
+import {
+	insertUserSchema,
+	updateUserSchema,
+	usersTable,
+	type InsertUser,
+	type SelectUser,
+	type UpdateUser,
+} from '$lib/drizzle/schema/users.server'
 import { decrypt } from '$lib/utils/encryption'
 import { SvelteKitAuth, type SvelteKitAuthConfig } from '@auth/sveltekit'
 import GitHub from '@auth/sveltekit/providers/github'
@@ -34,28 +41,32 @@ export const authHookConfig: SvelteKitAuthConfig = {
 			})
 			const now = new Date()
 			if (!existingUser) {
-				await db.insert(usersTable).values({
-					createdAt: now,
-					updatedAt: now,
-					name: params.profile.name ?? 'User',
-					email: params.profile.email,
-					image:
-						params.profile.picture ?? // google
-						params.profile.avatar_url ?? // github
-						null,
-				})
-			} else {
-				await db
-					.update(usersTable)
-					.set({
+				await db.insert(usersTable).values(
+					insertUserSchema.parse({
+						createdAt: now,
 						updatedAt: now,
-						name: params.profile.name ?? existingUser.name,
-						email: params.profile.email ?? existingUser.email,
+						name: params.profile.name ?? 'User',
+						email: params.profile.email,
 						image:
 							params.profile.picture ?? // google
 							params.profile.avatar_url ?? // github
-							existingUser.image,
-					})
+							null,
+					} satisfies InsertUser) satisfies InsertUser,
+				)
+			} else {
+				await db
+					.update(usersTable)
+					.set(
+						updateUserSchema.parse({
+							updatedAt: now,
+							name: params.profile.name ?? existingUser.name,
+							email: params.profile.email ?? existingUser.email,
+							image:
+								params.profile.picture ?? // google
+								params.profile.avatar_url ?? // github
+								existingUser.image,
+						} satisfies UpdateUser) satisfies UpdateUser,
+					)
 					.where(eq(usersTable.email, params.profile.email))
 			}
 			return true

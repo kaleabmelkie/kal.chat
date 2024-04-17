@@ -32,6 +32,8 @@ export const messagesRelations = relations(messagesTable, ({ one }) => ({
 }))
 
 export type InsertMessage = typeof messagesTable.$inferInsert
+export type UpdateMessage = Partial<InsertMessage>
 export type SelectMessage = typeof messagesTable.$inferSelect
 
 export const insertMessageSchema = createInsertSchema(messagesTable)
+export const updateMessageSchema = insertMessageSchema.partial()

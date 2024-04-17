@@ -1,6 +1,10 @@
 import { db } from '$lib/drizzle/db.server.js'
 import { messagesTable } from '$lib/drizzle/schema/messages.server.js'
-import { topicsTable } from '$lib/drizzle/schema/topics.server.js'
+import {
+	topicsTable,
+	updateTopicSchema,
+	type UpdateTopic,
+} from '$lib/drizzle/schema/topics.server.js'
 import { usersTable } from '$lib/drizzle/schema/users.server.js'
 import type { ChatStoreType } from '$lib/stores/chat-store.js'
 import { messagesCountInContext } from '$lib/utils/constants'
@@ -90,10 +94,12 @@ export async function load(event) {
 	if (activeTopic.responseMode === 'better' && session.user.plan === 'free') {
 		await db
 			.update(topicsTable)
-			.set({
-				updatedAt: new Date(),
-				responseMode: 'faster',
-			})
+			.set(
+				updateTopicSchema.parse({
+					updatedAt: new Date(),
+					responseMode: 'faster',
+				} satisfies UpdateTopic) satisfies UpdateTopic,
+			)
 			.where(eq(topicsTable.id, activeTopic.id))
 		activeTopic.responseMode = 'faster'
 	}
