@@ -14,7 +14,7 @@ export async function load(event) {
 	const redirectTo = `/${requestedRedirectTo?.slice(1) ?? ''}`
 
 	if (typeof session?.user?.id === 'number' && requestedRedirectTo !== null) {
-		throw redirect(302, redirectTo)
+		redirect(302, redirectTo)
 	}
 
 	return {
@@ -39,7 +39,7 @@ export async function load(event) {
 							.select({ count: count() })
 							.from(topicsTable)
 							.where(eq(topicsTable.userId, session.user.id))
-				  )[0].count,
+					)[0].count,
 		messagesCount:
 			typeof session?.user?.id !== 'number'
 				? 0
@@ -51,6 +51,6 @@ export async function load(event) {
 							.where(
 								and(not(eq(messagesTable.role, 'system')), eq(topicsTable.userId, session.user.id)),
 							)
-				  )[0].count,
+					)[0].count,
 	}
 }

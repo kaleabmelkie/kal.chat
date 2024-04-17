@@ -8,19 +8,19 @@ const responseModes: SelectTopic['responseMode'][] = ['faster', 'better']
 export async function PUT({ locals, params, request }) {
 	const session = await locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, `You must be logged in to change a topic's response mode`)
+		error(401, `You must be logged in to change a topic's response mode`)
 	}
 
 	if (typeof params.id !== 'string') {
-		throw error(400, 'You must provide a topic ID')
+		error(400, 'You must provide a topic ID')
 	}
 
 	const data = await request.json()
 	if (typeof data.responseMode !== 'string') {
-		throw error(400, 'You must provide a response mode')
+		error(400, 'You must provide a response mode')
 	}
 	if (!responseModes.includes(data.responseMode)) {
-		throw error(400, `Response mode must be one of ${responseModes.join(', ')}`)
+		error(400, `Response mode must be one of ${responseModes.join(', ')}`)
 	}
 
 	if (
@@ -28,7 +28,7 @@ export async function PUT({ locals, params, request }) {
 		session.user.plan === 'free' &&
 		!session.user.ownOpenaiApiKey
 	) {
-		throw error(
+		error(
 			402,
 			'You must either upgrade to a paid plan or provide your own OpenAI API key (in Advanced Settings) to use the better response mode',
 		)

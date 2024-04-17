@@ -81,14 +81,14 @@
 								id: -2 - index,
 								role: 'user' as const,
 								content,
-							} satisfies ChatStoreType['activeTopic']['messages'][number]),
+							}) satisfies ChatStoreType['activeTopic']['messages'][number],
 					),
 					{
 						id: -1,
 						role: 'system' as const,
 						content: 'Typing', // to be replaced in the template
 					},
-			  ]
+				]
 			: []) satisfies ChatStoreType['activeTopic']['messages']),
 	]
 </script>

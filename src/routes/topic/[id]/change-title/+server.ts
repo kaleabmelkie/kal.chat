@@ -6,12 +6,12 @@ import { and, eq } from 'drizzle-orm'
 export async function PUT({ locals, params, request }) {
 	const session = await locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, `You must be logged in to change a topic's title`)
+		error(401, `You must be logged in to change a topic's title`)
 	}
 
 	const data = await request.json()
 	if (typeof data?.title !== 'string') {
-		throw error(400, 'You must provide a valid title')
+		error(400, 'You must provide a valid title')
 	}
 
 	const [updatedTopic] = await db

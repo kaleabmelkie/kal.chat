@@ -6,7 +6,7 @@ import { and, eq } from 'drizzle-orm'
 export async function DELETE({ locals, params }) {
 	const session = await locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, 'You must be logged in to delete a topic')
+		error(401, 'You must be logged in to delete a topic')
 	}
 
 	await db

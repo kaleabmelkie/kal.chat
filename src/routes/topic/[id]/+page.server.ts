@@ -13,7 +13,7 @@ import { and, asc, desc, eq, not } from 'drizzle-orm'
 export async function load(event) {
 	const { browser, session } = await event.parent()
 	if (typeof session?.user?.id !== 'number') {
-		throw redirect(
+		redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
 		)
@@ -74,14 +74,14 @@ export async function load(event) {
 	])
 
 	if (!loggedInUser) {
-		throw redirect(
+		redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
 		)
 	}
 
 	if (!activeTopic) {
-		throw error(
+		error(
 			404,
 			`Topic (ID: ${event.params.id}) not found.\n\nEither it doesn't exist or you don't have access to it.`,
 		)
@@ -102,10 +102,12 @@ export async function load(event) {
 		activeTopic: {
 			id: activeTopic.id,
 			responseMode: activeTopic.responseMode,
-			messages: activeTopic.messages.map((m) => ({
-				...m,
-				content: markdownToHtml(m.content),
-			})),
+			messages: await Promise.all(
+				activeTopic.messages.map(async (m) => ({
+					...m,
+					content: await markdownToHtml(m.content),
+				})),
+			),
 			newMessage: {
 				queue: [],
 				content: '',

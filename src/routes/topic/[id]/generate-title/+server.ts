@@ -13,18 +13,18 @@ const maxTitleResponseTokens = 10
 export async function PUT({ locals, params, url }) {
 	const session = await locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, `You must be logged in to change a topic's title`)
+		error(401, `You must be logged in to change a topic's title`)
 	}
 
 	const topic = await db.query.topicsTable.findFirst({
 		where: and(eq(topicsTable.id, Number(params.id)), eq(topicsTable.userId, session.user.id)),
 	})
 	if (!topic) {
-		throw error(404, 'Topic not found')
+		error(404, 'Topic not found')
 	}
 
 	if (topic.title && url.searchParams.get('force') !== 'true') {
-		throw error(400, 'Topic already has a title')
+		error(400, 'Topic already has a title')
 	}
 
 	const prompt = `Generate a short title for this chat conversation. Limit the title to a absolute maximum of just 48 characters. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not label the title. Do not mention the characters length or limit. Do not include any quotation marks and periods.${
@@ -34,7 +34,7 @@ export async function PUT({ locals, params, url }) {
 
 	const model = models.find((m) => m.responseMode === 'faster')
 	if (!model) {
-		throw error(400, `Unsupported responseMode: faster`)
+		error(400, `Unsupported responseMode: faster`)
 	}
 
 	const reversedMessages = await db.query.messagesTable.findMany({
@@ -45,7 +45,7 @@ export async function PUT({ locals, params, url }) {
 		orderBy: desc(messagesTable.createdAt),
 	})
 	if (reversedMessages.length < 2) {
-		throw error(400, 'Not enough messages to generate a title')
+		error(400, 'Not enough messages to generate a title')
 	}
 	let messagesToAnalyze: typeof reversedMessages = []
 	let tokensCount = 0
@@ -92,7 +92,7 @@ export async function PUT({ locals, params, url }) {
 		.trim()
 		.substring(0, 64)
 	if (!newTitle) {
-		throw error(500, 'Could not generate a title')
+		error(500, 'Could not generate a title')
 	}
 
 	const [updatedTopic] = await db

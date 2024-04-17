@@ -6,7 +6,7 @@ import { and, desc, eq, isNull } from 'drizzle-orm'
 export async function GET(event) {
 	const session = await event.locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw redirect(
+		redirect(
 			302,
 			`/account?redirectTo=${encodeURIComponent(event.url.pathname + event.url.search)}`,
 		)
@@ -22,9 +22,9 @@ export async function GET(event) {
 	})
 
 	if (!latestTopic) {
-		throw redirect(302, '/topic/new')
+		redirect(302, '/topic/new')
 	} else if (!latestTopic.title) {
-		throw redirect(302, `/topic/${latestTopic.id}`)
+		redirect(302, `/topic/${latestTopic.id}`)
 	} else {
 		const latestUntitledTopic = await db.query.topicsTable.findFirst({
 			where: and(eq(topicsTable.userId, session.user.id), isNull(topicsTable.title)),
@@ -34,9 +34,9 @@ export async function GET(event) {
 			},
 		})
 		if (latestUntitledTopic) {
-			throw redirect(302, `/topic/${latestUntitledTopic.id}`)
+			redirect(302, `/topic/${latestUntitledTopic.id}`)
 		} else {
-			throw redirect(302, '/topic/new')
+			redirect(302, '/topic/new')
 		}
 	}
 }

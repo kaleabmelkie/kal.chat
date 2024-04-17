@@ -1,16 +1,28 @@
 import hljs from 'highlight.js'
-import { marked } from 'marked'
+import { Marked } from 'marked'
+import { markedHighlight } from 'marked-highlight'
+import { mangle } from 'marked-mangle'
+import { markedSmartypants } from 'marked-smartypants'
 import sanitize from 'sanitize-html'
 
-export function markdownToHtml(content: string) {
-	content = marked(content, {
-		highlight: (code) => hljs.highlightAuto(code).value,
+const marked = new Marked(
+	markedHighlight({
+		langPrefix: 'hljs language-',
+		highlight(code, lang) {
+			const language = hljs.getLanguage(lang) ? lang : 'plaintext'
+			return hljs.highlight(code, { language }).value
+		},
+	}),
+	mangle(),
+	markedSmartypants(),
+)
+
+export async function markdownToHtml(content: string) {
+	// eslint-disable-next-line no-misleading-character-class
+	content = await marked.parse(content.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, ''), {
 		breaks: true,
 		gfm: true,
-		mangle: false,
 		silent: true,
-		smartLists: true,
-		smartypants: true,
 	})
 
 	content = sanitize(content, {

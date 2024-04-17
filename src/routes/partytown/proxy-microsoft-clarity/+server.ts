@@ -6,7 +6,7 @@ export async function GET(event) {
 	const href = event.url.searchParams.get('href')
 
 	if (!href?.startsWith(`${clarityDomain}/`)) {
-		throw error(400, 'Invalid URL')
+		error(400, 'Invalid URL')
 	}
 
 	const response = await fetch(`${clarityDomain}/${href.replace(`${clarityDomain}/`, '')}`)

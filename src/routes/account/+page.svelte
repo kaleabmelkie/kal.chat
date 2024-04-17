@@ -41,12 +41,12 @@
 					{@html data.session.user.plan === 'free'
 						? '<strong>Free</strong> user (GPT 3.5 Turbo only) &nbsp;👀'
 						: data.session.user.plan === 'paid'
-						? '<strong>Pro</strong> user (GPT 3.5 Turbo & GPT 4) &nbsp;🎉'
-						: data.session.user.plan === 'grace'
-						? '<strong>Grace</strong> period (GPT 3.5 Turbo & GPT 4)<br/>Downgrading to free user soon &nbsp;🫤'
-						: data.session.user.plan === 'sponsored'
-						? '<strong>Sponsored</strong> user (GPT 3.5 Turbo & GPT 4)<br/>Paid for by Kaleab &nbsp;🎁'
-						: data.session.user.plan}
+							? '<strong>Pro</strong> user (GPT 3.5 Turbo & GPT 4) &nbsp;🎉'
+							: data.session.user.plan === 'grace'
+								? '<strong>Grace</strong> period (GPT 3.5 Turbo & GPT 4)<br/>Downgrading to free user soon &nbsp;🫤'
+								: data.session.user.plan === 'sponsored'
+									? '<strong>Sponsored</strong> user (GPT 3.5 Turbo & GPT 4)<br/>Paid for by Kaleab &nbsp;🎁'
+									: data.session.user.plan}
 				</span>
 
 				<span class="mt-4 text-xs uppercase text-primary-900/75 dark:text-primary-100/75">

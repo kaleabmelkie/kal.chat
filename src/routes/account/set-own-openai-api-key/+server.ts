@@ -8,12 +8,12 @@ import { eq } from 'drizzle-orm'
 export async function PUT(event) {
 	const session = await event.locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, 'Unauthorized')
+		error(401, 'Unauthorized')
 	}
 
 	const requestJson = await event.request.json()
 	if (typeof requestJson?.ownOpenaiApiKey !== 'string' && requestJson?.ownOpenaiApiKey !== null) {
-		throw error(400, 'Bad request')
+		error(400, 'Bad request')
 	}
 
 	const encryptedOwnOpenaiApiKey = !requestJson.ownOpenaiApiKey

@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm'
 export async function DELETE(event) {
 	const session = await event.locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw error(401, 'Unauthorized')
+		error(401, 'Unauthorized')
 	}
 
 	await db.delete(usersTable).where(eq(usersTable.id, session.user.id))

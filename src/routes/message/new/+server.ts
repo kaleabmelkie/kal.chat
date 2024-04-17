@@ -19,18 +19,18 @@ export async function POST(event) {
 	const { topicId, message } = await event.request.json()
 
 	if (typeof topicId !== 'number') {
-		throw error(400, `Invalid topicId: ${topicId}`)
+		error(400, `Invalid topicId: ${topicId}`)
 	}
 	if (typeof message !== 'string') {
-		throw error(400, `Invalid message: ${message}`)
+		error(400, `Invalid message: ${message}`)
 	}
 	if (!message.trim()) {
-		throw error(400, `Empty message`)
+		error(400, `Empty message`)
 	}
 
 	const session = await event.locals.auth()
 	if (typeof session?.user?.id !== 'number') {
-		throw redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
+		redirect(302, `/account?redirectTo=${encodeURIComponent(`/topic/${topicId}`)}`)
 	}
 
 	const topic = await db.query.topicsTable.findFirst({
@@ -40,7 +40,7 @@ export async function POST(event) {
 		},
 	})
 	if (!topic) {
-		throw error(404, 'Topic not found')
+		error(404, 'Topic not found')
 	}
 	let responseMode = topic.responseMode
 	if (responseMode === 'better' && session.user.plan === 'free') {
@@ -56,7 +56,7 @@ export async function POST(event) {
 
 	const model = models.find((m) => m.responseMode === responseMode)
 	if (!model) {
-		throw error(400, `Unsupported responseMode: ${responseMode}`)
+		error(400, `Unsupported responseMode: ${responseMode}`)
 	}
 
 	const oldMessages = (
@@ -91,7 +91,7 @@ export async function POST(event) {
 		tokenCount += await countTokens(requestMessage.content ?? '')
 	}
 	if (tokenCount > model.maxRequestTokens) {
-		throw error(413, 'Too many tokens')
+		error(413, 'Too many tokens')
 	}
 
 	const openAiApi = getOpenAiApi(session.user.ownOpenaiApiKey ?? null)
@@ -102,7 +102,7 @@ export async function POST(event) {
 		})
 	).json()
 	if (moderationResponse.results.find((result) => result.flagged)) {
-		throw error(400, 'Message flagged by OpenAI')
+		error(400, 'Message flagged by OpenAI')
 	}
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
@@ -188,11 +188,13 @@ export async function POST(event) {
 	}
 
 	return json({
-		newMessages: newMessages.reverse().map((m) => ({
-			id: m.id,
-			role: m.role,
-			content: markdownToHtml(m.content),
-		})),
+		newMessages: await Promise.all(
+			newMessages.reverse().map(async (m) => ({
+				id: m.id,
+				role: m.role,
+				content: await markdownToHtml(m.content),
+			})),
+		),
 		topicTitle: updatedTopic.title,
 		topicHistoryUpdatedAtIso: updatedTopic.updatedAt.toISOString(),
 	} satisfies NewMessageOkResponseBody)

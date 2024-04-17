@@ -21,8 +21,8 @@
 			'info'
 				? 'bg-primary-200/80 text-primary-900 shadow-primary-600/10 ring-primary-400/50'
 				: toast.type === 'error'
-				? 'bg-red-200/80 text-red-900 shadow-red-600/10 ring-red-400/50'
-				: ''}"
+					? 'bg-red-200/80 text-red-900 shadow-red-600/10 ring-red-400/50'
+					: ''}"
 		>
 			<pre
 				class="sm:text-h3 my-auto flex-1 whitespace-pre-wrap break-words px-4 py-3 font-sans">{toast.message}</pre>
@@ -42,8 +42,8 @@
 					'info'
 						? 'bg-primary-400'
 						: toast.type === 'error'
-						? 'bg-red-400'
-						: ''}"
+							? 'bg-red-400'
+							: ''}"
 					style="transition-duration: {(() => {
 						setTimeout(() => {
 							if (timeoutDivRefs[toast.id]) {
