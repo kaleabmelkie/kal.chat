@@ -155,7 +155,7 @@ export async function POST(event) {
 			.update(topicsTable)
 			.set(
 				updateTopicSchema.parse({
-					updatedAt: new Date(),
+					updatedAt: now,
 				} satisfies UpdateTopic) satisfies UpdateTopic,
 			)
 			.where(eq(topicsTable.id, topicId))

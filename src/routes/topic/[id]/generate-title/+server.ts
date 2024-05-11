@@ -67,7 +67,7 @@ export async function PUT({ locals, params, url }) {
 
 	const chatCompletionResponse: CreateChatCompletionResponse = await (
 		await openAiApi.createChatCompletion({
-			model: model.name,
+			model: 'gpt-3.5-turbo',
 			messages: [
 				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
 				{
