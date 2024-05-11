@@ -27,6 +27,8 @@ export const authHookConfig: SvelteKitAuthConfig = {
 		GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
 	],
 
+	trustHost: true,
+
 	useSecureCookies: AUTH_USE_SECURE_COOKIES === 'true',
 
 	callbacks: {
