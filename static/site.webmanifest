@@ -1,6 +1,6 @@
 {
 	"scope": "/",
-	"name": "kal.chat — Better Chat Interface for GPT",
+	"name": "kal.chat — Fast AI Assistant",
 	"short_name": "kal.chat",
 	"description": "A better chat interface for OpenAI's GPT model (ChatGPT alternative)",
 	"icons": [

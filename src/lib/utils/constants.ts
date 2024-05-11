@@ -9,18 +9,18 @@ export const models: {
 }[] = [
 	{
 		responseMode: 'faster',
-		name: 'gpt-3.5-turbo-1106',
-		maxModelTokens: 16_384,
-		maxResponseTokens: 500,
+		name: 'llama3-8b-8192',
+		maxModelTokens: 8_192,
+		maxResponseTokens: 1_024,
 		get maxRequestTokens() {
 			return this.maxModelTokens - this.maxResponseTokens
 		},
 	},
 	{
 		responseMode: 'better',
-		name: 'gpt-4-1106-preview',
-		maxModelTokens: 131_072,
-		maxResponseTokens: 1_000,
+		name: 'llama3-70b-8192',
+		maxModelTokens: 8_192,
+		maxResponseTokens: 1_024,
 		get maxRequestTokens() {
 			return this.maxModelTokens - this.maxResponseTokens
 		},

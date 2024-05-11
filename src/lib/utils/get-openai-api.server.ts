@@ -3,6 +3,9 @@ import { Configuration, OpenAIApi } from 'openai-edge'
 
 const apisByKey = new Map<string, OpenAIApi>()
 
+/**
+ * @deprecated Use `getGroq` from `./get-groq.server.ts` instead.
+ */
 export function getOpenAiApi(apiKey: string | null) {
 	if (!apiKey) {
 		apiKey = OPENAI_API_KEY

@@ -29,7 +29,7 @@
 					: ''}{$page.data.session.user?.email
 					? `&checkout[email]=${encodeURIComponent($page.data.session.user.email)}`
 					: ''}"
-				title="Upgrading to Pro gives you a paid premium access to GPT-4  🎉"
+				title="Upgrading to Pro gives you the options to get better responses  🎉"
 			>
 				<span class="text-lg">✨</span>
 				<span class="pr-2">Upgrade to Pro</span>

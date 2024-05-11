@@ -108,9 +108,7 @@
 
 <svelte:head>
 	<title>
-		{topicTitle
-			? `${topicTitle} | kal.chat`
-			: 'New topic | kal.chat — Better Chat Interface for GPT'}
+		{topicTitle ? `${topicTitle} | kal.chat` : 'New topic | kal.chat — Fast AI Assistant'}
 	</title>
 </svelte:head>
 

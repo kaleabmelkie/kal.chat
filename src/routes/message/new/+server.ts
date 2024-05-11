@@ -13,15 +13,11 @@ import type { NewMessageOkResponseBody } from '$lib/types/message.js'
 import { messagesCountInContext, models } from '$lib/utils/constants'
 import { countTokens } from '$lib/utils/count-tokens'
 import { generateSystemPrompt } from '$lib/utils/generate-system-prompt.server'
-import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
+import { getGroq } from '$lib/utils/get-groq.server.js'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
 import { error, json, redirect } from '@sveltejs/kit'
 import { and, desc, eq, inArray } from 'drizzle-orm'
-import type {
-	ChatCompletionRequestMessage,
-	CreateChatCompletionResponse,
-	CreateModerationResponse,
-} from 'openai-edge'
+import type { CompletionCreateParams } from 'groq-sdk/resources/chat/index.mjs'
 
 export async function POST(event) {
 	const { topicId, message } = await event.request.json()
@@ -90,7 +86,7 @@ export async function POST(event) {
 
 	const systemPrompt = generateSystemPrompt(session.user.name ?? undefined)
 
-	const recentRequestMessages: ChatCompletionRequestMessage[] = [
+	const recentRequestMessages: CompletionCreateParams.Message[] = [
 		{ role: 'system', content: systemPrompt },
 		...oldMessages.map((m) => ({ role: m.role, content: m.content })),
 		{ role: 'user', content: message },
@@ -104,26 +100,26 @@ export async function POST(event) {
 		error(413, 'Too many tokens')
 	}
 
-	const openAiApi = getOpenAiApi(session.user.ownOpenaiApiKey ?? null)
+	// const groq = getGroq(session.user.ownGroqCloudApiKey ?? null) // TODO: implement ownGroqCloudApiKey
+	const groq = getGroq(null)
 
-	const moderationResponse: CreateModerationResponse = await (
-		await openAiApi.createModeration({
-			input: message,
-		})
-	).json()
-	if (moderationResponse.results.find((result) => result.flagged)) {
-		error(400, 'Message flagged by OpenAI')
-	}
+	// Note: Not needed for Groq, I guess
+	// const moderationResponse: CreateModerationResponse = await (
+	// 	await openAiApi.createModeration({
+	// 		input: message,
+	// 	})
+	// ).json()
+	// if (moderationResponse.results.find((result) => result.flagged)) {
+	// 	error(400, 'Message flagged by OpenAI')
+	// }
 
-	const chatCompletionResponse: CreateChatCompletionResponse = await (
-		await openAiApi.createChatCompletion({
-			model: model.name,
-			messages: recentRequestMessages,
-			max_tokens: model.maxResponseTokens,
-			n: 1,
-			stream: false,
-		})
-	).json()
+	const chatCompletionResponse = await groq.chat.completions.create({
+		model: model.name,
+		messages: recentRequestMessages,
+		max_tokens: model.maxResponseTokens,
+		n: 1,
+		stream: false,
+	})
 
 	const now = new Date()
 

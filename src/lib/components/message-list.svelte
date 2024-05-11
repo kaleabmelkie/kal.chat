@@ -112,7 +112,7 @@
 				on:click={() => changeResponseModeTo('faster')}
 			>
 				<span class="">Faster responses</span>
-				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">GPT 3.5 Turbo</span></span>
+				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">Llama 3 8B</span></span>
 			</button>
 
 			<button
@@ -125,7 +125,7 @@
 				on:click={() => changeResponseModeTo('better')}
 			>
 				<span class="">Better responses</span>
-				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">GPT 4</span></span>
+				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">Llama 3 70B</span></span>
 			</button>
 		</div>
 	</div>

@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>My Account | kal.chat — Better Chat Interface for GPT</title>
+	<title>My Account | kal.chat — Fast AI Assistant</title>
 </svelte:head>
 
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">
@@ -39,13 +39,13 @@
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{@html data.session.user.plan === 'free'
-						? '<strong>Free</strong> user (GPT 3.5 Turbo only) &nbsp;👀'
+						? '<strong>Free</strong> user (Llama 3 8B only) &nbsp;👀'
 						: data.session.user.plan === 'paid'
-							? '<strong>Pro</strong> user (GPT 3.5 Turbo & GPT 4) &nbsp;🎉'
+							? '<strong>Pro</strong> user (Llama 3 8B & 70B) &nbsp;🎉'
 							: data.session.user.plan === 'grace'
-								? '<strong>Grace</strong> period (GPT 3.5 Turbo & GPT 4)<br/>Downgrading to free user soon &nbsp;🫤'
+								? '<strong>Grace</strong> period (Llama 3 8B & 70B)<br/>Downgrading to free user soon &nbsp;🫤'
 								: data.session.user.plan === 'sponsored'
-									? '<strong>Sponsored</strong> user (GPT 3.5 Turbo & GPT 4)<br/>Paid for by Kaleab &nbsp;🎁'
+									? '<strong>Sponsored</strong> user (Llama 3 8B & 70B)<br/>Paid for by Kaleab &nbsp;🎁'
 									: data.session.user.plan}
 				</span>
 
@@ -108,6 +108,8 @@
 
 			{#if isAdvancedSettingsOpen}
 				<div class="grid gap-4" transition:slide={{ duration: 150 }}>
+					<!--
+					// TODO: Replace with Own GroqCloud API Key
 					<button
 						class="button pointer-events-auto {isActive ? 'button-loading' : ''}"
 						type="button"
@@ -160,6 +162,7 @@
 							? 'Use your own OpenAI API key'
 							: 'Update your own OpenAI API key'}
 					</button>
+					-->
 
 					{#if data.session.user.ownOpenaiApiKey}
 						<button
