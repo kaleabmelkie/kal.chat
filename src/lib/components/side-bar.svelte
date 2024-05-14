@@ -200,7 +200,7 @@
 							transition:fly={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>
-							{#if topic.messagesCount > 2}
+							{#if topic.messagesCount >= 2}
 								<button
 									class="drop-down-item"
 									type="button"

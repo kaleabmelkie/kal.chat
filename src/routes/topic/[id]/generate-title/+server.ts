@@ -7,10 +7,9 @@ import {
 } from '$lib/drizzle/schema/topics.server.js'
 import { models } from '$lib/utils/constants.js'
 import { countTokens } from '$lib/utils/count-tokens'
-import { getOpenAiApi } from '$lib/utils/get-openai-api.server'
+import { getGroq } from '$lib/utils/get-groq.server.js'
 import { error, json } from '@sveltejs/kit'
 import { and, desc, eq, inArray } from 'drizzle-orm'
-import type { CreateChatCompletionResponse } from 'openai-edge'
 
 const maxTitleResponseTokens = 10
 
@@ -31,11 +30,6 @@ export async function PUT({ locals, params, url }) {
 		error(400, 'Topic already has a title')
 	}
 
-	const prompt = `Generate a short title for this chat conversation. Limit the title to a absolute maximum of just 48 characters. Be specific within the scope of this chat. The title should describe this chat well. Respond exactly with the generated title. Do not include any other punctuation. Do not label the title. Do not mention the characters length or limit. Do not include any quotation marks and periods.${
-		session.user?.name ? ` Do not mention the user's name (i.e. "${session.user.name}").` : ''
-	} Do not include any other text. If there are multiple topics, choose the most talked about.`
-	const promptTokens = await countTokens(prompt)
-
 	const model = models.find((m) => m.responseMode === 'faster')
 	if (!model) {
 		error(400, `Unsupported responseMode: faster`)
@@ -51,6 +45,9 @@ export async function PUT({ locals, params, url }) {
 	if (reversedMessages.length < 2) {
 		error(400, 'Not enough messages to generate a title')
 	}
+
+	const promptTokens = await countTokens(getPrompt([]))
+
 	let messagesToAnalyze: typeof reversedMessages = []
 	let tokensCount = 0
 	for (const message of reversedMessages) {
@@ -63,23 +60,35 @@ export async function PUT({ locals, params, url }) {
 	}
 	messagesToAnalyze = messagesToAnalyze.reverse()
 
-	const openAiApi = getOpenAiApi(session.user.ownOpenaiApiKey ?? null)
+	function getPrompt(messages: typeof messagesToAnalyze) {
+		return `Summarize the following conversation in 4 words max as a title:
 
-	const chatCompletionResponse: CreateChatCompletionResponse = await (
-		await openAiApi.createChatCompletion({
-			model: 'gpt-3.5-turbo',
-			messages: [
-				...messagesToAnalyze.map((m) => ({ role: m.role, content: m.content })),
-				{
-					role: 'system',
-					content: prompt,
-				},
-			],
-			max_tokens: maxTitleResponseTokens,
-			n: 1,
-			stream: false,
-		})
-	).json()
+[START OF CONVERSATION]
+
+${messages.map((m, i) => `${i === 0 ? '' : '---\n'}${m.content}\n`).join('\n')}
+
+[END OF CONVERSATION]
+
+
+
+Conversation Title: `
+	}
+
+	const groq = getGroq(session.user.ownOpenaiApiKey ?? null)
+
+	const chatCompletionResponse = await groq.chat.completions.create({
+		model: model.name,
+		messages: [
+			{
+				role: 'system',
+				content: getPrompt(messagesToAnalyze),
+			},
+		],
+		max_tokens: maxTitleResponseTokens,
+		n: 1,
+		stream: false,
+	})
+
 	const newTitle = chatCompletionResponse.choices
 		?.map((c) => c.message?.content ?? '')
 		.join('')
