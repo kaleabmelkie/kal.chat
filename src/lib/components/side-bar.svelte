@@ -187,7 +187,7 @@
 						<button
 							class="-mr-2 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all hover:bg-primary-100/50 dark:hover:bg-primary-900/50 {optionsExpandedForTopicId ===
 							topic.id
-								? '-mt-2 animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
+								? 'animate-pulse !bg-primary-200 dark:!bg-primary-950/50'
 								: ''}"
 							on:click|preventDefault|stopPropagation={() => (optionsExpandedForTopicId = topic.id)}
 						>
@@ -196,7 +196,7 @@
 					</a>
 					{#if optionsExpandedForTopicId === topic.id}
 						<div
-							class="drop-down right-2 top-9 lg:right-4"
+							class="drop-down right-2 top-11 lg:right-4"
 							transition:fly={{ duration: 150, y: -16 }}
 							use:clickOutside={() => (optionsExpandedForTopicId = null)}
 						>

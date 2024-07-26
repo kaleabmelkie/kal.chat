@@ -10,7 +10,6 @@ export type ChatStoreType = {
 		newMessage: {
 			queue: string[]
 			content: string
-			isVoiceTyping: boolean
 		}
 
 		systemPromptTokensCount: number

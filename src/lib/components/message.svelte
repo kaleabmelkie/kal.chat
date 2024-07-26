@@ -20,9 +20,9 @@
 
 <li class="group flex {className}" transition:slide={{ duration: 150 }}>
 	<div
-		class="relative grid max-w-screen-md gap-2 {message.role === 'user'
+		class="relative grid justify-items-start gap-2 {message.role === 'user'
 			? 'ml-auto pl-8'
-			: 'mr-auto pr-8'}"
+			: 'pr-8'}"
 	>
 		<div
 			class="text-xs font-semibold uppercase text-primary-600 dark:text-primary-400 {message.role ===
@@ -34,11 +34,11 @@
 		</div>
 
 		<article
-			class="match-braces prose relative w-full max-w-full overflow-x-auto overflow-y-hidden rounded-2xl bg-gradient-to-tr p-4 text-lg shadow-primary-600/10 dark:shadow-black/10 {isInContextWindow
-				? 'shadow-md'
+			class="match-braces prose relative max-w-full overflow-x-auto overflow-y-hidden text-lg {isInContextWindow
+				? ''
 				: 'opacity-50'} {message.role === 'user'
-				? 'prose-invert rounded-tr from-primary-700/90 to-primary-500/75 text-white dark:from-primary-950/90 dark:to-primary-700/75'
-				: 'rounded-tl from-white/95 to-white/75 text-black dark:prose-invert dark:bg-primary-950 dark:from-black/50 dark:to-black/10 dark:text-white'} {articleClassName}"
+				? `prose-invert rounded-2xl rounded-tl bg-gradient-to-tr from-primary-700/90 to-primary-500/75 p-4 text-white shadow-primary-600/10 dark:from-primary-950/90 dark:to-primary-700/75 dark:shadow-black/10 ${isInContextWindow ? 'shadow' : 'text-black'}`
+				: 'pb-4 pr-4 pt-2 dark:prose-invert'} {articleClassName}"
 			title={isInContextWindow ? undefined : 'This message is outside the context window'}
 			bind:this={articleEle}
 		>
@@ -48,8 +48,8 @@
 		{#if message.id !== -1}
 			<div use:clickOutside={() => (isOptionsExpanded = false)}>
 				<button
-					class="absolute top-9 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 dark:bg-primary-950/50 dark:text-primary-200/50 dark:shadow-black/20 dark:hover:bg-primary-950 dark:hover:text-primary-300 dark:focus:bg-primary-900 dark:active:bg-primary-800 dark:active:text-primary-400 {isOptionsExpanded
-						? '!top-6 animate-pulse !bg-primary-200/50 !shadow-none dark:!bg-primary-950/50'
+					class="absolute top-6 flex h-9 w-9 items-center justify-center rounded-full bg-white/50 text-primary-900/75 shadow-sm shadow-primary-600/10 transition-all hover:bg-white hover:text-primary-600 hover:shadow focus:bg-primary-50 focus:text-primary-600 focus:opacity-100 focus:shadow active:bg-primary-300 active:text-primary-600 active:opacity-100 active:shadow-none group-hover:opacity-100 group-active:opacity-100 dark:bg-primary-950/50 dark:text-primary-200/50 dark:shadow-black/20 dark:hover:bg-primary-950 dark:hover:text-primary-300 dark:focus:bg-primary-900 dark:active:bg-primary-800 dark:active:text-primary-400 {isOptionsExpanded
+						? 'animate-pulse !bg-primary-200/50 !shadow-none dark:!bg-primary-950/50'
 						: 'sm:opacity-0'} {message.role === 'user' ? 'left-0 -ml-2' : 'right-0 -mr-2'}"
 					type="button"
 					title="Message Options"
@@ -145,7 +145,7 @@
 
 <style lang="postcss">
 	article :global(pre) {
-		@apply overflow-y-hidden !rounded-xl bg-black bg-gradient-to-tr from-primary-600/50 to-primary-400/50 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
+		@apply overflow-y-hidden !rounded-xl bg-black bg-gradient-to-tr from-primary-600/10 to-primary-400/30 p-[1rem] text-sm leading-6 dark:bg-primary-950 dark:from-black/75 dark:to-black/50;
 
 		overflow-x: overlay;
 		scrollbar-color: rgb(255 255 255 / 0.1) transparent;

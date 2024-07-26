@@ -2,7 +2,7 @@
 	"scope": "/",
 	"name": "kal.chat — Fast AI Assistant",
 	"short_name": "kal.chat",
-	"description": "A better chat interface for OpenAI's GPT model (ChatGPT alternative)",
+	"description": "Fast and smart AI assistant in a beautiful chat interface (ChatGPT alternative)",
 	"icons": [
 		{
 			"src": "https://kal.chat/assets/brand-images/app-icon-512x512.png",

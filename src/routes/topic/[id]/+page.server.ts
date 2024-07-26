@@ -117,7 +117,6 @@ export async function load(event) {
 			newMessage: {
 				queue: [],
 				content: '',
-				isVoiceTyping: false,
 			},
 			systemPromptTokensCount: systemPromptTokensCount,
 			messagesCountInContext: messagesCountInContext,
@@ -131,7 +130,7 @@ export async function load(event) {
 		},
 
 		sideBar: {
-			isOpen: browser.isDesktop ? loggedInUser.prefersSideBarOpen ?? false : false,
+			isOpen: browser.isDesktop ? (loggedInUser.prefersSideBarOpen ?? false) : false,
 			prefersOpen: loggedInUser.prefersSideBarOpen ?? false,
 		},
 

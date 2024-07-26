@@ -17,7 +17,7 @@ import { getGroq } from '$lib/utils/get-groq.server.js'
 import { markdownToHtml } from '$lib/utils/markdown-to-html.server.js'
 import { error, json, redirect } from '@sveltejs/kit'
 import { and, desc, eq, inArray } from 'drizzle-orm'
-import type { CompletionCreateParams } from 'groq-sdk/resources/chat/index.mjs'
+import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions.mjs'
 
 export async function POST(event) {
 	const { topicId, message } = await event.request.json()
@@ -86,7 +86,7 @@ export async function POST(event) {
 
 	const systemPrompt = generateSystemPrompt(session.user.name ?? undefined)
 
-	const recentRequestMessages: CompletionCreateParams.Message[] = [
+	const recentRequestMessages: ChatCompletionMessageParam[] = [
 		{ role: 'system', content: systemPrompt },
 		...oldMessages.map((m) => ({ role: m.role, content: m.content })),
 		{ role: 'user', content: message },
@@ -94,7 +94,7 @@ export async function POST(event) {
 
 	let tokenCount = await countTokens(systemPrompt)
 	for (const requestMessage of recentRequestMessages) {
-		tokenCount += await countTokens(requestMessage.content ?? '')
+		tokenCount += await countTokens(requestMessage.content?.toString() ?? '')
 	}
 	if (tokenCount > model.maxRequestTokens) {
 		error(413, 'Too many tokens')

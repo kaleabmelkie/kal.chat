@@ -94,16 +94,18 @@
 </script>
 
 <ul
-	class="mx-auto flex min-h-full max-w-[56rem] flex-col gap-6 px-4 pb-[calc(4rem+7.25rem)] lg:px-6"
+	class="mx-auto flex min-h-full max-w-[56rem] flex-col gap-12 px-4 pb-[calc(4rem+7.25rem)] lg:px-6"
 >
 	<div class="min-h-[calc(4.75rem+3.5rem)] flex-1" />
 
-	<div class="grid gap-4 pb-12">
-		<div class="text-sm text-primary-700 opacity-80 dark:text-primary-300">Choose mode:</div>
+	<div class="pointer-events-none z-10 grid gap-4 pb-12 lg:sticky lg:-top-5">
+		<div class="pointer-events-auto text-sm text-primary-700 opacity-80 dark:text-primary-300">
+			Choose mode:
+		</div>
 
 		<div class="mr-auto grid grid-cols-2 gap-2">
 			<button
-				class="button flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+				class="button pointer-events-auto flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
 					?.activeTopic.responseMode === 'faster'
 					? 'button-disabled !bg-primary-600/90 !text-white'
 					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
@@ -112,11 +114,11 @@
 				on:click={() => changeResponseModeTo('faster')}
 			>
 				<span class="">Faster responses</span>
-				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">Llama 3 8B</span></span>
+				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">Llama 3.1 8B</span></span>
 			</button>
 
 			<button
-				class="button flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+				class="button pointer-events-auto flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
 					?.activeTopic.responseMode === 'better'
 					? 'button-disabled !bg-primary-600/90 !text-white'
 					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
@@ -125,7 +127,7 @@
 				on:click={() => changeResponseModeTo('better')}
 			>
 				<span class="">Better responses</span>
-				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">Llama 3 70B</span></span>
+				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">Llama 3.1 70B</span></span>
 			</button>
 		</div>
 	</div>

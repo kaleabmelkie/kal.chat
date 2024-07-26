@@ -35,6 +35,7 @@ export async function GET(event) {
 				insertTopicSchema.parse({
 					createdAt: now,
 					updatedAt: now,
+					responseMode: session.user.plan === 'free' ? 'faster' : 'better',
 					userId: session.user.id,
 				} satisfies InsertTopic) satisfies InsertTopic,
 			)
