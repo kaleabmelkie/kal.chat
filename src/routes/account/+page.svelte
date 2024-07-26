@@ -39,13 +39,13 @@
 				</span>
 				<span class="text-lg font-semibold text-primary-700/90 dark:text-primary-300/90">
 					{@html data.session.user.plan === 'free'
-						? '<strong>Free</strong> user (Llama 3 8B only) &nbsp;👀'
+						? '<strong>Free</strong> user (Llama 3.1 8B only) &nbsp;👀'
 						: data.session.user.plan === 'paid'
-							? '<strong>Pro</strong> user (Llama 3 8B & 70B) &nbsp;🎉'
+							? '<strong>Pro</strong> user (Llama 3.1 8B & 70B) &nbsp;🎉'
 							: data.session.user.plan === 'grace'
-								? '<strong>Grace</strong> period (Llama 3 8B & 70B)<br/>Downgrading to free user soon &nbsp;🫤'
+								? '<strong>Grace</strong> period (Llama 3.1 8B & 70B)<br/>Downgrading to free user soon &nbsp;🫤'
 								: data.session.user.plan === 'sponsored'
-									? '<strong>Sponsored</strong> user (Llama 3 8B & 70B)<br/>Paid for by Kaleab &nbsp;🎁'
+									? '<strong>Sponsored</strong> user (Llama 3.1 8B & 70B)<br/>Paid for by Kaleab &nbsp;🎁'
 									: data.session.user.plan}
 				</span>
 
