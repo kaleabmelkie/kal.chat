@@ -12,8 +12,13 @@ export const libsqlClient = createClient({
 
 export const db = drizzle(libsqlClient, {
 	schema: {
-		...messagesSchema,
-		...topicsSchema,
-		...usersSchema,
+		messagesTable: messagesSchema.messagesTable,
+		messagesRelations: messagesSchema.messagesRelations,
+
+		topicsTable: topicsSchema.topicsTable,
+		topicsRelations: topicsSchema.topicsRelations,
+
+		usersTable: usersSchema.usersTable,
+		usersRelations: usersSchema.usersRelations,
 	},
 })

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import MessageBox from '$lib/components/message-box.svelte'
 	import MessageList from '$lib/components/message-list.svelte'
 	import SideBar from '$lib/components/side-bar.svelte'
@@ -110,6 +111,39 @@
 	<title>
 		{topicTitle ? `${topicTitle} | kal.chat` : 'New topic | kal.chat — Fast AI Assistant'}
 	</title>
+	<meta
+		name="description"
+		content={topicTitle
+			? `Chat with kal.chat AI assistant about ${topicTitle}. Get instant, intelligent responses and engage in meaningful conversations.`
+			: 'Start a new conversation with kal.chat AI assistant. Experience fast, intelligent responses tailored to your needs.'}
+	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta
+		property="og:title"
+		content={topicTitle ? `${topicTitle} | kal.chat` : 'New topic | kal.chat — Fast AI Assistant'}
+	/>
+	<meta
+		property="og:description"
+		content={topicTitle
+			? `Chat with kal.chat AI assistant about ${topicTitle}. Get instant, intelligent responses and engage in meaningful conversations.`
+			: 'Start a new conversation with kal.chat AI assistant. Experience fast, intelligent responses tailored to your needs.'}
+	/>
+	<meta property="og:url" content={$page.url.href} />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta
+		name="twitter:title"
+		content={topicTitle ? `${topicTitle} | kal.chat` : 'New topic | kal.chat — Fast AI Assistant'}
+	/>
+	<meta
+		name="twitter:description"
+		content={topicTitle
+			? `Chat with kal.chat AI assistant about ${topicTitle}. Get instant, intelligent responses and engage in meaningful conversations.`
+			: 'Start a new conversation with kal.chat AI assistant. Experience fast, intelligent responses tailored to your needs.'}
+	/>
 </svelte:head>
 
 <div class="flex h-screen">

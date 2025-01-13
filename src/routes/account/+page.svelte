@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import ChevronRightSvg from '$lib/icons/chevron-right.svg.svelte'
 	import { err, toast } from '$lib/stores/toasts-store.js'
 	import { signIn, signOut } from '@auth/sveltekit/client'
@@ -12,6 +13,27 @@
 
 <svelte:head>
 	<title>My Account | kal.chat — Fast AI Assistant</title>
+	<meta
+		name="description"
+		content="Manage your kal.chat account settings, preferences, and authentication options. Access your personalized AI assistant experience."
+	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="My Account | kal.chat — Fast AI Assistant" />
+	<meta
+		property="og:description"
+		content="Manage your kal.chat account settings, preferences, and authentication options. Access your personalized AI assistant experience."
+	/>
+	<meta property="og:url" content={$page.url.href} />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="My Account | kal.chat — Fast AI Assistant" />
+	<meta
+		name="twitter:description"
+		content="Manage your kal.chat account settings, preferences, and authentication options. Access your personalized AI assistant experience."
+	/>
 </svelte:head>
 
 <div class="mx-auto flex min-h-screen items-center justify-center px-4 py-32">

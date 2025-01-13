@@ -9,7 +9,7 @@ export const models: {
 }[] = [
 	{
 		responseMode: 'faster',
-		name: 'llama-3.1-8b-instant',
+		name: 'llama-3.3-70b-specdec',
 		maxModelTokens: 8_192,
 		maxResponseTokens: 1_024,
 		get maxRequestTokens() {
@@ -18,9 +18,9 @@ export const models: {
 	},
 	{
 		responseMode: 'better',
-		name: 'llama-3.1-70b-versatile',
-		maxModelTokens: 16_384,
-		maxResponseTokens: 1_024,
+		name: 'llama-3.3-70b-versatile',
+		maxModelTokens: 131_072,
+		maxResponseTokens: 16_384,
 		get maxRequestTokens() {
 			return this.maxModelTokens - this.maxResponseTokens
 		},
