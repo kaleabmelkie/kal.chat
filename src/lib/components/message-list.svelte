@@ -105,7 +105,7 @@
 
 		<div class="mr-auto grid grid-cols-2 gap-2">
 			<button
-				class="button pointer-events-auto flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+				class="button pointer-events-auto flex items-start justify-start gap-2 rounded-lg text-left text-sm {$chatStore
 					?.activeTopic.responseMode === 'faster'
 					? 'button-disabled !bg-primary-600/90 !text-white'
 					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
@@ -113,12 +113,12 @@
 				disabled={isChangingResponseMode || $chatStore?.activeTopic.responseMode === 'faster'}
 				on:click={() => changeResponseModeTo('faster')}
 			>
-				<span class="">Faster responses</span>
-				<span class="text-xs">💨&nbsp;&nbsp;<span class="opacity-75">Llama 3.1 8B</span></span>
+				<span>💨</span>
+				<span>Faster responses</span>
 			</button>
 
 			<button
-				class="button pointer-events-auto flex flex-col items-start justify-start gap-1 rounded-lg text-left {$chatStore
+				class="button pointer-events-auto flex items-start justify-start gap-2 rounded-lg text-left text-sm {$chatStore
 					?.activeTopic.responseMode === 'better'
 					? 'button-disabled !bg-primary-600/90 !text-white'
 					: ''} {isChangingResponseMode ? 'button-loading' : ''}"
@@ -126,8 +126,8 @@
 				disabled={isChangingResponseMode || $chatStore?.activeTopic.responseMode === 'better'}
 				on:click={() => changeResponseModeTo('better')}
 			>
-				<span class="">Better responses</span>
-				<span class="text-xs">✅&nbsp;&nbsp;<span class="opacity-75">Llama 3.1 70B</span></span>
+				<span>✅</span>
+				<span>Better responses</span>
 			</button>
 		</div>
 	</div>
