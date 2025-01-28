@@ -153,4 +153,8 @@
 	article :global(pre::-webkit-scrollbar-thumb) {
 		box-shadow: 12px 0 0 12px rgb(255 255 255 / 0.1) inset;
 	}
+
+	:global(.think) {
+		@apply border-l-2 border-primary-600/70 pl-3 text-xs text-primary-800 opacity-70 dark:border-primary-500/70 dark:text-primary-200;
+	}
 </style>

@@ -117,6 +117,7 @@ export async function POST(event) {
 		model: model.name,
 		messages: recentRequestMessages,
 		max_tokens: model.maxResponseTokens,
+		temperature: model.temperature,
 		n: 1,
 		stream: false,
 	})
@@ -144,7 +145,10 @@ export async function POST(event) {
 								createdAt: now,
 								updatedAt: now,
 								role: m.role as InsertMessage['role'],
-								content: m.content as string,
+								content:
+									m.content
+										?.replace(/<think>/g, '<div class="think">')
+										.replace(/<\/think>/g, '</div>') ?? '',
 								topicId: topicId,
 							}) satisfies InsertMessage,
 					),

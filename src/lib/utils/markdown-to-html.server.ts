@@ -30,6 +30,7 @@ export async function markdownToHtml(content: string) {
 			pre: [/^language-/],
 			code: [/^language-/],
 			span: [/^hljs-/],
+			div: [/^think/],
 		},
 	})
 
