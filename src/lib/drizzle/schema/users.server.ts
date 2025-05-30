@@ -36,6 +36,6 @@ export type UpdateUser = Partial<InsertUser>
 export type SelectUser = typeof usersTable.$inferSelect
 
 export const insertUserSchema = createInsertSchema(usersTable, {
-	email: (schema) => schema.email.email(),
+	email: (schema) => schema.email(),
 })
 export const updateUserSchema = insertUserSchema.partial()
